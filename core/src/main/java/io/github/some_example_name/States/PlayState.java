@@ -21,7 +21,6 @@ public class PlayState extends State {
     private Texture exit;
     private Texture thorns;
     private Texture stopTexture;
-    private Button stopButton;
     private int level;
     private boolean Time = true;
     private String maps[] = {
@@ -138,7 +137,6 @@ public class PlayState extends State {
         exit = new Texture("Sprites/exit.png");
         thorns = new Texture("Sprites/thorns.png");
         stopTexture = new Texture("Buttons/stopBtn.png");
-        stopButton = new Button((int) (Main.HEIGHT / Main.SIZECHANGE.x - (stopTexture.getWidth() / 2 + 60)), (int) (Main.HEIGHT / Main.SIZECHANGE.y - ((float) stopTexture.getHeight() / 2 + 60)), 120, 120, stopTexture);
         sizeMap = new Vector2(maps[level - 1].split("\\r?\\n")[0].length(), maps[level - 1].split("\\r?\\n").length);
         levelMap = maps[level - 1].split("\\r?\\n");
 
@@ -154,9 +152,11 @@ public class PlayState extends State {
     @Override
     public void handleInpute() {
         player.input(Gdx.input.getDeltaX(), Gdx.input.getDeltaY());
-        if (stopButton.onClick()) {
-            Time = false;
+
+        if(Gdx.input.justTouched()&&Main.HEIGHT- Gdx.input.getY()>=1740*Main.SIZECHANGE.y&& Main.HEIGHT-Gdx.input.getY()<=1860* Main.SIZECHANGE.y&&Gdx.input.getX()>=900*Main.SIZECHANGE.x&&Gdx.input.getX()<=1020*Main.SIZECHANGE.x){
+            Time=false;
         }
+        System.out.println(Main.HEIGHT-Gdx.input.getY()+ " "+Gdx.input.getX());
     }
 
     @Override
@@ -173,8 +173,8 @@ public class PlayState extends State {
                 gsm.set(new MenuState(gsm));
             }
 
-            if (player.die()) {
-
+            if (player.isDie()) {
+                Time=false;
             }
         }
     }
@@ -203,11 +203,11 @@ public class PlayState extends State {
             }
         }
 
-        if (!player.die()) {
+        if (!player.isDie()) {
             player.draw(sb);
         }
 
-        stopButton.draw(sb);
+        sb.draw(stopTexture,900*Main.SIZECHANGE.x,1740*Main.SIZECHANGE.y,120*Main.SIZECHANGE.x,120*Main.SIZECHANGE.y);
 
 
         sb.end();

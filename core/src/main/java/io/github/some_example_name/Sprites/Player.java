@@ -9,6 +9,7 @@ import io.github.some_example_name.Main;
 public class Player {
     private Vector2 position;
     private Texture texture;
+    private boolean die=false;
     private Vector2 speed;
     private Vector2 target=new Vector2(-1,-1);
     private Vector2 size;
@@ -113,7 +114,8 @@ public class Player {
     public boolean exit(){
         return (map[(int) posInMap.y].charAt((int) posInMap.x)=='0' && target.y==-1&& target.x==-1);
     }
-    public boolean die(){
-        return (map[(int) posInMap.y].charAt((int) posInMap.x)=='w' && target.y==-1&& target.x==-1);
+    public boolean isDie(){
+        die= (map[(int) posInMap.y].charAt((int) posInMap.x)=='w' && target.y==-1&& target.x==-1)||die;
+        return die;
     }
 }

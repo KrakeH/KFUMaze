@@ -3,7 +3,14 @@ package io.github.some_example_name.States;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 
 import org.w3c.dom.Text;
@@ -14,6 +21,10 @@ import io.github.some_example_name.Main;
 import io.github.some_example_name.Sprites.Button;
 
 public class MenuState extends State{
+
+    private Stage stage;
+    private Texture buttonTexture;
+    private ImageButton imageButton;
     private int rightIndent =210;
     private int leftIndent =210;
     private int bottomIndent=120;
@@ -23,6 +34,41 @@ public class MenuState extends State{
     private Array<Button> buttonLvl=new Array<>();
     public MenuState(GameStateManager gsm) {
         super(gsm);
+        stage = new Stage(new ScreenViewport());
+        Gdx.input.setInputProcessor(stage);
+
+        // Загружаем текстуру для кнопки
+        buttonTexture = new Texture(Gdx.files.internal("libgdx.png")); // Положите ваш файл изображения в assets
+
+        // Создаем стиль для кнопки
+        ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
+        style.imageUp = new TextureRegionDrawable(new TextureRegion(buttonTexture));
+        // Можно добавить другие состояния (нажатая, подсвеченная и т.д.)
+        // style.imageDown = new TextureRegionDrawable(...);
+
+        // Создаем кнопку с нашим стилем
+        imageButton = new ImageButton(style);
+        // Настраиваем размер и позицию кнопки
+        imageButton.setSize(200, 100); // Размер в пикселях
+        imageButton.setPosition(
+            Gdx.graphics.getWidth()/2 - 100,  // Центрируем по горизонтали
+            Gdx.graphics.getHeight()/2 - 50   // Центрируем по вертикали
+        );
+
+        // Добавляем обработчик клика
+        imageButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.log("ImageButton", "Кнопка нажата!");
+                // Здесь можно добавить любую логику при нажатии
+            }
+        });
+
+        // Добавляем кнопку на сцену
+        stage.addActor(imageButton);
+
+
+
         camera.setToOrtho(false, Main.WIDTH, Main.HEIGHT);
         background = new Texture("menuBackground.png");
         //create levels
@@ -103,7 +149,8 @@ public class MenuState extends State{
         for (int i = 0; i < countLevel; i++) {
             buttonLvl.get(i).draw(sb);
         }
-
+        stage.act(Gdx.graphics.getDeltaTime()); // Обновляем логику
+        stage.draw();
         sb.end();
     }
 
