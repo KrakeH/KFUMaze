@@ -1,6 +1,7 @@
 package io.github.some_example_name.States;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
@@ -43,8 +44,9 @@ public class MenuState extends State {
     private Image UStar;
     private Sound SoundBtn=Gdx.audio.newSound(Gdx.files.internal("Audio/ButtonSound.wav"));
     private Music MenuMusic=Gdx.audio.newMusic(Gdx.files.internal("Audio/MenuMusic.mp3"));
+    Preferences prefs=Gdx.app.getPreferences("Game");
+
     private int levelTo = 0;
-    private boolean StartMusic=true;
     private static int countLevel = 20;
     private boolean levelStars[][] = {
         {false, false, false},
@@ -100,7 +102,19 @@ public class MenuState extends State {
 
     public MenuState(GameStateManager gsm, boolean[][] stars) {
         super(gsm);
-        levelStars=stars;
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 3; j++) {
+                prefs.putBoolean(""+i+j,stars[i][j]);
+            }
+        }
+        prefs.flush();
+
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 3; j++) {
+                levelStars[i][j]=prefs.getBoolean(""+i+j);
+            }
+        }
+
         MenuMusic.setLooping(true);
         MenuMusic.setVolume(0.3f);
         MenuMusic.play();

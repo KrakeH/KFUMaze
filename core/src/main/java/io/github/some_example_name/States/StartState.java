@@ -1,6 +1,7 @@
 package io.github.some_example_name.States;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -13,13 +14,36 @@ import io.github.some_example_name.Sprites.Button;
 public class StartState extends State {
 
     private Texture background;
+    Preferences prefs=Gdx.app.getPreferences("Game");
     private Button play;
     private Sound SoundBtn=Gdx.audio.newSound(Gdx.files.internal("Audio/ButtonSound.wav"));
+    private boolean[][] Save= {
+        {false, false, false},
+        {false, false, false},
+        {false, false, false},
+        {false, false, false},
+        {false, false, false}};
 
     public StartState(GameStateManager gsm) {
         super(gsm);
         camera.setToOrtho(false, Main.WIDTH, Main.HEIGHT);
         background = new Texture("background.png");
+
+        if(!prefs.contains("00")){
+            for (int i = 0; i < 5; i++) {
+                for (int j = 0; j < 3; j++) {
+                    prefs.putBoolean(""+i+j,false);
+                }
+            }
+            prefs.flush();
+        }
+        else{
+            for (int i = 0; i < 5; i++) {
+                for (int j = 0; j < 3; j++) {
+                    Save[i][j]=prefs.getBoolean(""+i+j);
+                }
+            }
+        }
 
         play = new Button(1080 / 2 - 205, 1920 / 2 - 65, 410, 130, new Texture("Buttons/playbtn.png"));
     }
@@ -28,12 +52,7 @@ public class StartState extends State {
     public void handleInpute() {
         if (Gdx.input.justTouched()) {
             SoundBtn.play(1.0f);
-            gsm.set(new MenuState(gsm,  new boolean[][]{
-                {false, false, false},
-                {false, false, false},
-                {false, false, false},
-                {false, false, false},
-                {false, false, false}}));
+            gsm.set(new MenuState(gsm, Save));
         }
     }
 

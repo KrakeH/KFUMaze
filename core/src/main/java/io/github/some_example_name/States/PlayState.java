@@ -2,6 +2,7 @@ package io.github.some_example_name.States;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -29,6 +30,7 @@ public class PlayState extends State {
 
     private OrthographicCamera camera;
     private Stage stage;
+    Preferences prefs=Gdx.app.getPreferences("Game");
     private Sound SoundBtn=Gdx.audio.newSound(Gdx.files.internal("Audio/ButtonSound.wav"));
     private Sound Win=Gdx.audio.newSound(Gdx.files.internal("Audio/Win.mp3"));
     private Sound WinStar=Gdx.audio.newSound(Gdx.files.internal("Audio/WinStar.wav"));
@@ -493,6 +495,12 @@ public class PlayState extends State {
                 if (z <= x) {
                     levelStars[level - 1] = player.getStars();
                 }
+                for (int i = 0; i < 5; i++) {
+                    for (int j = 0; j < 3; j++) {
+                        prefs.putBoolean(""+i+j,levelStars[i][j]);
+                    }
+                }
+                prefs.flush();
 
                 winBackground.setVisible(true);
                 againButton.setVisible(true);
