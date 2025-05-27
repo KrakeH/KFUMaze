@@ -17,10 +17,11 @@ import io.github.some_example_name.Main;
 
 public class InfoState extends State{
     private Stage stage;
-    private Texture[] info={new Texture("Info/info1.png")};
+    private Texture[] info={new Texture("Info/info1.png"),new Texture("Info/info2.png"),new Texture("Info/info3.png"),new Texture("Info/info4.png"),new Texture("Info/info5.png")};
     private Sound SoundBtn=Gdx.audio.newSound(Gdx.files.internal("Audio/ButtonSound.wav"));
     private OrthographicCamera camera;
     private ImageButton nextButton;
+    private int level;
 
     private ImageButton createImageButton(Texture buttonTexture, float Height, float Width) {
         ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
@@ -33,9 +34,9 @@ public class InfoState extends State{
         return button;
     }
 
-    public InfoState(GameStateManager gsm,boolean[][] stars) {
+    public InfoState(GameStateManager gsm,boolean[][] stars,int level) {
         super(gsm);
-
+        this.level=level;
         camera = new OrthographicCamera(Main.WIDTH, Main.HEIGHT);
         camera.setToOrtho(false);
         stage = new Stage(new ScreenViewport());
@@ -73,7 +74,12 @@ public class InfoState extends State{
         sb.setProjectionMatrix(camera.combined);
 
         sb.begin();
-        sb.draw(info[0],0,0,Main.WIDTH,Main.HEIGHT);
+
+        try {
+            sb.draw(info[level-1], 0, 0, Main.WIDTH, Main.HEIGHT);
+        } catch (Exception e) {
+            sb.draw(info[0], 0, 0, Main.WIDTH, Main.HEIGHT);
+        }
         sb.end();
 
         stage.act(Gdx.graphics.getDeltaTime());

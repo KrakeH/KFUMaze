@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.some_example_name.Main;
+import io.github.some_example_name.Sprites.Bat;
 import io.github.some_example_name.Sprites.Player;
 
 public class PlayState extends State {
@@ -32,7 +33,7 @@ public class PlayState extends State {
     private Stage stage;
     Preferences prefs=Gdx.app.getPreferences("Game");
     private Sound SoundBtn=Gdx.audio.newSound(Gdx.files.internal("Audio/ButtonSound.wav"));
-    private Sound Win=Gdx.audio.newSound(Gdx.files.internal("Audio/Win.mp3"));
+    private Music Win=Gdx.audio.newMusic(Gdx.files.internal("Audio/Win.mp3"));
     private Sound WinStar=Gdx.audio.newSound(Gdx.files.internal("Audio/WinStar.wav"));
     private Sound Die=Gdx.audio.newSound(Gdx.files.internal("Audio/Die.mp3"));
     private com.badlogic.gdx.audio.Music GameMusic=Gdx.audio.newMusic(Gdx.files.internal("Audio/GameMusic.mp3"));
@@ -79,7 +80,9 @@ public class PlayState extends State {
     private Vector3 Music = new Vector3(0, 0, 0);
     private float timeToOpen=0.8f;
     private boolean Time = true;
+    private boolean batsDie = false;
     private boolean[][] levelStars;
+    private List<Bat> bats=new ArrayList<>();
     private String maps[] = {
         "##################\n" +
             "#########0########\n" +
@@ -178,7 +181,71 @@ public class PlayState extends State {
             "#   # ## ## ### ##\n" +
             "# * #    ##     ##\n" +
             "#   ##############\n" +
-            "##################"};
+            "##################",
+        "##################\n" +
+            "##################\n" +
+            "###########o######\n" +
+            "########      0###\n" +
+            "######## ## ######\n" +
+            "########       ###\n" +
+            "########### ## ###\n" +
+            "#############w ###\n" +
+            "############ww ###\n" +
+            "#              ###\n" +
+            "# ############ ###\n" +
+            "# ############ ###\n" +
+            "# ############ ###\n" +
+            "#         ####u###\n" +
+            "######### ########\n" +
+            "######### ########\n" +
+            "#wwwwwww# #wwwwww#\n" +
+            "#w   #          w#\n" +
+            "##f       #     w#\n" +
+            "#w  #           w#\n" +
+            "#w         #    w#\n" +
+            "#ww# #wwwwwwwwwww#\n" +
+            "#### #############\n" +
+            "#### #############\n" +
+            "#p     ###########\n" +
+            "# p    ###########\n" +
+            "#  p   ### #######\n" +
+            "#### #####o#     #\n" +
+            "#    ##### #  *  #\n" +
+            "#k               #\n" +
+            "########## #######\n" +
+            "##################",
+    "##################\n" +
+        "######    ###o####\n" +
+        "######  *  ## ####\n" +
+        "######     ## ####\n" +
+        "########       k##\n" +
+        "#     ## #### # ##\n" +
+        "# www ## ###### ##\n" +
+        "# w#w ## ###### ##\n" +
+        "# www ##        ##\n" +
+        "#        #########\n" +
+        "##### ############\n" +
+        "##### ##    ######\n" +
+        "#####f      ######\n" +
+        "######## #########\n" +
+        "#######    p######\n" +
+        "######## #########\n" +
+        "#######  #########\n" +
+        "####### ##########\n" +
+        "####p    #########\n" +
+        "####### ##########\n" +
+        "#######         ##\n" +
+        "############### ##\n" +
+        "#####u          ##\n" +
+        "##### ############\n" +
+        "##### #  o   #####\n" +
+        "#####        #####\n" +
+        "#######      #####\n" +
+        "#######p     #####\n" +
+        "#######      #####\n" +
+        "############ #####\n" +
+        "############0#####\n" +
+        "##################"};
 
     private String[] levelMap;
     private Vector2 sizeMap;
@@ -287,11 +354,12 @@ public class PlayState extends State {
 
     public PlayState(GameStateManager gsm, int level, boolean[][] stars) {
         super(gsm);
+
         levelStars = stars;
         this.level = level;
 
         GameMusic.setLooping(true);
-        GameMusic.setVolume(0.3f);
+        GameMusic.setVolume(0.7f);
         GameMusic.play();
 
         camera = new OrthographicCamera(Main.WIDTH, Main.HEIGHT);
@@ -365,6 +433,7 @@ public class PlayState extends State {
         KStar.setVisible(false);
         FStar.setVisible(false);
         UStar.setVisible(false);
+
         ///-----------------------
         stopButton.addListener(new ClickListener() {
             @Override
@@ -410,7 +479,7 @@ public class PlayState extends State {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 SoundBtn.play();
-                gsm.set(new InfoState(gsm, levelStars));
+                gsm.set(new InfoState(gsm, levelStars,level));
             }
         });
 
@@ -452,7 +521,13 @@ public class PlayState extends State {
         for (int i = 0; i < sizeMap.y; i++) {
             for (int j = 0; j < sizeMap.x; j++) {
                 if (levelMap[i].charAt(j) == '*') {
-                    player = new Player(new Vector2(60 * j, 60 * (sizeMap.y - 1 - i)), new Vector2(60, 60), levelMap, new Vector2(25 * Main.SIZECHANGE.x, 25 * Main.SIZECHANGE.y));
+                    player = new Player(new Vector2(60 * j, 60 * (sizeMap.y - 1 - i)), new Vector2(60, 60), levelMap, new Vector2(50 * Main.SIZECHANGE.x, 50 * Main.SIZECHANGE.y),Gdx.graphics.getDeltaTime());
+                }
+                if(levelMap[i].charAt(j) == 'o'){
+                    bats.add(new Bat(new Vector2(60 * j, 60 * (sizeMap.y - 1 - i)), new Vector2(60, 60), levelMap,new Vector2(5 * Main.SIZECHANGE.x, 5 * Main.SIZECHANGE.y),true));
+                }
+                if(levelMap[i].charAt(j) == 'p'){
+                    bats.add(new Bat(new Vector2(60 * j, 60 * (sizeMap.y - 1 - i)), new Vector2(60, 60), levelMap,new Vector2(5 * Main.SIZECHANGE.x, 5 * Main.SIZECHANGE.y),false));
                 }
             }
         }
@@ -465,9 +540,19 @@ public class PlayState extends State {
 
     @Override
     public void update(float dt) {
+        for (int i = 0; i < bats.size()&&!batsDie; i++) {
+            float x=bats.get(i).getPosition().x;
+            float y=bats.get(i).getPosition().y;
+            if((x<player.getTruthPosition().x+60*Main.SIZECHANGE.x&&x>player.getTruthPosition().x&&y<player.getTruthPosition().y+60*Main.SIZECHANGE.y&&y>player.getTruthPosition().y)||(x+60*Main.SIZECHANGE.x<player.getTruthPosition().x+60*Main.SIZECHANGE.x&&x+60*Main.SIZECHANGE.x>player.getTruthPosition().x&&y<player.getTruthPosition().y+60*Main.SIZECHANGE.y&&y>player.getTruthPosition().y)||(x+60*Main.SIZECHANGE.x<player.getTruthPosition().x+60*Main.SIZECHANGE.x&&x+60*Main.SIZECHANGE.x>player.getTruthPosition().x&&y+60*Main.SIZECHANGE.y<player.getTruthPosition().y+60*Main.SIZECHANGE.y&&y+60*Main.SIZECHANGE.y>player.getTruthPosition().y)||(x<player.getTruthPosition().x+60*Main.SIZECHANGE.x&&x>player.getTruthPosition().x&&y+60*Main.SIZECHANGE.y<player.getTruthPosition().y+60*Main.SIZECHANGE.y&&y+60*Main.SIZECHANGE.y>player.getTruthPosition().y)) {
+                batsDie = true;
+            }
+        }
         handleInpute();
 
         if (Time) {
+            for (int i = 0; i < bats.size(); i++) {
+                bats.get(i).move();
+            }
             player.move();
             if (player.exit() && !winBackground.isVisible()) {
                 GameMusic.stop();
@@ -522,16 +607,18 @@ public class PlayState extends State {
                 if (player.getStars()[2])
                     UStar.setVisible(true);
             }
-            if (player.isDie()&&!killBackground.isVisible()) {
+            if ((player.isDie()||batsDie)&&!killBackground.isVisible()) {
+                killBackground.setVisible(true);
                 GameMusic.dispose();
-                Die.play();
+
                 exitButton.setPosition(Main.WIDTH / 2 - new Texture("killBackground.png").getWidth() / 3 * Main.SIZECHANGE.x + 10 * 4 * Main.SIZECHANGE.x, Main.HEIGHT / 2 - new Texture("killBackground.png").getHeight() / 3 * Main.SIZECHANGE.y + 10 * 8 * Main.SIZECHANGE.y);
                 againButton.setPosition(Main.WIDTH / 2 - new Texture("killBackground.png").getWidth() / 3 * Main.SIZECHANGE.x + 10 * 4 * Main.SIZECHANGE.x, Main.HEIGHT / 2 - new Texture("killBackground.png").getHeight() / 3 * Main.SIZECHANGE.y + 10 * 28 * Main.SIZECHANGE.y);
 
-                killBackground.setVisible(true);
+
                 againButton.setVisible(true);
                 exitButton.setVisible(true);
                 Time = false;
+                Die.play();
             }
         }
     }
@@ -634,6 +721,9 @@ public class PlayState extends State {
 
         sb.draw(background, 0, 0, background.getWidth() * Main.SIZECHANGE.x, background.getHeight() * Main.SIZECHANGE.y);
 
+        for (int i = 0; i < bats.size(); i++) {
+            bats.get(i).draw(sb);
+        }
         for (int i = 0; i < sizeMap.y; i++) {
             for (int j = 0; j < sizeMap.x; j++) {
                 switch (levelMap[i].charAt(j)) {

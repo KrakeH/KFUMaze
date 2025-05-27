@@ -42,8 +42,9 @@ public class MenuState extends State {
     private Image KStar;
     private Image FStar;
     private Image UStar;
-    private Sound SoundBtn=Gdx.audio.newSound(Gdx.files.internal("Audio/ButtonSound.wav"));
+    private Music SoundBtn=Gdx.audio.newMusic(Gdx.files.internal("Audio/ButtonSound.wav"));
     private Music MenuMusic=Gdx.audio.newMusic(Gdx.files.internal("Audio/MenuMusic.mp3"));
+    private Music Blocked=Gdx.audio.newMusic(Gdx.files.internal("Audio/blocked.mp3"));
     Preferences prefs=Gdx.app.getPreferences("Game");
 
     private int levelTo = 0;
@@ -81,8 +82,11 @@ public class MenuState extends State {
                         loadingBackground.setVisible(true);
                         cancelBtn.setVisible(true);
                         enterBtn.setVisible(true);
+                        SoundBtn.play();
                     }
-                    SoundBtn.play();
+                    else{
+                        Blocked.play();
+                    }
                 }
             }
         });
@@ -116,7 +120,7 @@ public class MenuState extends State {
         }
 
         MenuMusic.setLooping(true);
-        MenuMusic.setVolume(0.3f);
+        MenuMusic.setVolume(0.7f);
         MenuMusic.play();
         for (int i = 0; i < levelStars.length; i++) {
             for (int k = 0; k < 3; k++) {

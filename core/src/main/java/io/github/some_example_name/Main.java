@@ -10,7 +10,6 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import io.github.some_example_name.States.GameStateManager;
 import io.github.some_example_name.States.StartState;
 
-/** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
     public static int WIDTH = 0;
     public static int HEIGHT = 0;

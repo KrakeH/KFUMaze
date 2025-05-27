@@ -2,6 +2,7 @@ package io.github.some_example_name.States;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -16,7 +17,7 @@ public class StartState extends State {
     private Texture background;
     Preferences prefs=Gdx.app.getPreferences("Game");
     private Button play;
-    private Sound SoundBtn=Gdx.audio.newSound(Gdx.files.internal("Audio/ButtonSound.wav"));
+    private Music SoundBtn=Gdx.audio.newMusic(Gdx.files.internal("Audio/ButtonSound.wav"));
     private boolean[][] Save= {
         {false, false, false},
         {false, false, false},
@@ -51,7 +52,7 @@ public class StartState extends State {
     @Override
     public void handleInpute() {
         if (Gdx.input.justTouched()) {
-            SoundBtn.play(1.0f);
+            SoundBtn.play();
             gsm.set(new MenuState(gsm, Save));
         }
     }
