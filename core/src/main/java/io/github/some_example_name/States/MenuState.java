@@ -68,23 +68,26 @@ public class MenuState extends State {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if(!loadingBackground.isVisible()) {
-                    if (level <= 4) {
-                        levelTo = level;
-                        if (levelStars[levelTo][0]) {
-                            KStar.setVisible(true);
+                    try {
+                        if (level==0||(levelStars[level-1][0]||levelStars[level-1][1]||levelStars[level-1][2])) {
+                            levelTo = level;
+                            if (levelStars[levelTo][0]) {
+                                KStar.setVisible(true);
+                            }
+                            if (levelStars[levelTo][1]) {
+                                FStar.setVisible(true);
+                            }
+                            if (levelStars[levelTo][2]) {
+                                UStar.setVisible(true);
+                            }
+                            loadingBackground.setVisible(true);
+                            cancelBtn.setVisible(true);
+                            enterBtn.setVisible(true);
+                            SoundBtn.play();
+                        } else {
+                            Blocked.play();
                         }
-                        if (levelStars[levelTo][1]) {
-                            FStar.setVisible(true);
-                        }
-                        if (levelStars[levelTo][2]) {
-                            UStar.setVisible(true);
-                        }
-                        loadingBackground.setVisible(true);
-                        cancelBtn.setVisible(true);
-                        enterBtn.setVisible(true);
-                        SoundBtn.play();
-                    }
-                    else{
+                    } catch (Exception e) {
                         Blocked.play();
                     }
                 }
@@ -139,24 +142,41 @@ public class MenuState extends State {
 
         for (int i = 0; i < countLevel / 4 + 1; i++) {
             try {
-                container.add(createImageButton(i * 4 + 1, new Texture("levels/" + (i * 4 + 2) + ".png")));
+                if(levelStars[i*4][0]||levelStars[i*4][1]||levelStars[i*4][2])
+                    container.add(createImageButton(i * 4 + 1, new Texture("levels/" + (i * 4 + 2) + ".png")));
+                else
+                    container.add(createImageButton(i * 4 + 1, new Texture("levels/lock.png")));
+
             } catch (Exception e) {
                 container.add(createImageButton(i * 4 + 1, new Texture("levels/lock.png")));
             }
             try {
-                container.add(createImageButton(i * 4, new Texture("levels/" + (i * 4 + 1) + ".png")));
+                if(i==0)
+                    container.add(createImageButton(i * 4, new Texture("levels/" + (i * 4 + 1) + ".png")));
+                else
+                    if(levelStars[i*4-1][0]||levelStars[i*4-1][1]||levelStars[i*4-1][2])
+                        container.add(createImageButton(i * 4, new Texture("levels/" + (i * 4 + 1) + ".png")));
+                    else
+                        container.add(createImageButton(i * 4, new Texture("levels/lock.png")));
+
             } catch (Exception e) {
                 container.add(createImageButton(i * 4, new Texture("levels/lock.png")));
             }
             container.row();
 
             try {
-                container.add(createImageButton(i * 4 + 2, new Texture("levels/" + (i * 4 + 3) + ".png")));
+                if(levelStars[i*4+1][0]||levelStars[i*4+1][1]||levelStars[i*4+1][2])
+                    container.add(createImageButton(i * 4 + 2, new Texture("levels/" + (i * 4 + 3) + ".png")));
+                else
+                    container.add(createImageButton(i * 4 + 2, new Texture("levels/lock.png")));
             } catch (Exception e) {
                 container.add(createImageButton(i * 4 + 2, new Texture("levels/lock.png")));
             }
             try {
-                container.add(createImageButton(i * 4 + 3, new Texture("levels/" + (i * 4 + 4) + ".png")));
+                if(levelStars[i*4+2][0]||levelStars[i*4+2][1]||levelStars[i*4+2][2])
+                    container.add(createImageButton(i * 4 + 3, new Texture("levels/" + (i * 4 + 4) + ".png")));
+                else
+                    container.add(createImageButton(i * 4 + 3, new Texture("levels/lock.png")));
             } catch (Exception e) {
                 container.add(createImageButton(i * 4 + 3, new Texture("levels/lock.png")));
             }

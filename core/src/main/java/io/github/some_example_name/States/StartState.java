@@ -28,7 +28,7 @@ public class StartState extends State {
     public StartState(GameStateManager gsm) {
         super(gsm);
         camera.setToOrtho(false, Main.WIDTH, Main.HEIGHT);
-        background = new Texture("background.png");
+        background = new Texture("StartBackground.png");
 
         if(!prefs.contains("00")){
             for (int i = 0; i < 5; i++) {
