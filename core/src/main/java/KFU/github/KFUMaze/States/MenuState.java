@@ -35,6 +35,7 @@ public class MenuState extends State {
     private Image UStar;
     private Music MenuMusic=Gdx.audio.newMusic(Gdx.files.internal("Audio/MenuMusic.mp3"));
     private Music Blocked=Gdx.audio.newMusic(Gdx.files.internal("Audio/blocked.mp3"));
+    private Music SoundBtn=Gdx.audio.newMusic(Gdx.files.internal("Audio/ButtonSound.mp3"));
     Preferences prefs=Gdx.app.getPreferences("Game");
 
     private int levelTo = 0;
