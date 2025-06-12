@@ -103,7 +103,7 @@ public class Player {
         }
     }
 
-    public void move() {
+    public void move(float dt) {
         if (position.x <= target.x && target.x >= 0) {
             if(speed.x<=50)
                 speed.x+=acceleration.x*dt;

@@ -682,13 +682,13 @@ public class PlayState extends State {
                 KillMap[i][j] = null;
                 switch (levelMap[i].charAt(j)) {
                     case '*':
-                        player = new Player(new Vector2(60 * j, 60 * (sizeMap.y - 1 - i)), new Vector2(60, 60), levelMap, new Vector2(50 * Main.SIZECHANGE.x, 50 * Main.SIZECHANGE.y), Gdx.graphics.getDeltaTime(), SoundVolume);
+                        player = new Player(new Vector2(60 * j, 60 * (sizeMap.y - 1 - i)), new Vector2(60, 60), levelMap, new Vector2(312 * Main.SIZECHANGE.x, 312 * Main.SIZECHANGE.y), Gdx.graphics.getDeltaTime(), SoundVolume);
                         break;
                     case 'o':
-                        bats.add(new Bat(new Vector2(60 * j, 60 * (sizeMap.y - 1 - i)), new Vector2(60, 60), levelMap, new Vector2(5 * Main.SIZECHANGE.x, 5 * Main.SIZECHANGE.y), true));
+                        bats.add(new Bat(new Vector2(60 * j, 60 * (sizeMap.y - 1 - i)), new Vector2(60, 60), levelMap, new Vector2(312 * Main.SIZECHANGE.x, 312 * Main.SIZECHANGE.y), true));
                         break;
                     case 'p':
-                        bats.add(new Bat(new Vector2(60 * j, 60 * (sizeMap.y - 1 - i)), new Vector2(60, 60), levelMap, new Vector2(5 * Main.SIZECHANGE.x, 5 * Main.SIZECHANGE.y), false));
+                        bats.add(new Bat(new Vector2(60 * j, 60 * (sizeMap.y - 1 - i)), new Vector2(60, 60), levelMap, new Vector2(312 * Main.SIZECHANGE.x, 312 * Main.SIZECHANGE.y), false));
                         break;
                     case '1':
                     case '2':
@@ -734,9 +734,9 @@ public class PlayState extends State {
 
         if (Time) {
             for (int i = 0; i < bats.size(); i++) {
-                bats.get(i).move();
+                bats.get(i).move(dt);
             }
-            player.move();
+            player.move(dt);
             if (player.exit()) Exit = true;
             if (player.exit()) player.setAcceleration(new Vector2(0, 0));
             if (Exit && !winBackground.isVisible()) {
