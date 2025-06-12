@@ -1,5 +1,6 @@
 package com.Turb1na_.KFUMaze.States;
 
+import com.Turb1na_.KFUMaze.Sprites.KillBlock;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.audio.Music;
@@ -69,6 +70,7 @@ public class PlayState extends State {
     private boolean Time = true;
     private boolean Exit = false;
     private boolean batsDie = false;
+    private boolean killBlockDie = false;
     private boolean[][] levelStars;
     private List<Bat> bats = new ArrayList<>();
     private String maps[] = {
@@ -116,7 +118,7 @@ public class PlayState extends State {
             "########## #### ##\n" +
             "#            #  ##\n" +
             "# ######## # #  ##\n" +
-            "#    f#### # #  ##\n" +
+            "#   1f#### # #  ##\n" +
             "###   ##     #  ##\n" +
             "###    # # ### ###\n" +
             "###### # # ### ###\n" +
@@ -124,7 +126,7 @@ public class PlayState extends State {
             "###### # # ### ###\n" +
             "###### #       ###\n" +
             "###### ### #######\n" +
-            "##              ##\n" +
+            "##             2##\n" +
             "## ### ### #    ##\n" +
             "## ### ### #    ##\n" +
             "## ### ### #   u##\n" +
@@ -133,7 +135,7 @@ public class PlayState extends State {
             "## ###       #####\n" +
             "## ####### #######\n" +
             "## ####### #######\n" +
-            "##               #\n" +
+            "## 1111111       #\n" +
             "########## #   * #\n" +
             "##########0##    #\n" +
             "##################",
@@ -147,13 +149,13 @@ public class PlayState extends State {
             "#w         #    w#\n" +
             "#w   #          w#\n" +
             "#w     ##       w#\n" +
-            "#w     #f   #   w#\n" +
-            "##u    #        w#\n" +
+            "#w     #f  2#   w#\n" +
+            "##u   3#        w#\n" +
             "#w    ##     #  w#\n" +
             "#w     #        w#\n" +
             "#w              w#\n" +
             "#w        #     w#\n" +
-            "#www          # w#\n" +
+            "#www      1   # w#\n" +
             "####w  #        w#\n" +
             "####w     k#    w#\n" +
             "####w           w#\n" +
@@ -183,8 +185,8 @@ public class PlayState extends State {
             "#              ###\n" +
             "# ############ ###\n" +
             "# ############ ###\n" +
-            "# ############ ###\n" +
-            "#         ####u###\n" +
+            "# ############u###\n" +
+            "#         ####3###\n" +
             "######### ########\n" +
             "######### ########\n" +
             "#wwwwwww# #wwwwww#\n" +
@@ -209,14 +211,14 @@ public class PlayState extends State {
             "######  *  ## ####\n" +
             "######     ## ####\n" +
             "########       k##\n" +
-            "#     ## #### # ##\n" +
-            "#  w  ## ###### ##\n" +
-            "# w#w ## ###### ##\n" +
-            "#  w  ##        ##\n" +
-            "#        #########\n" +
-            "##### ############\n" +
-            "##### ##    ######\n" +
-            "#####f      ######\n" +
+            "######## #### # ##\n" +
+            "######## ###### ##\n" +
+            "# 3 #### ###### ##\n" +
+            "#2#4####        ##\n" +
+            "# 1      #########\n" +
+            "### ##############\n" +
+            "### ####    ######\n" +
+            "###f        ######\n" +
             "######## #########\n" +
             "#######    p######\n" +
             "######## #########\n" +
@@ -228,20 +230,20 @@ public class PlayState extends State {
             "############### ##\n" +
             "#####u          ##\n" +
             "##### ############\n" +
-            "##### #  o   #####\n" +
-            "#####        #####\n" +
-            "#######      #####\n" +
-            "#######p     #####\n" +
-            "#######      #####\n" +
-            "############ #####\n" +
-            "############0#####\n" +
+            "##### #   o   ####\n" +
+            "#####         ####\n" +
+            "#######p      ####\n" +
+            "#######       ####\n" +
+            "#######       ####\n" +
+            "#######       ####\n" +
+            "#############0####\n" +
             "##################",
 
         "##################\n" +
             "##################\n" +
             "##################\n" +
-            "##wwwwwwwwwwwww###\n" +
-            "#              ###\n" +
+            "##################\n" +
+            "# 1111111111111###\n" +
             "# ############ ###\n" +
             "# ##########  u###\n" +
             "# ##########  ####\n" +
@@ -249,15 +251,15 @@ public class PlayState extends State {
             "# ############ ###\n" +
             "# ############0###\n" +
             "# ################\n" +
-            "# ####      ######\n" +
+            "# #### 11111######\n" +
             "# ####      ######\n" +
             "# ####p     ######\n" +
             "#       f#     ###\n" +
             "#######    p#  ###\n" +
             "#######     #  ###\n" +
-            "#######     #  ###\n" +
-            "#############    #\n" +
-            "##########       #\n" +
+            "####### 3333#  ###\n" +
+            "#############   2#\n" +
+            "##########      2#\n" +
             "##########       #\n" +
             "##########p  k   #\n" +
             "##########   #   #\n" +
@@ -277,9 +279,9 @@ public class PlayState extends State {
             "##  ##u        0##\n" +
             "#  ###############\n" +
             "# #####f##########\n" +
-            "# ###     ########\n" +
-            "# ### #   ########\n" +
-            "# ###   # ########\n" +
+            "# ### 3   ########\n" +
+            "# ###2#4  ########\n" +
+            "# ### 1 # ########\n" +
             "# ##### # ########\n" +
             "# ##### # ########\n" +
             "#       # ########\n" +
@@ -289,15 +291,15 @@ public class PlayState extends State {
             "# ## #############\n" +
             "# ## ######## ####\n" +
             "# ## #           #\n" +
-            "#      ###### ## #\n" +
+            "#     2###### ## #\n" +
             "###########      #\n" +
             "#           #o####\n" +
             "# ################\n" +
             "# ################\n" +
             "# ########wwwwwww#\n" +
-            "# #o######w     w#\n" +
-            "# # ##   #w  #  w#\n" +
-            "#      #        w#\n" +
+            "# #o######w  3  w#\n" +
+            "# # ##   #w 2#4 w#\n" +
+            "#      #     1  w#\n" +
             "### #   k#w     w#\n" +
             "### ######w     w#\n" +
             "### ######w  *  w#\n" +
@@ -306,9 +308,9 @@ public class PlayState extends State {
         "##################\n" +
             "###0##############\n" +
             "#              ###\n" +
-            "# #u########## ###\n" +
-            "# #  w######## ###\n" +
-            "# ## w########   #\n" +
+            "# #u##########2###\n" +
+            "# # 2#########4###\n" +
+            "# ##2#########   #\n" +
             "#    #######w f  #\n" +
             "############w #  #\n" +
             "#############    #\n" +
@@ -323,17 +325,17 @@ public class PlayState extends State {
             "#www##### ###### #\n" +
             "#       #    ### #\n" +
             "# *  ##      ### #\n" +
-            "#    #     #   # #\n" +
-            "######   ok#   # #\n" +
-            "######  #####  # #\n" +
-            "#########   #  # #\n" +
-            "######### # #  # #\n" +
-            "#########      # #\n" +
+            "#    #     #  2# #\n" +
+            "######   ok#  2# #\n" +
+            "######33#####  # #\n" +
+            "######### 3 #  # #\n" +
+            "#########2#4#  # #\n" +
+            "######### 1    # #\n" +
             "#########    o # #\n" +
             "########### #### #\n" +
             "########         #\n" +
-            "######## ## w#####\n" +
-            "########    w#####\n" +
+            "######## ##2######\n" +
+            "########   2######\n" +
             "##################",
 
         "##################\n" +
@@ -347,9 +349,9 @@ public class PlayState extends State {
             "### ######f#######\n" +
             "### ##wwww wwww###\n" +
             "###0##w        ###\n" +
-            "######w  #      w#\n" +
+            "######w  #     1w#\n" +
             "######w     #   w#\n" +
-            "######w         ##\n" +
+            "######w     1   ##\n" +
             "######w    #     #\n" +
             "#######wwww www# #\n" +
             "################ #\n" +
@@ -361,7 +363,7 @@ public class PlayState extends State {
             "### ## ## ###### #\n" +
             "###             k#\n" +
             "######### ########\n" +
-            "#         ########\n" +
+            "#4        ########\n" +
             "# ################\n" +
             "# ##wwwwwww#######\n" +
             "# ##w     w#######\n" +
@@ -374,6 +376,8 @@ public class PlayState extends State {
     private Player player;
     private int[][] WallMap = new int[32][18];
     private int[][] ThronsMap = new int[32][18];
+    private KillBlock[][] KillMap = new KillBlock[32][18];
+    private List<KillBlock> KillBlocks = new ArrayList<>();
 
     private int GetWallMask(int x, int y, String[] map) {
         int mask = 0;
@@ -485,11 +489,11 @@ public class PlayState extends State {
 
         if (((y + 1 >= 32 || map[y + 1].charAt(x) == 'w') && (x + 1 >= 18 || map[y].charAt(x + 1) == 'w')) || ((x - 1 < 0 || map[y].charAt(x - 1) == '#') && (y - 1 < 0 || map[y - 1].charAt(x) == '#')))
             return 0;
-        if (((y + 1 >= 32 || map[y + 1].charAt(x) == 'w') && (x - 1 < 0 || map[y].charAt(x - 1) == 'w')) || ((x + 1 >=18 || map[y].charAt(x + 1) == '#') && (y - 1 < 0 || map[y - 1].charAt(x) == '#')))
+        if (((y + 1 >= 32 || map[y + 1].charAt(x) == 'w') && (x - 1 < 0 || map[y].charAt(x - 1) == 'w')) || ((x + 1 >= 18 || map[y].charAt(x + 1) == '#') && (y - 1 < 0 || map[y - 1].charAt(x) == '#')))
             return 1;
-        if (((y - 1 < 0 || map[y - 1].charAt(x) == 'w') && (x - 1 < 0 || map[y].charAt(x - 1) == 'w')) || ((x + 1 >=18 || map[y].charAt(x + 1) == '#') && (y + 1 >=32 || map[y + 1].charAt(x) == '#')))
+        if (((y - 1 < 0 || map[y - 1].charAt(x) == 'w') && (x - 1 < 0 || map[y].charAt(x - 1) == 'w')) || ((x + 1 >= 18 || map[y].charAt(x + 1) == '#') && (y + 1 >= 32 || map[y + 1].charAt(x) == '#')))
             return 2;
-        if (((y - 1 < 0 || map[y - 1].charAt(x) == 'w') && (x + 1 >= 18 || map[y].charAt(x + 1) == 'w')) || ((x - 1 < 0 || map[y].charAt(x - 1) == '#') && (y + 1 >=32 || map[y + 1].charAt(x) == '#')))
+        if (((y - 1 < 0 || map[y - 1].charAt(x) == 'w') && (x + 1 >= 18 || map[y].charAt(x + 1) == 'w')) || ((x - 1 < 0 || map[y].charAt(x - 1) == '#') && (y + 1 >= 32 || map[y + 1].charAt(x) == '#')))
             return 3;
 
         if (y - 1 < 0 || map[y - 1].charAt(x) == '#') return 4;
@@ -512,12 +516,11 @@ public class PlayState extends State {
         return button;
     }
 
-    public PlayState(GameStateManager gsm, float MusicVolume,float SoundVolume,int level, boolean[][] stars) {
+    public PlayState(GameStateManager gsm, float MusicVolume, float SoundVolume, int level, boolean[][] stars) {
         super(gsm, MusicVolume, SoundVolume);
 
         Win.setVolume(MusicVolume);
         GameMusic.setVolume(MusicVolume);
-
 
 
         levelStars = stars;
@@ -627,7 +630,7 @@ public class PlayState extends State {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 SoundBtn.play(SoundVolume);
-                gsm.set(new MenuState(gsm, MusicVolume,SoundVolume,levelStars));
+                gsm.set(new MenuState(gsm, MusicVolume, SoundVolume, levelStars));
             }
         });
 
@@ -676,14 +679,24 @@ public class PlayState extends State {
 
         for (int i = 0; i < sizeMap.y; i++) {
             for (int j = 0; j < sizeMap.x; j++) {
-                if (levelMap[i].charAt(j) == '*') {
-                    player = new Player(new Vector2(60 * j, 60 * (sizeMap.y - 1 - i)), new Vector2(60, 60), levelMap, new Vector2(50 * Main.SIZECHANGE.x, 50 * Main.SIZECHANGE.y), Gdx.graphics.getDeltaTime(),SoundVolume);
-                }
-                if (levelMap[i].charAt(j) == 'o') {
-                    bats.add(new Bat(new Vector2(60 * j, 60 * (sizeMap.y - 1 - i)), new Vector2(60, 60), levelMap, new Vector2(5 * Main.SIZECHANGE.x, 5 * Main.SIZECHANGE.y), true));
-                }
-                if (levelMap[i].charAt(j) == 'p') {
-                    bats.add(new Bat(new Vector2(60 * j, 60 * (sizeMap.y - 1 - i)), new Vector2(60, 60), levelMap, new Vector2(5 * Main.SIZECHANGE.x, 5 * Main.SIZECHANGE.y), false));
+                KillMap[i][j] = null;
+                switch (levelMap[i].charAt(j)) {
+                    case '*':
+                        player = new Player(new Vector2(60 * j, 60 * (sizeMap.y - 1 - i)), new Vector2(60, 60), levelMap, new Vector2(50 * Main.SIZECHANGE.x, 50 * Main.SIZECHANGE.y), Gdx.graphics.getDeltaTime(), SoundVolume);
+                        break;
+                    case 'o':
+                        bats.add(new Bat(new Vector2(60 * j, 60 * (sizeMap.y - 1 - i)), new Vector2(60, 60), levelMap, new Vector2(5 * Main.SIZECHANGE.x, 5 * Main.SIZECHANGE.y), true));
+                        break;
+                    case 'p':
+                        bats.add(new Bat(new Vector2(60 * j, 60 * (sizeMap.y - 1 - i)), new Vector2(60, 60), levelMap, new Vector2(5 * Main.SIZECHANGE.x, 5 * Main.SIZECHANGE.y), false));
+                        break;
+                    case '1':
+                    case '2':
+                    case '3':
+                    case '4':
+                        KillMap[i][j] = new KillBlock(new Vector2(60 * j, 60 * (sizeMap.y - 1 - i)), new Vector2(60, 60), levelMap, levelMap[i].charAt(j));
+                        KillBlocks.add(KillMap[i][j]);
+                        break;
                 }
             }
         }
@@ -696,13 +709,24 @@ public class PlayState extends State {
 
     @Override
     public void update(float dt) {
+        for (int i = 0; i < KillBlocks.size(); i++) {
+            KillBlocks.get(i).update(dt);
+        }
+
+        if (KillMap[31 - Math.round(player.getTruthPosition().y / 60f)][Math.round(player.getTruthPosition().x / 60f)] != null && !KillMap[31 - Math.round(player.getTruthPosition().y / 60f)][Math.round(player.getTruthPosition().x / 60f)].isRunning()) {
+            KillMap[31 - Math.round(player.getTruthPosition().y / 60f)][Math.round(player.getTruthPosition().x / 60f)].run();
+        }
+        if (KillMap[31 - Math.round(player.getTruthPosition().y / 60f)][Math.round(player.getTruthPosition().x / 60f)] != null && KillMap[31 - Math.round(player.getTruthPosition().y / 60f)][Math.round(player.getTruthPosition().x / 60f)].isCanKill()) {
+            killBlockDie=true;
+        }
+
         for (int i = 0; i < bats.size() && !batsDie; i++) {
 
-            float x = bats.get(i).getPosition().x+5 ;
-            float y = bats.get(i).getPosition().y+5;
-            float batWidth=50 ;
-            float batHeight=50 ;
-            if ((x < player.getTruthPosition().x + 60  && x > player.getTruthPosition().x && y < player.getTruthPosition().y + 60 && y > player.getTruthPosition().y) || (x + batWidth < player.getTruthPosition().x + 60  && x + batWidth > player.getTruthPosition().x && y < player.getTruthPosition().y + 60  && y > player.getTruthPosition().y) || (x + batWidth < player.getTruthPosition().x + 60  && x + batWidth > player.getTruthPosition().x && y + batHeight < player.getTruthPosition().y + 60  && y + batHeight > player.getTruthPosition().y) || (x < player.getTruthPosition().x + 60  && x > player.getTruthPosition().x && y + batHeight < player.getTruthPosition().y + 60  && y + batHeight > player.getTruthPosition().y)) {
+            float x = bats.get(i).getPosition().x + 5;
+            float y = bats.get(i).getPosition().y + 5;
+            float batWidth = 50;
+            float batHeight = 50;
+            if ((x < player.getTruthPosition().x + 60 && x > player.getTruthPosition().x && y < player.getTruthPosition().y + 60 && y > player.getTruthPosition().y) || (x + batWidth < player.getTruthPosition().x + 60 && x + batWidth > player.getTruthPosition().x && y < player.getTruthPosition().y + 60 && y > player.getTruthPosition().y) || (x + batWidth < player.getTruthPosition().x + 60 && x + batWidth > player.getTruthPosition().x && y + batHeight < player.getTruthPosition().y + 60 && y + batHeight > player.getTruthPosition().y) || (x < player.getTruthPosition().x + 60 && x > player.getTruthPosition().x && y + batHeight < player.getTruthPosition().y + 60 && y + batHeight > player.getTruthPosition().y)) {
                 batsDie = true;
             }
         }
@@ -768,7 +792,7 @@ public class PlayState extends State {
                 if (player.getStars()[2])
                     UStar.setVisible(true);
             }
-            if ((player.isDie() || batsDie) && !killBackground.isVisible()) {
+            if ((player.isDie() || batsDie||killBlockDie) && !killBackground.isVisible()) {
                 Die.play(SoundVolume);
                 killBackground.setVisible(true);
                 GameMusic.dispose();
@@ -915,6 +939,10 @@ public class PlayState extends State {
                     }
                 }
             }
+        }
+        for (int i = 0; i < KillBlocks.size(); i++) {
+            KillBlocks.get(i).draw(sb);
+
         }
         if (!player.isDie()) {
             player.draw(sb);

@@ -25,7 +25,6 @@ public class Bat {
         this.isY=isY;
 
         posInMap=new Vector2(Math.round(position.x / 60f),31 - Math.round(position.y / 60f));
-        System.out.println(posInMap);
     }
 
     public void move() {

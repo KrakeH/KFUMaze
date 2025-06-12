@@ -75,7 +75,6 @@ public class InfoState extends State {
 
     @Override
     public void render(SpriteBatch sb) {
-        System.out.println(level);
         camera.update();
         sb.setProjectionMatrix(camera.combined);
 
