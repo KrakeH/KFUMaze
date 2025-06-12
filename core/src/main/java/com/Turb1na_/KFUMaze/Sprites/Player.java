@@ -103,10 +103,10 @@ public class Player {
         }
     }
 
-    public void move(float dt) {
+    public void move() {
         if (position.x <= target.x && target.x >= 0) {
             if(speed.x<=50)
-                speed.x+=acceleration.x*dt;
+                speed.x+=acceleration.x;
             position.x += speed.x;
             if (position.x >= target.x) {
                 position.x = target.x;
@@ -115,7 +115,7 @@ public class Player {
             }
         } else if (position.x >= target.x && target.x >= 0) {
             if(Math.abs(speed.x)<=50)
-                speed.x-=acceleration.x*dt;
+                speed.x-=acceleration.x;
             position.x += speed.x;
             if (position.x <= target.x) {
                 position.x = target.x;
@@ -124,7 +124,7 @@ public class Player {
             }
         } else if (position.y <= target.y && target.y >= 0) {
             if(speed.y<=50)
-                speed.y+=acceleration.y*dt;
+                speed.y+=acceleration.y;
             position.y += speed.y;
             if (position.y >= target.y) {
                 position.y = target.y;
@@ -133,7 +133,7 @@ public class Player {
             }
         } else if (position.y >= target.y && target.y >= 0) {
             if(Math.abs(speed.y)<=50)
-                speed.y-=acceleration.y*dt;
+                speed.y-=acceleration.y;
             position.y += speed.y;
             if (position.y <= target.y) {
                 position.y = target.y;

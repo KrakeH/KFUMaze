@@ -27,7 +27,7 @@ public class Bat {
         posInMap=new Vector2(Math.round(position.x / 60f),31 - Math.round(position.y / 60f));
     }
 
-    public void move(float dt) {
+    public void move() {
         if (isY && target.y == -1&&go.y==1) {
             for (int i = (int) posInMap.y; i >= 0; i--) {
                 if (map[i].charAt((int) posInMap.x) == '#') {
@@ -70,25 +70,25 @@ public class Bat {
         }
 
         if (position.x <= target.x && target.x >= 0) {
-            position.x += speed.x*dt;
+            position.x += speed.x;
             if (position.x >= target.x) {
                 position.x = target.x;
                 target.x = -1;
             }
         } else if (position.x >= target.x && target.x >= 0) {
-            position.x -= speed.x*dt;
+            position.x -= speed.x;
             if (position.x <= target.x) {
                 position.x = target.x;
                 target.x = -1;
             }
         } else if (position.y <= target.y && target.y >= 0) {
-            position.y += speed.y*dt;
+            position.y += speed.y;
             if (position.y >= target.y) {
                 position.y = target.y;
                 target.y = -1;
             }
         } else if (position.y >= target.y && target.y >= 0) {
-            position.y -= speed.y*dt;
+            position.y -= speed.y;
             if (position.y <= target.y) {
                 position.y = target.y;
                 target.y = -1;
