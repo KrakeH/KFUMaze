@@ -9,7 +9,7 @@ import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.badlogic.gdx.backends.android.AndroidAudio;
 import com.badlogic.gdx.backends.android.AsynchronousAndroidAudio;
 
-import KFU.github.KFUMaze.Main;
+import com.Turb1na_.KFUMaze.Main;
 
 /** Launches the Android application. */
 public class AndroidLauncher extends AndroidApplication {

@@ -2,7 +2,7 @@ package KFU.github.KFUMaze.lwjgl3;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import KFU.github.KFUMaze.Main;
+import com.Turb1na_.KFUMaze.Main;
 
 /** Launches the desktop (LWJGL3) application. */
 public class Lwjgl3Launcher {
