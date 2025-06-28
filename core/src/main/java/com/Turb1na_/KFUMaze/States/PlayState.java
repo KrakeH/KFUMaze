@@ -679,7 +679,7 @@ public class PlayState extends State {
                 SoundBtn.play(SoundVolume);
                 GameMusic.stop();
                 if (Exit) {
-                    money += player.getCoins() * 100000;
+                    money += player.getCoins() ;
                     prefs.putInteger("Coins", money);
                     prefs.flush();
                 }
