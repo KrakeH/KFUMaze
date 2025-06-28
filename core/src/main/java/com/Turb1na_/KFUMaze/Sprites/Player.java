@@ -1,6 +1,7 @@
 package com.Turb1na_.KFUMaze.Sprites;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.Turb1na_.KFUMaze.Main;
 
 public class Player {
+    private int coins=0;
     private Vector2 position;
     private boolean die = false;
     private Vector2 speed=new Vector2(0,0);
@@ -18,14 +20,23 @@ public class Player {
     private Vector2 size;
     private String map[];
     private Vector2 posInMap;
-    private float dt;
     private char[] s;
     private boolean[] stars = {false, false, false};
+    private Preferences prefs = Gdx.app.getPreferences("Game");
     private Sound Star= Gdx.audio.newSound(Gdx.files.internal("Audio/Star.mp3"));
-    private Texture playerUp=new Texture("Player/playerUp.png");
-    private Texture playerLeft=new Texture("Player/playerLeft.png");
-    private Texture playerRight=new Texture("Player/playerRight.png");
-    private Texture playerStop=new Texture("Player/playerStop.png");
+    private String[][] skins={
+        {"Player/playerUp.png","Player/playerLeft.png","Player/playerRight.png","Player/playerStop.png"},
+        {"Player/playerUp3.png","Player/playerLeft3.png","Player/playerRight3.png","Player/playerStop3.png"},
+        {"Player/playerUp4.png","Player/playerLeft4.png","Player/playerRight4.png","Player/playerStop4.png"},
+        {"Player/playerUp1.png","Player/playerLeft1.png","Player/playerRight1.png","Player/playerStop1.png"},
+        {"Player/playerUp2.png","Player/playerLeft2.png","Player/playerRight2.png","Player/playerStop2.png"},
+        {"Player/playerUp5.png","Player/playerLeft5.png","Player/playerRight5.png","Player/playerStop5.png"},
+    };
+    private int skin=prefs.getInteger("Skin");
+    private Texture playerUp=new Texture(skins[skin][0]);
+    private Texture playerLeft=new Texture(skins[skin][1]);
+    private Texture playerRight=new Texture(skins[skin][2]);
+    private Texture playerStop=new Texture(skins[skin][3]);
 
     public Player(Vector2 position,  Vector2 size, String map[], Vector2 acceleration,float dt,float SoundVolume) {
         this.map = map;
@@ -33,7 +44,6 @@ public class Player {
         this.position = position;
         this.size = size;
         this.acceleration = acceleration;
-        this.dt=dt/0.2f;
 
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[0].length(); j++) {
@@ -63,50 +73,63 @@ public class Player {
     }
 
     public void input(int deltaX, int deltaY) {
-        if (Math.abs(deltaX) >= 30) {
+        if (Math.abs(deltaX*1f/Main.WIDTH) >= 0.028f) {
             if (deltaX < 0 && target.x == -1 && target.y == -1) {
+                firstCicle:
                 for (int i = (int) posInMap.x; i >= 0; i--) {
-                    if (map[(int) posInMap.y].charAt(i) == '#') {
-                        posInMap.x = i + 1;
-                        target.x = (int) ((i + 1) * size.x);
-                        break;
+                    switch (map[(int) posInMap.y].charAt(i)){
+                        case '#':
+                        case 'e':
+                            posInMap.x = i + 1;
+                            target.x = (int) ((i + 1) * size.x);
+                            break firstCicle;
                     }
                 }
             } else if (deltaX > 0 && target.x == -1 && target.y == -1) {
+                secondCicle:
                 for (int i = (int) posInMap.x; i < 18; i++) {
-                    if (map[(int) posInMap.y].charAt(i) == '#') {
-                        posInMap.x = i - 1;
-                        target.x = (int) ((i - 1) * size.x);
-                        break ;
+                    switch (map[(int) posInMap.y].charAt(i)){
+                        case'#':
+                        case 'e':
+                            posInMap.x = i - 1;
+                            target.x = (int) ((i - 1) * size.x);
+                            break secondCicle;
                     }
                 }
             }
-        } else if (Math.abs(deltaY) >= 30) {
+        } else if (Math.abs(deltaY*1f/Main.HEIGHT) >= 0.0157f) {
             if (deltaY < 0 && target.x == -1 && target.y == -1) {
+                thirdCicle:
                 for (int i = (int) posInMap.y; i >= 0; i--) {
-                    if (map[i].charAt((int) posInMap.x) == '#') {
-                        posInMap.y = i + 1;
-                        target.y = Main.HEIGHT / Main.SIZECHANGE.y - (int) ((i + 2) * size.y);
-                        break;
+                    switch (map[i].charAt((int) posInMap.x)){
+                        case '#':
+                        case 'e':
+                            posInMap.y = i + 1;
+                            target.y = Main.HEIGHT / Main.SIZECHANGE.y - (int) ((i + 2) * size.y);
+                            break thirdCicle;
                     }
                 }
 
             } else if (deltaY > 0 && target.x == -1 && target.y == -1) {
+                fourthCicle:
                 for (int i = (int) posInMap.y; i < 32; i++) {
-                    if (map[i].charAt((int) posInMap.x) == '#') {
-                        posInMap.y = i - 1;
-                        target.y = Main.HEIGHT / Main.SIZECHANGE.y - (int) ((i) * size.y);
-                        break;
+                    switch (map[i].charAt((int) posInMap.x)){
+                        case'#':
+                        case 'e':
+                            posInMap.y = i - 1;
+                            target.y = Main.HEIGHT / Main.SIZECHANGE.y - (int) ((i) * size.y);
+                            break fourthCicle;
                     }
                 }
             }
         }
     }
 
-    public void move() {
+    public void move(float dt) {
+        System.out.println(speed.x*dt+" "+speed.y*dt);
         if (position.x <= target.x && target.x >= 0) {
             if(speed.x<=50)
-                speed.x+=acceleration.x;
+                speed.x+=acceleration.x*dt;
             position.x += speed.x;
             if (position.x >= target.x) {
                 position.x = target.x;
@@ -115,7 +138,7 @@ public class Player {
             }
         } else if (position.x >= target.x && target.x >= 0) {
             if(Math.abs(speed.x)<=50)
-                speed.x-=acceleration.x;
+                speed.x-=acceleration.x*dt;
             position.x += speed.x;
             if (position.x <= target.x) {
                 position.x = target.x;
@@ -124,7 +147,7 @@ public class Player {
             }
         } else if (position.y <= target.y && target.y >= 0) {
             if(speed.y<=50)
-                speed.y+=acceleration.y;
+                speed.y+=acceleration.y*dt;
             position.y += speed.y;
             if (position.y >= target.y) {
                 position.y = target.y;
@@ -133,7 +156,7 @@ public class Player {
             }
         } else if (position.y >= target.y && target.y >= 0) {
             if(Math.abs(speed.y)<=50)
-                speed.y-=acceleration.y;
+                speed.y-=acceleration.y*dt;
             position.y += speed.y;
             if (position.y <= target.y) {
                 position.y = target.y;
@@ -143,6 +166,7 @@ public class Player {
         }
         switch (map[31 - Math.round(position.y / 60f)].charAt(Math.round(position.x / 60f))) {
             case 'k':
+                Star.stop();
                 stars[0] = true;
                 s = map[31 - Math.round(position.y / 60f)].toCharArray();
                 s[Math.round(position.x / 60f)] = ' ';
@@ -150,6 +174,7 @@ public class Player {
                 Star.play(SoundVolume);
                 break;
             case 'f':
+                Star.stop();
                 stars[1] = true;
                 s = map[31 - Math.round(position.y / 60f)].toCharArray();
                 s[Math.round(position.x / 60f)] = ' ';
@@ -157,7 +182,16 @@ public class Player {
                 Star.play(SoundVolume);
                 break;
             case 'u':
+                Star.stop();
                 stars[2] = true;
+                s = map[31 - Math.round(position.y / 60f)].toCharArray();
+                s[Math.round(position.x / 60f)] = ' ';
+                map[31 - Math.round(position.y / 60f)] = new String(s);
+                Star.play(SoundVolume);
+                break;
+            case '-':
+                Star.stop();
+                coins++;
                 s = map[31 - Math.round(position.y / 60f)].toCharArray();
                 s[Math.round(position.x / 60f)] = ' ';
                 map[31 - Math.round(position.y / 60f)] = new String(s);
@@ -186,5 +220,8 @@ public class Player {
     }
     public void setAcceleration(Vector2 acceleration){
         this.acceleration=acceleration;
+    }
+    public int getCoins(){
+        return coins;
     }
 }

@@ -22,28 +22,39 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
+import java.util.Random;
 
 import com.Turb1na_.KFUMaze.Main;
 import com.Turb1na_.KFUMaze.Sprites.Bat;
 import com.Turb1na_.KFUMaze.Sprites.Player;
 
-import jdk.internal.foreign.abi.fallback.FallbackLinker;
 
 public class PlayState extends State {
 
     private OrthographicCamera camera;
     private Stage stage;
-    Preferences prefs = Gdx.app.getPreferences("Game");
+    private Preferences prefs = Gdx.app.getPreferences("Game");
     private Sound SoundBtn = Gdx.audio.newSound(Gdx.files.internal("Audio/ButtonSound.wav"));
     private Music Win = Gdx.audio.newMusic(Gdx.files.internal("Audio/Win.mp3"));
     private Sound WinStar = Gdx.audio.newSound(Gdx.files.internal("Audio/WinStar.wav"));
     private Sound Die = Gdx.audio.newSound(Gdx.files.internal("Audio/Die.mp3"));
     private com.badlogic.gdx.audio.Music GameMusic = Gdx.audio.newMusic(Gdx.files.internal("Audio/GameMusic.mp3"));
     private Texture background;
-    /// wallTexturs---------------
+    /// Textures---------------
     private Texture[] walls = new Texture[45];
     private Texture[] throns = new Texture[8];
+    private Texture[] tables = {new Texture("Sprites/Decorations/table1.png"), new Texture("Sprites/Decorations/table2.png"), new Texture("Sprites/Decorations/table3.png"), new Texture("Sprites/Decorations/table4.png")};
+    private Texture[] chairs = {new Texture("Sprites/Decorations/chair1.png"), new Texture("Sprites/Decorations/chair2.png"), new Texture("Sprites/Decorations/chair3.png"), new Texture("Sprites/Decorations/chair4.png")};
+    private Texture boardsFront = (new Random().nextInt(100) <= 49 ? new Texture("Sprites/Decorations/boardFront1.png") : new Random().nextInt(50) < 49 ? new Texture("Sprites/Decorations/boardFront2.png") : new Texture("Sprites/Decorations/boardFrontSecret.png"));
+    private Texture boardsLeft = (new Random().nextInt(2) == 0 ? new Texture("Sprites/Decorations/boardLeft1.png") : new Texture("Sprites/Decorations/boardLeft2.png"));
+    private Texture boardsRight = (new Random().nextInt(2) == 0 ? new Texture("Sprites/Decorations/boardRight1.png") : new Texture("Sprites/Decorations/boardRight2.png"));
+    private Texture door = new Texture("Sprites/exit.png");
+    private Texture shelfFront = new Texture("Sprites/Decorations/bookShelf2.png");
+    private Texture shelfLeft = new Texture("Sprites/Decorations/bookShelf1.png");
+    private Texture shelfRight = new Texture("Sprites/Decorations/bookShelf3.png");
+    private Texture kitchenTable = new Texture("Sprites/Decorations/kitchenTable.png");
+    private Texture gym = new Texture("Sprites/Decorations/gym.png");
+    private Texture coin = new Texture("Sprites/coin.png");
 
     /// ------------------------
     private Texture exit;
@@ -72,6 +83,7 @@ public class PlayState extends State {
     private boolean batsDie = false;
     private boolean killBlockDie = false;
     private boolean[][] levelStars;
+    private int money = prefs.getInteger("Coins");
     private List<Bat> bats = new ArrayList<>();
     private String maps[] = {
         "##################\n" +
@@ -79,164 +91,164 @@ public class PlayState extends State {
             "######### ########\n" +
             "######### ########\n" +
             "######### ########\n" +
-            "######    ########\n" +
+            "######   -########\n" +
             "######  ##########\n" +
             "######  ##########\n" +
-            "######   #########\n" +
+            "######   #5a5a5a #\n" +
+            "######## #5a5a5a h\n" +
+            "######## #5a5a5a h\n" +
+            "######## e       h\n" +
+            "######## #5a5a5a #\n" +
             "######## #########\n" +
-            "######## #########\n" +
-            "######## #########\n" +
-            "######## #########\n" +
-            "######## #########\n" +
-            "######       #####\n" +
-            "######   ### #####\n" +
+            "######      -#####\n" +
             "######  u### #####\n" +
             "############ #####\n" +
-            "############ #####\n" +
-            "############ #####\n" +
+            "###### c7c7# #####\n" +
+            "######i    e #####\n" +
+            "###### c7c7# #####\n" +
             "############ #####\n" +
             "####   f#### #####\n" +
             "#### ## #### #####\n" +
             "#### ##      #####\n" +
             "#### #############\n" +
-            "#         ###    #\n" +
-            "#k   ####        #\n" +
-            "#    #########   #\n" +
-            "#    ######      #\n" +
-            "########### *    #\n" +
-            "###########      #\n" +
+            "#         ###  -##\n" +
+            "#k   ####       ##\n" +
+            "#    #########  ##\n" +
+            "#    ######     ##\n" +
+            "###########     ##\n" +
+            "###########    *e#\n" +
             "##################\n",
 
-        "##################\n" +
             "##################\n" +
             "##              ##\n" +
             "##        k#### ##\n" +
-            "##         #### ##\n" +
-            "########## #### ##\n" +
-            "########## #### ##\n" +
-            "########## #### ##\n" +
-            "########## #### ##\n" +
+            "##        -#6 e ##\n" +
+            "########## #b # ##\n" +
+            "##  ggg  # #6 # ##\n" +
+            "##ddd ddd# #b # ##\n" +
+            "##888 888# #  # ##\n" +
+            "#####e#### #### ##\n" +
             "#            #  ##\n" +
             "# ######## # #  ##\n" +
             "#   1f#### # #  ##\n" +
             "###   ##     #  ##\n" +
-            "###    # # ### ###\n" +
+            "###   -# # ### ###\n" +
             "###### # # ### ###\n" +
-            "###### # # ### ###\n" +
-            "###### # # ### ###\n" +
-            "###### #       ###\n" +
+            "#i c7# # # ### ###\n" +
+            "#i   e # # ### ###\n" +
+            "#i c7# #      -###\n" +
             "###### ### #######\n" +
-            "##             2##\n" +
+            "##       -     2##\n" +
             "## ### ### #    ##\n" +
             "## ### ### #    ##\n" +
             "## ### ### #   u##\n" +
-            "## ### ### # #####\n" +
-            "## ### ### # #####\n" +
+            "## ### ###-# #####\n" +
+            "## ### ### #-#####\n" +
             "## ###       #####\n" +
             "## ####### #######\n" +
             "## ####### #######\n" +
-            "## 1111111       #\n" +
-            "########## #   * #\n" +
-            "##########0##    #\n" +
+            "##-1111111      ##\n" +
+            "########## #   *e#\n" +
+            "##########0#    ##\n" +
             "##################",
 
-        "##################\n" +
             "##################\n" +
-            "#######0##########\n" +
-            "####### ##########\n" +
-            "####### ##########\n" +
-            "#w      #       w#\n" +
+            "# gg  #0# 5a5a5a h\n" +
+            "#dddd # #        h\n" +
+            "#8888 # # 5a5a5a h\n" +
+            "#####e# #e########\n" +
+            "#w1-    #       w#\n" +
             "#w         #    w#\n" +
-            "#w   #          w#\n" +
+            "#w   #-         w#\n" +
             "#w     ##       w#\n" +
             "#w     #f  2#   w#\n" +
-            "##u   3#        w#\n" +
-            "#w    ##     #  w#\n" +
+            "##u - 3#        w#\n" +
+            "#w    ##-    #  w#\n" +
             "#w     #        w#\n" +
             "#w              w#\n" +
             "#w        #     w#\n" +
-            "#www      1   # w#\n" +
+            "#www      1  -# w#\n" +
             "####w  #        w#\n" +
             "####w     k#    w#\n" +
             "####w           w#\n" +
             "####w      # #  w#\n" +
-            "####w #         w#\n" +
+            "####w #-        w#\n" +
             "########### ######\n" +
-            "########### ######\n" +
-            "########### ######\n" +
+            "#   ggg   e-######\n" +
+            "# 5d7 5d7 # ######\n" +
             "########### ######\n" +
             "##    ##        ##\n" +
             "## ## ## ## ### ##\n" +
-            "#  ## ## ## ### ##\n" +
+            "#- ## ## ## ### ##\n" +
             "#   # ## ## ### ##\n" +
-            "# * #    ##     ##\n" +
-            "#   ##############\n" +
+            "# * #   -##-    ##\n" +
+            "##e###############\n" +
             "##################",
 
         "##################\n" +
             "##################\n" +
             "###########o######\n" +
-            "########      0###\n" +
-            "######## ## ######\n" +
-            "########       ###\n" +
-            "########### #w ###\n" +
-            "#############w ###\n" +
-            "#############w ###\n" +
+            "# ggg ##     -0###\n" +
+            "#d ddd## ## ######\n" +
+            "#8 888## --    ###\n" +
+            "#d ddd##### #w ###\n" +
+            "#8 888#######w ###\n" +
+            "##e##########w ###\n" +
             "#              ###\n" +
-            "# ############ ###\n" +
-            "# ############ ###\n" +
-            "# ############u###\n" +
-            "#         ####3###\n" +
+            "# ############-###\n" +
+            "# ############-###\n" +
+            "#-############u###\n" +
+            "#      -  ####3###\n" +
             "######### ########\n" +
             "######### ########\n" +
             "#wwwwwww# #wwwwww#\n" +
             "#w   #          w#\n" +
-            "##f       #     w#\n" +
-            "#w  #           w#\n" +
-            "#w         #    w#\n" +
-            "#ww# #wwwww wwwww#\n" +
+            "##f-      #     w#\n" +
+            "#w  #     -     w#\n" +
+            "#w  -      #    w#\n" +
+            "#ww#-#wwwww wwwww#\n" +
             "#### #############\n" +
-            "#### #############\n" +
-            "#p     ###########\n" +
-            "# p    ###########\n" +
-            "#  p   ### #######\n" +
+            "#### #######5a5ai#\n" +
+            "#p     #####5a5ai#\n" +
+            "# p    #####     #\n" +
+            "#  p   ### ##e####\n" +
             "#### #####o#     #\n" +
-            "#    ##### #  *  #\n" +
-            "#k               #\n" +
-            "########## #######\n" +
+            "#    ##### #     #\n" +
+            "#k    --        *#\n" +
+            "########## #####e#\n" +
             "##################",
 
-        "##################\n" +
-            "######    ###o####\n" +
-            "######  *  ## ####\n" +
-            "######     ## ####\n" +
-            "########       k##\n" +
-            "######## #### # ##\n" +
-            "######## ###### ##\n" +
-            "# 3 #### ###### ##\n" +
+            "##################\n" +
+            "#ggg #    *e#o####\n" +
+            "#ddd e     ## ####\n" +
+            "#888 #     ## ####\n" +
+            "#ddd ###       k##\n" +
+            "#888 ### #### #-##\n" +
+            "######## ######-##\n" +
+            "# 3 #### ######-##\n" +
             "#2#4####        ##\n" +
-            "# 1      #########\n" +
-            "### ##############\n" +
-            "### ####    ######\n" +
-            "###f        ######\n" +
-            "######## #########\n" +
-            "#######    p######\n" +
-            "######## #########\n" +
-            "#######  #########\n" +
+            "# 1   -  #####e###\n" +
+            "### #########    #\n" +
+            "### ####   -# 5j7#\n" +
+            "###f  -     # 5j7#\n" +
+            "######## ####    #\n" +
+            "#######    p# 5j7#\n" +
+            "######## #### 5j7#\n" +
+            "####### -####    #\n" +
+            "####### ##### 5j7#\n" +
+            "####p    #### 5j7#\n" +
             "####### ##########\n" +
-            "####p    #########\n" +
-            "####### ##########\n" +
-            "#######         ##\n" +
+            "#######-        ##\n" +
             "############### ##\n" +
-            "#####u          ##\n" +
+            "#####u         -##\n" +
             "##### ############\n" +
-            "##### #   o   ####\n" +
-            "#####         ####\n" +
-            "#######p      ####\n" +
-            "#######       ####\n" +
-            "#######       ####\n" +
-            "#######       ####\n" +
-            "#############0####\n" +
+            "##### -    o    ##\n" +
+            "#######       - ##\n" +
+            "# c7c7#         ##\n" +
+            "#ic7c7# p       ##\n" +
+            "#i    e         ##\n" +
+            "#ic7c7#         ##\n" +
+            "# c7c7# q     - 0#\n" +
             "##################",
 
         "##################\n" +
@@ -244,131 +256,131 @@ public class PlayState extends State {
             "##################\n" +
             "##################\n" +
             "# 1111111111111###\n" +
-            "# ############ ###\n" +
-            "# ##########  u###\n" +
-            "# ##########  ####\n" +
-            "# ##########   ###\n" +
-            "# ############ ###\n" +
-            "# ############0###\n" +
+            "# #####e###### ###\n" +
+            "# #6666 6666##u###\n" +
+            "# #bbbb bbbb## ###\n" +
+            "#-#6666 6666##-###\n" +
+            "# #bbbb bbbb## ###\n" +
+            "# #         ##0###\n" +
             "# ################\n" +
-            "# #### 11111######\n" +
-            "# ####      ######\n" +
-            "# ####p     ######\n" +
-            "#       f#     ###\n" +
+            "#-#### 11111######\n" +
+            "# ####     -######\n" +
+            "# ####p-    ######\n" +
+            "#   -   f#-    ###\n" +
             "#######    p#  ###\n" +
             "#######     #  ###\n" +
-            "####### 3333#  ###\n" +
-            "#############   2#\n" +
-            "##########      2#\n" +
-            "##########       #\n" +
-            "##########p  k   #\n" +
-            "##########   #   #\n" +
-            "##########       #\n" +
-            "############# ####\n" +
-            "############# ####\n" +
-            "#############   ##\n" +
-            "###########     ##\n" +
-            "###########  *  ##\n" +
-            "###########     ##\n" +
+            "#######-3333#  ###\n" +
+            "#############-  2#\n" +
+            "#        #      2#\n" +
+            "# 5d75d7 e      -#\n" +
+            "# 5d75d7 #p  k   #\n" +
+            "#        #   #   #\n" +
+            "# 5d75d7 #   -   #\n" +
+            "# 5d75d7 #### ####\n" +
+            "#        #### ####\n" +
+            "# lmmmmn #### - ##\n" +
+            "#        #      ##\n" +
+            "# lmmmmn e     *e#\n" +
+            "#        #      ##\n" +
             "##################",
 
-        "##################\n" +
             "##################\n" +
-            "##     ###########\n" +
+            "##################\n" +
+            "##-    ###########\n" +
             "##    p###########\n" +
-            "##  ##u        0##\n" +
+            "## ###u    -   0##\n" +
             "#  ###############\n" +
             "# #####f##########\n" +
-            "# ### 3   ########\n" +
-            "# ###2#4  ########\n" +
-            "# ### 1 # ########\n" +
-            "# ##### # ########\n" +
-            "# ##### # ########\n" +
-            "#       # ########\n" +
-            "######### ########\n" +
-            "####o#### ########\n" +
-            "#         ########\n" +
+            "# ### 3   # ggggg#\n" +
+            "# ###2#4  # ddddd#\n" +
+            "# ### 1-# # 88888#\n" +
+            "# ##### # # ddddd#\n" +
+            "# ##### # # 88888#\n" +
+            "#-      # # ddddd#\n" +
+            "######### # 88888#\n" +
+            "####o#### e ddddd#\n" +
+            "#        -# 88888#\n" +
             "# ## #############\n" +
             "# ## ######## ####\n" +
-            "# ## #           #\n" +
-            "#     2###### ## #\n" +
-            "###########      #\n" +
-            "#           #o####\n" +
-            "# ################\n" +
-            "# ################\n" +
-            "# ########wwwwwww#\n" +
+            "# ## #      -    #\n" +
+            "#-    2###### ## #\n" +
+            "###########     -#\n" +
+            "#        -  #o####\n" +
+            "# ####e###########\n" +
+            "# ###  5a#########\n" +
+            "# ###lmmn#wwwwwww#\n" +
             "# #o######w  3  w#\n" +
-            "# # ##   #w 2#4 w#\n" +
-            "#      #     1  w#\n" +
+            "# # ##-  #w 2#4 w#\n" +
+            "#-     #-    1  w#\n" +
             "### #   k#w     w#\n" +
-            "### ######w     w#\n" +
             "### ######w  *  w#\n" +
+            "### #########e####\n" +
             "##################",
 
         "##################\n" +
             "###0##############\n" +
-            "#              ###\n" +
+            "#             -###\n" +
             "# #u##########2###\n" +
-            "# # 2#########4###\n" +
+            "# #-2#########2###\n" +
             "# ##2#########   #\n" +
-            "#    #######w f  #\n" +
-            "############w #  #\n" +
-            "#############    #\n" +
-            "#############    #\n" +
-            "############   ###\n" +
-            "############  ####\n" +
-            "############  ####\n" +
-            "############    ##\n" +
+            "#  - #######w f  #\n" +
+            "############w # -#\n" +
+            "## ggg ggg e     #\n" +
+            "## ddd ddd ##    #\n" +
+            "## 888 888 #   ###\n" +
+            "## ddd ddd #  ####\n" +
+            "## 888 888 e  ####\n" +
+            "############-   ##\n" +
             "##########  p   ##\n" +
             "###############  #\n" +
             "######### ###### #\n" +
-            "#www##### ###### #\n" +
-            "#       #    ### #\n" +
-            "# *  ##      ### #\n" +
-            "#    #     #  2# #\n" +
-            "######   ok#  2# #\n" +
-            "######33#####  # #\n" +
-            "######### 3 #  # #\n" +
-            "#########2#4#  # #\n" +
-            "######### 1    # #\n" +
-            "#########    o # #\n" +
-            "########### #### #\n" +
-            "########         #\n" +
-            "######## ##2######\n" +
+            "##www#### ###### #\n" +
+            "##     -# -  ### #\n" +
+            "#e*   #      ### #\n" +
+            "##   ##    #  2#-#\n" +
+            "#### #   ok#  2# #\n" +
+            "#### #33#####  # #\n" +
+            "####e#### 3 #  # #\n" +
+            "#      ##2#4#  # #\n" +
+            "#5j75j7## 1    # #\n" +
+            "#5j75j7##-   o-# #\n" +
+            "#      #### #### #\n" +
+            "#5j75j7#-  -     #\n" +
+            "#5j75j7# ##2######\n" +
             "########   2######\n" +
             "##################",
 
         "##################\n" +
             "##################\n" +
-            "###         ######\n" +
-            "###        p######\n" +
-            "###       p ######\n" +
-            "###      p  ######\n" +
-            "###u####### ######\n" +
-            "### ######  ######\n" +
-            "### ######f#######\n" +
-            "### ##wwww wwww###\n" +
-            "###0##w        ###\n" +
-            "######w  #     1w#\n" +
-            "######w     #   w#\n" +
-            "######w     1   ##\n" +
-            "######w    #     #\n" +
-            "#######wwww www# #\n" +
+            "###        - #####\n" +
+            "###        p #####\n" +
+            "###       p  #####\n" +
+            "###      p   #####\n" +
+            "###u######## #####\n" +
+            "#66-66#####- #####\n" +
+            "#     #####f######\n" +
+            "#66 66#wwww www###\n" +
+            "#     #w       ###\n" +
+            "#66 66#w  #-   1w#\n" +
+            "#     #w     #  w#\n" +
+            "#66 66#w     1 -##\n" +
+            "#     #w    #    #\n" +
+            "###0###wwwww ww#-#\n" +
             "################ #\n" +
-            "###       ###### #\n" +
-            "### ##o## ###### #\n" +
+            "###  -    #lmmn# #\n" +
+            "### ##o## #    # #\n" +
+            "### ## ##-#5d7 # #\n" +
+            "###   p   #    e #\n" +
+            "###-## ## #lmmn# #\n" +
             "### ## ## ###### #\n" +
-            "###   p   ###### #\n" +
-            "### ## ## ###### #\n" +
-            "### ## ## ###### #\n" +
-            "###             k#\n" +
-            "######### ########\n" +
-            "#4        ########\n" +
-            "# ################\n" +
-            "# ##wwwwwww#######\n" +
-            "# ##w     w#######\n" +
-            "# ##w     w#######\n" +
-            "#       * w#######\n" +
+            "###        -    k#\n" +
+            "######### ##e#####\n" +
+            "#4 -      ##     #\n" +
+            "# ##########5a5a h\n" +
+            "# ##wwwwww##5a5a h\n" +
+            "# ##w    w##5a5a h\n" +
+            "# ##w    w##5a5a h\n" +
+            "#  -     *e#5a5a #\n" +
             "##################\n"};
 
     private String[] levelMap;
@@ -381,10 +393,10 @@ public class PlayState extends State {
 
     private int GetWallMask(int x, int y, String[] map) {
         int mask = 0;
-        if (!(y - 1 >= 0) || map[y - 1].charAt(x) == '#') mask += 1;
-        if (!(x + 1 < 18) || map[y].charAt(x + 1) == '#') mask += 2;
-        if (!(y + 1 < 32) || map[y + 1].charAt(x) == '#') mask += 4;
-        if (!(x - 1 >= 0) || map[y].charAt(x - 1) == '#') mask += 8;
+        if (!(y - 1 >= 0) || map[y - 1].charAt(x) == '#' || map[y - 1].charAt(x) == 'h') mask += 1;
+        if (!(x + 1 < 18) || map[y].charAt(x + 1) == '#' || map[y].charAt(x + 1) == 'h') mask += 2;
+        if (!(y + 1 < 32) || map[y + 1].charAt(x) == '#' || map[y + 1].charAt(x) == 'h') mask += 4;
+        if (!(x - 1 >= 0) || map[y].charAt(x - 1) == '#' || map[y].charAt(x - 1) == 'h') mask += 8;
 
         if (mask == 3 && map[y - 1].charAt(x + 1) == '#') return 16;
         if (mask == 6 && map[y + 1].charAt(x + 1) == '#') return 17;
@@ -396,7 +408,7 @@ public class PlayState extends State {
                 return 20;
             if (!((y - 1 < 0 || x + 1 >= 18) || (map[y - 1].charAt(x + 1) == '#')) && ((y + 1 >= 32 || x + 1 >= 18) || map[y + 1].charAt(x + 1) == '#'))
                 return 21;
-            if (((y - 1 < 0 || x + 1 >= 18) || (map[y - 1].charAt(x + 1) == '#')) && ((y + 1 >= 32 || x + 1 >= 18) || map[y + 1].charAt(x + 1) == '#'))
+            if (((y - 1 < 0 || x + 1 >= 18) || (map[y - 1].charAt(x + 1) == '#')|| (map[y - 1].charAt(x + 1) == 'h')) && ((y + 1 >= 32 || x + 1 >= 18) || map[y + 1].charAt(x + 1) == '#'|| map[y + 1].charAt(x + 1) == 'h'))
                 return 22;
 
         }
@@ -436,7 +448,7 @@ public class PlayState extends State {
                 return 34;
             if (!((y - 1 < 0 || x + 1 >= 18) || map[y - 1].charAt(x + 1) == '#') && !((y + 1 >= 32 || x + 1 >= 18) || map[y + 1].charAt(x + 1) == '#') && !((y + 1 >= 32 || x - 1 < 0) || map[y + 1].charAt(x - 1) == '#') && ((y - 1 < 0 || x - 1 < 0) || map[y - 1].charAt(x - 1) == '#'))
                 return 35;
-            if (((y - 1 < 0 || x + 1 >= 18) || map[y - 1].charAt(x + 1) == '#') && ((y + 1 >= 32 || x + 1 >= 18) || map[y + 1].charAt(x + 1) == '#') && !((y + 1 >= 32 || x - 1 < 0) || map[y + 1].charAt(x - 1) == '#') && !((y - 1 < 0 || x - 1 < 0) || map[y - 1].charAt(x - 1) == '#'))
+            if (((y - 1 < 0 || x + 1 >= 18) || map[y - 1].charAt(x + 1) == '#'||map[y - 1].charAt(x + 1) == 'h') && ((y + 1 >= 32 || x + 1 >= 18) || map[y + 1].charAt(x + 1) == '#'|| map[y + 1].charAt(x + 1) == 'h') && !((y + 1 >= 32 || x - 1 < 0) || map[y + 1].charAt(x - 1) == '#'|| map[y + 1].charAt(x - 1) == 'h') && !((y - 1 < 0 || x - 1 < 0) || map[y - 1].charAt(x - 1) == '#' || map[y - 1].charAt(x - 1) == 'h'))
                 return 36;
             if (!((y - 1 < 0 || x + 1 >= 18) || map[y - 1].charAt(x + 1) == '#') && ((y + 1 >= 32 || x + 1 >= 18) || map[y + 1].charAt(x + 1) == '#') && ((y + 1 >= 32 || x - 1 < 0) || map[y + 1].charAt(x - 1) == '#') && !((y - 1 < 0 || x - 1 < 0) || map[y - 1].charAt(x - 1) == '#'))
                 return 37;
@@ -444,15 +456,15 @@ public class PlayState extends State {
                 return 38;
             if (((y - 1 < 0 || x + 1 >= 18) || map[y - 1].charAt(x + 1) == '#') && !((y + 1 >= 32 || x + 1 >= 18) || map[y + 1].charAt(x + 1) == '#') && !((y + 1 >= 32 || x - 1 < 0) || map[y + 1].charAt(x - 1) == '#') && ((y - 1 < 0 || x - 1 < 0) || map[y - 1].charAt(x - 1) == '#'))
                 return 39;
-            if (((y - 1 < 0 || x + 1 >= 18) || map[y - 1].charAt(x + 1) == '#') && ((y + 1 >= 32 || x + 1 >= 18) || map[y + 1].charAt(x + 1) == '#') && ((y + 1 >= 32 || x - 1 < 0) || map[y + 1].charAt(x - 1) == '#') && !((y - 1 < 0 || x - 1 < 0) || map[y - 1].charAt(x - 1) == '#'))
+            if (((y - 1 < 0 || x + 1 >= 18) || map[y - 1].charAt(x + 1) == '#'|| map[y - 1].charAt(x + 1) == 'h') && ((y + 1 >= 32 || x + 1 >= 18) || map[y + 1].charAt(x + 1) == '#'|| map[y + 1].charAt(x + 1) == 'h') && ((y + 1 >= 32 || x - 1 < 0) || map[y + 1].charAt(x - 1) == '#'|| map[y + 1].charAt(x - 1) == 'h') && !((y - 1 < 0 || x - 1 < 0) || map[y - 1].charAt(x - 1) == '#'|| map[y - 1].charAt(x - 1) == 'h'))
                 return 40;
             if (!((y - 1 < 0 || x + 1 >= 18) || map[y - 1].charAt(x + 1) == '#') && ((y + 1 >= 32 || x + 1 >= 18) || map[y + 1].charAt(x + 1) == '#') && ((y + 1 >= 32 || x - 1 < 0) || map[y + 1].charAt(x - 1) == '#') && ((y - 1 < 0 || x - 1 < 0) || map[y - 1].charAt(x - 1) == '#'))
                 return 41;
             if (((y - 1 < 0 || x + 1 >= 18) || map[y - 1].charAt(x + 1) == '#') && !((y + 1 >= 32 || x + 1 >= 18) || map[y + 1].charAt(x + 1) == '#') && ((y + 1 >= 32 || x - 1 < 0) || map[y + 1].charAt(x - 1) == '#') && ((y - 1 < 0 || x - 1 < 0) || map[y - 1].charAt(x - 1) == '#'))
                 return 42;
-            if (((y - 1 < 0 || x + 1 >= 18) || map[y - 1].charAt(x + 1) == '#') && ((y + 1 >= 32 || x + 1 >= 18) || map[y + 1].charAt(x + 1) == '#') && !((y + 1 >= 32 || x - 1 < 0) || map[y + 1].charAt(x - 1) == '#') && ((y - 1 < 0 || x - 1 < 0) || map[y - 1].charAt(x - 1) == '#'))
+            if (((y - 1 < 0 || x + 1 >= 18) || map[y - 1].charAt(x + 1) == '#'||map[y - 1].charAt(x + 1) == 'h') && ((y + 1 >= 32 || x + 1 >= 18) || map[y + 1].charAt(x + 1) == '#'|| map[y + 1].charAt(x + 1) == 'h') && !((y + 1 >= 32 || x - 1 < 0) || map[y + 1].charAt(x - 1) == '#'|| map[y + 1].charAt(x - 1) == 'h') && ((y - 1 < 0 || x - 1 < 0) || map[y - 1].charAt(x - 1) == '#'|| map[y - 1].charAt(x - 1) == 'h'))
                 return 43;
-            if (((y - 1 < 0 || x + 1 >= 18) || map[y - 1].charAt(x + 1) == '#') && ((y + 1 >= 32 || x + 1 >= 18) || map[y + 1].charAt(x + 1) == '#') && ((y + 1 >= 32 || x - 1 < 0) || map[y + 1].charAt(x - 1) == '#') && ((y - 1 < 0 || x - 1 < 0) || map[y - 1].charAt(x - 1) == '#'))
+            if (((y - 1 < 0 || x + 1 >= 18) || map[y - 1].charAt(x + 1) == '#'||map[y - 1].charAt(x + 1) == 'h') && ((y + 1 >= 32 || x + 1 >= 18) || map[y + 1].charAt(x + 1) == '#'||map[y + 1].charAt(x + 1) == 'h') && ((y + 1 >= 32 || x - 1 < 0) || map[y + 1].charAt(x - 1) == '#'||map[y + 1].charAt(x - 1) == 'h') && ((y - 1 < 0 || x - 1 < 0) || map[y - 1].charAt(x - 1) == '#'|| map[y - 1].charAt(x - 1) == 'h'))
                 return 44;
         }
 
@@ -630,6 +642,7 @@ public class PlayState extends State {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 SoundBtn.play(SoundVolume);
+                GameMusic.stop();
                 gsm.set(new MenuState(gsm, MusicVolume, SoundVolume, levelStars));
             }
         });
@@ -638,6 +651,10 @@ public class PlayState extends State {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 SoundBtn.play(SoundVolume);
+                GameMusic.stop();
+                money += player.getCoins();
+                prefs.putInteger("Coins", money);
+                prefs.flush();
                 gsm.set(new InfoState(gsm, MusicVolume, SoundVolume, levelStars, level));
             }
         });
@@ -660,11 +677,15 @@ public class PlayState extends State {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 SoundBtn.play(SoundVolume);
+                GameMusic.stop();
+                if (Exit) {
+                    money += player.getCoins() * 100000;
+                    prefs.putInteger("Coins", money);
+                    prefs.flush();
+                }
                 gsm.set(new PlayState(gsm, MusicVolume, SoundVolume, level, levelStars));
             }
         });
-        ///-----------------------
-
         stage.addActor(stopButton);
         stage.addActor(menuBackground);
         stage.addActor(killBackground);
@@ -682,13 +703,13 @@ public class PlayState extends State {
                 KillMap[i][j] = null;
                 switch (levelMap[i].charAt(j)) {
                     case '*':
-                        player = new Player(new Vector2(60 * j, 60 * (sizeMap.y - 1 - i)), new Vector2(60, 60), levelMap, new Vector2(5 * Main.SIZECHANGE.x, 5 * Main.SIZECHANGE.y), Gdx.graphics.getDeltaTime(), SoundVolume);
+                        player = new Player(new Vector2(60 * j, 60 * (sizeMap.y - 1 - i)), new Vector2(60, 60), levelMap, new Vector2(5 * Main.SIZECHANGE.x*50, 5 * Main.SIZECHANGE.y*50), Gdx.graphics.getDeltaTime(), SoundVolume);
                         break;
                     case 'o':
-                        bats.add(new Bat(new Vector2(60 * j, 60 * (sizeMap.y - 1 - i)), new Vector2(60, 60), levelMap, new Vector2(4 * Main.SIZECHANGE.x, 4 * Main.SIZECHANGE.y), true));
+                        bats.add(new Bat(new Vector2(60 * j, 60 * (sizeMap.y - 1 - i)), new Vector2(60, 60), levelMap, new Vector2(4 * Main.SIZECHANGE.x*50, 4 * Main.SIZECHANGE.y*50), true));
                         break;
                     case 'p':
-                        bats.add(new Bat(new Vector2(60 * j, 60 * (sizeMap.y - 1 - i)), new Vector2(60, 60), levelMap, new Vector2(4 * Main.SIZECHANGE.x, 4 * Main.SIZECHANGE.y), false));
+                        bats.add(new Bat(new Vector2(60 * j, 60 * (sizeMap.y - 1 - i)), new Vector2(60, 60), levelMap, new Vector2(4 * Main.SIZECHANGE.x*50, 4 * Main.SIZECHANGE.y*50), false));
                         break;
                     case '1':
                     case '2':
@@ -717,7 +738,7 @@ public class PlayState extends State {
             KillMap[31 - Math.round(player.getTruthPosition().y / 60f)][Math.round(player.getTruthPosition().x / 60f)].run();
         }
         if (KillMap[31 - Math.round(player.getTruthPosition().y / 60f)][Math.round(player.getTruthPosition().x / 60f)] != null && KillMap[31 - Math.round(player.getTruthPosition().y / 60f)][Math.round(player.getTruthPosition().x / 60f)].isCanKill()) {
-            killBlockDie=true;
+            killBlockDie = true;
         }
 
         for (int i = 0; i < bats.size() && !batsDie; i++) {
@@ -734,9 +755,10 @@ public class PlayState extends State {
 
         if (Time) {
             for (int i = 0; i < bats.size(); i++) {
-                bats.get(i).move();
+                bats.get(i).move(dt);
             }
-            player.move();
+            player.move(dt);
+
             if (player.exit()) Exit = true;
             if (player.exit()) player.setAcceleration(new Vector2(0, 0));
             if (Exit && !winBackground.isVisible()) {
@@ -792,7 +814,7 @@ public class PlayState extends State {
                 if (player.getStars()[2])
                     UStar.setVisible(true);
             }
-            if ((player.isDie() || batsDie||killBlockDie) && !killBackground.isVisible()) {
+            if ((player.isDie() || batsDie || killBlockDie) && !killBackground.isVisible()) {
                 Die.play(SoundVolume);
                 killBackground.setVisible(true);
                 GameMusic.dispose();
@@ -907,9 +929,6 @@ public class PlayState extends State {
 
         sb.draw(background, 0, 0, background.getWidth() * Main.SIZECHANGE.x, background.getHeight() * Main.SIZECHANGE.y);
 
-        for (int i = 0; i < bats.size(); i++) {
-            bats.get(i).draw(sb);
-        }
         for (int i = 0; i < sizeMap.y; i++) {
             for (int j = 0; j < sizeMap.x; j++) {
                 if (levelMap[i].charAt(j) == '#') {
@@ -925,7 +944,7 @@ public class PlayState extends State {
                 } else {
                     switch (levelMap[i].charAt(j)) {
                         case '0':
-                            sb.draw(exit, exit.getWidth() * Main.SIZECHANGE.x * j, exit.getHeight() * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), exit.getWidth() * Main.SIZECHANGE.x, exit.getHeight() * Main.SIZECHANGE.y);
+                            sb.draw(exit, 60 * Main.SIZECHANGE.x * j, 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), exit.getWidth() * Main.SIZECHANGE.x, exit.getHeight() * Main.SIZECHANGE.y);
                             break;
                         case 'k':
                             sb.draw(Ktexture, Ktexture.getWidth() * Main.SIZECHANGE.x * j, Ktexture.getHeight() * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), Ktexture.getWidth() * Main.SIZECHANGE.x, Ktexture.getHeight() * Main.SIZECHANGE.y);
@@ -936,9 +955,54 @@ public class PlayState extends State {
                         case 'u':
                             sb.draw(Utexture, Utexture.getWidth() * Main.SIZECHANGE.x * j, Utexture.getHeight() * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), Utexture.getWidth() * Main.SIZECHANGE.x, Utexture.getHeight() * Main.SIZECHANGE.y);
                             break;
+                        case '5':
+                        case '6':
+                        case '7':
+                        case '8':
+                            sb.draw(chairs[levelMap[i].charAt(j) - '5'], 60 * Main.SIZECHANGE.x * j, 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
+                            break;
+                        case 'a':
+                        case 'b':
+                        case 'c':
+                        case 'd':
+                            sb.draw(tables[levelMap[i].charAt(j) - 'a'], 60 * Main.SIZECHANGE.x * j, 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
+                            break;
+                        case 'e':
+                            sb.draw(door, 60 * Main.SIZECHANGE.x * j, 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
+                            break;
+                        case 'q':
+                            sb.draw(gym, 60 * Main.SIZECHANGE.x * j, 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), 60*7 * Main.SIZECHANGE.x, 60*7 * Main.SIZECHANGE.y);
+                            break;
+                        case 'l':
+                            sb.draw(shelfLeft, 60 * Main.SIZECHANGE.x * j, 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
+                            break;
+                        case 'm':
+                            sb.draw(shelfFront, 60 * Main.SIZECHANGE.x * j, 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
+                            break;
+                        case 'n':
+                            sb.draw(shelfRight, 60 * Main.SIZECHANGE.x * j, 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
+                            break;
+                        case 'j':
+                            sb.draw(kitchenTable, 60 * Main.SIZECHANGE.x * j, 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
+                            break;
+                        case 'g':
+                            sb.draw(boardsFront, 60 * Main.SIZECHANGE.x * j, 60 * Main.SIZECHANGE.y * (sizeMap.y - i), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
+                            break;
+                        case 'h':
+                            sb.draw(boardsLeft, 60 * Main.SIZECHANGE.x * (j), 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
+                            break;
+                        case 'i':
+                            sb.draw(boardsRight, 60 * Main.SIZECHANGE.x * (j - 1), 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
+                            break;
+                        case '-':
+                            sb.draw(coin, 60 * Main.SIZECHANGE.x * (j), 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
+                            break;
                     }
                 }
             }
+        }
+        for (int i = 0; i < bats.size(); i++) {
+            bats.get(i).draw(sb);
         }
         for (int i = 0; i < KillBlocks.size(); i++) {
             KillBlocks.get(i).draw(sb);
@@ -947,7 +1011,6 @@ public class PlayState extends State {
         if (!player.isDie()) {
             player.draw(sb);
         }
-
         sb.end();
 
         stage.act(Gdx.graphics.getDeltaTime());
@@ -968,11 +1031,22 @@ public class PlayState extends State {
         Ktexture.dispose();
         Ftexture.dispose();
         Utexture.dispose();
+        boardsFront.dispose();
+        boardsLeft.dispose();
+        boardsRight.dispose();
+        door.dispose();
+        coin.dispose();
         for (int i = 0; i < walls.length; i++) {
             walls[i].dispose();
         }
         for (int i = 0; i < throns.length; i++) {
             throns[i].dispose();
+        }
+        for (int i = 0; i < chairs.length; i++) {
+            chairs[i].dispose();
+        }
+        for (int i = 0; i < tables.length; i++) {
+            tables[i].dispose();
         }
     }
 }

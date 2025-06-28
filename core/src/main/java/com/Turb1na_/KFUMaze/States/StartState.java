@@ -12,7 +12,7 @@ import com.Turb1na_.KFUMaze.Sprites.Button;
 public class StartState extends State {
 
     private Texture background;
-    Preferences prefs = Gdx.app.getPreferences("Game");
+    private Preferences prefs = Gdx.app.getPreferences("Game");
     private Button play;
     private Music SoundBtn = Gdx.audio.newMusic(Gdx.files.internal("Audio/ButtonSound.wav"));
     private boolean[][] Save = {
@@ -51,6 +51,10 @@ public class StartState extends State {
                 }
             }
         }
+        if(!prefs.contains("Skin")){
+            prefs.putInteger("Skin",0);
+            prefs.flush();
+        }
         if (!prefs.contains("Music")) {
             prefs.putFloat("Music", 1);
             prefs.flush();
@@ -61,6 +65,11 @@ public class StartState extends State {
             prefs.flush();
         }
         this.SoundVolume= prefs.getFloat("Sound");
+
+        if(!prefs.contains("Coins")){
+            prefs.putInteger("Coins",0);
+            prefs.flush();
+        }
 
         play = new Button(1080 / 2 - 205, 1920 / 2 - 65, 410, 130, new Texture("Buttons/playbtn.png"));
 

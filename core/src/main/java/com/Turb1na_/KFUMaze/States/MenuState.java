@@ -35,12 +35,13 @@ import com.Turb1na_.KFUMaze.Main;
 public class MenuState extends State {
     private Stage stage;
     private BitmapFont font;
+    private BitmapFont font2;
     private ScrollPane scrollPane;
     private Table container;
     private ImageButton enterBtn;
     private ImageButton homeBtn;
+    private ImageButton shopBtn;
     private ImageButton cancelBtn;
-
     private TextureRegion background;
     private Texture loadingMenu;
     private Image loadingBackground;
@@ -48,6 +49,7 @@ public class MenuState extends State {
     private Image KStar;
     private Image FStar;
     private Image UStar;
+    private Image Coins;
     private Music MenuMusic = Gdx.audio.newMusic(Gdx.files.internal("Audio/MenuMusic.mp3"));
     private Music Blocked = Gdx.audio.newMusic(Gdx.files.internal("Audio/blocked.mp3"));
     private Music SoundBtn = Gdx.audio.newMusic(Gdx.files.internal("Audio/ButtonSound.wav"));
@@ -57,7 +59,7 @@ public class MenuState extends State {
     private Slider.SliderStyle style;
     private Slider MusicSlider;
     private Slider SoundSlider;
-
+    private int money= prefs.getInteger("Coins");
     private int levelTo = 0;
     private float tempSound;
     private float tempMusic;
@@ -128,19 +130,25 @@ public class MenuState extends State {
 
     public MenuState(GameStateManager gsm,float MusicVolume,float SoundVolume, boolean[][] stars) {
         super(gsm, MusicVolume, SoundVolume);
-        tempSound=SoundVolume;
-        tempMusic=MusicVolume;
+        SoundVolume=prefs.getFloat("Sound");
+        MusicVolume=prefs.getFloat("Music");
+        tempSound=prefs.getFloat("Sound");
+        tempMusic=prefs.getFloat("Music");
         MenuMusic.setVolume(MusicVolume);
         Blocked.setVolume(SoundVolume);
         SoundBtn.setVolume(SoundVolume);
 
         /// -----Font-----------
-
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/font.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = (int) (5*15*Main.SIZECHANGE.y);
         parameter.color=new Color(47/255f,54/255f,153/255f,1);
         font = generator.generateFont(parameter);
+        parameter.color=Color.BLACK;
+        parameter.size = (int) (4*15*Main.SIZECHANGE.y);
+        parameter.borderWidth=(int)8*Main.SIZECHANGE.y;
+        parameter.borderColor=new Color(180/255f,180/255f,180/255f,1);
+        font2 = generator.generateFont(parameter);
         generator.dispose();
         /// ------------------
 
@@ -166,12 +174,6 @@ public class MenuState extends State {
 
         MenuMusic.setLooping(true);
         MenuMusic.play();
-        for (int i = 0; i < levelStars.length; i++) {
-            for (int k = 0; k < 3; k++) {
-                System.out.print(levelStars[i][k] + " ");
-            }
-            System.out.println();
-        }
         camera = new OrthographicCamera(Main.WIDTH, Main.HEIGHT);
         camera.setToOrtho(false);
         stage = new Stage(new ScreenViewport());
@@ -180,7 +182,7 @@ public class MenuState extends State {
 
         container.defaults().pad(60, 90 * Main.SIZECHANGE.x, 60, 90 * Main.SIZECHANGE.x);
 
-        container.defaults().size(240 * Main.SIZECHANGE.x, 240 );
+        container.defaults().size(240 *Main.SIZECHANGE.x, 240 );
 
 
         for (int i = 0; i < countLevel / 4 + 1; i++) {
@@ -205,7 +207,6 @@ public class MenuState extends State {
                 container.add(createImageButton(i * 4, new Texture("levels/lock.png")));
             }
             container.row();
-
             try {
                 if (levelStars[i * 4 + 1][0] || levelStars[i * 4 + 1][1] || levelStars[i * 4 + 1][2])
                     container.add(createImageButton(i * 4 + 2, new Texture("levels/" + (i * 4 + 3) + ".png")));
@@ -243,6 +244,8 @@ public class MenuState extends State {
         FStar = new Image(new Texture("Sprites/KFU/F.png"));
         UStar = new Image(new Texture("Sprites/KFU/U.png"));
 
+        Coins=new Image(new Texture("CoinValue.png"));
+
         parametrsBackground.setSize(960 * Main.SIZECHANGE.x, 540 * Main.SIZECHANGE.y);
         parametrsBackground.setPosition(Main.WIDTH / 2 - parametrsBackground.getWidth() / 2, Main.HEIGHT / 2 - parametrsBackground.getHeight() / 2);
 
@@ -252,13 +255,18 @@ public class MenuState extends State {
         enterBtn = createImageButton(new Texture("Buttons/enterBtn.png"), 16 * 10, 67 * 10);
         cancelBtn = createImageButton(new Texture("Buttons/cancelBtn.png"), 60, 60);
         homeBtn = createImageButton(new Texture("Buttons/paramBtn.png"), 150, 150);
+        shopBtn = createImageButton(new Texture("Buttons/shopBtn.png"), 150, 150);
 
         KStar.setSize(24 * 10 * Main.SIZECHANGE.x, 24 * 10 * Main.SIZECHANGE.y);
         FStar.setSize(24 * 10 * Main.SIZECHANGE.x, 24 * 10 * Main.SIZECHANGE.y);
         UStar.setSize(24 * 10 * Main.SIZECHANGE.x, 24 * 10 * Main.SIZECHANGE.y);
 
+        Coins.setSize(120*Main.SIZECHANGE.x,120*Main.SIZECHANGE.y);
+        Coins.setPosition( (30), Main.HEIGHT - (homeBtn.getHeight() +30*Main.SIZECHANGE.y));
+
         enterBtn.setPosition(Main.WIDTH / 2 - loadingMenu.getWidth() / 3 * Main.SIZECHANGE.x + 10 * 4f * Main.SIZECHANGE.x, Main.HEIGHT / 2 - loadingMenu.getHeight() / 3 * Main.SIZECHANGE.y + 8 * 10 * Main.SIZECHANGE.y);
         homeBtn.setPosition(Main.WIDTH - (homeBtn.getWidth() + 30), Main.HEIGHT - (homeBtn.getHeight() + 30));
+        shopBtn.setPosition(Main.WIDTH - (shopBtn.getWidth() + 30), Main.HEIGHT - (shopBtn.getHeight() + 60+homeBtn.getHeight()));
 
         KStar.setPosition(Main.WIDTH / 2 - loadingMenu.getWidth() / 3 * Main.SIZECHANGE.x + 10 * 3 * Main.SIZECHANGE.x, Main.HEIGHT / 2 - loadingMenu.getHeight() / 3 * Main.SIZECHANGE.y + 34 * 10 * Main.SIZECHANGE.y);
         FStar.setPosition(Main.WIDTH / 2 - loadingMenu.getWidth() / 3 * Main.SIZECHANGE.x + 10 * 25 * Main.SIZECHANGE.x, Main.HEIGHT / 2 - loadingMenu.getHeight() / 3 * Main.SIZECHANGE.y + 34 * 10 * Main.SIZECHANGE.y);
@@ -277,10 +285,11 @@ public class MenuState extends State {
         stage.addActor(KStar);
         stage.addActor(FStar);
         stage.addActor(UStar);
+        stage.addActor(Coins);
         stage.addActor(cancelBtn);
         stage.addActor(homeBtn);
+        stage.addActor(shopBtn);
         stage.addActor(enterBtn);
-
 
         stage.addActor(MusicSlider);
         stage.addActor(SoundSlider);
@@ -303,6 +312,17 @@ public class MenuState extends State {
                     cancelBtn.setPosition(Main.WIDTH / 2 + parametrsBackground.getWidth() / 2 - 15 * 5f * Main.SIZECHANGE.x, Main.HEIGHT / 2 + parametrsBackground.getHeight() / 2 - 5 * 15 * Main.SIZECHANGE.y);
                     cancelBtn.setVisible(true);
                     SoundBtn.play();
+                }
+            }
+        });
+
+        shopBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if(!loadingBackground.isVisible()&&!parametrsBackground.isVisible()) {
+                    SoundBtn.play();
+                    gsm.set(new ShopState(gsm, tempMusic, tempSound,stars));
+                    MenuMusic.stop();
                 }
             }
         });
@@ -389,6 +409,7 @@ public class MenuState extends State {
             font.draw(sb, String.valueOf((int) (100 * SoundVolume)), Main.WIDTH / 2 - parametrsBackground.getWidth() / 2 + 42 * 15 * Main.SIZECHANGE.x, Main.HEIGHT / 2 - parametrsBackground.getHeight() / 2 + 17 * 15 * Main.SIZECHANGE.y);
             font.draw(sb, String.valueOf((int) (100 * MusicVolume)), Main.WIDTH / 2 - parametrsBackground.getWidth() / 2 + 42 * 15 * Main.SIZECHANGE.x, Main.HEIGHT / 2 - parametrsBackground.getHeight() / 2 + 32 * 15 * Main.SIZECHANGE.y);
         }
+        font2.draw(sb, String.valueOf(money), 36*Main.SIZECHANGE.x+Coins.getWidth(), Main.HEIGHT - homeBtn.getHeight() +60*Main.SIZECHANGE.y);
         sb.end();
 
     }
