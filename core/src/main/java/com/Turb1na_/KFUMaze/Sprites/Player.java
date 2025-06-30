@@ -80,6 +80,7 @@ public class Player {
                     switch (map[(int) posInMap.y].charAt(i)){
                         case '#':
                         case 'e':
+                        case 'y':
                             posInMap.x = i + 1;
                             target.x = (int) ((i + 1) * size.x);
                             break firstCicle;
@@ -91,6 +92,7 @@ public class Player {
                     switch (map[(int) posInMap.y].charAt(i)){
                         case'#':
                         case 'e':
+                        case 'y':
                             posInMap.x = i - 1;
                             target.x = (int) ((i - 1) * size.x);
                             break secondCicle;
@@ -104,6 +106,7 @@ public class Player {
                     switch (map[i].charAt((int) posInMap.x)){
                         case '#':
                         case 'e':
+                        case 'y':
                             posInMap.y = i + 1;
                             target.y = Main.HEIGHT / Main.SIZECHANGE.y - (int) ((i + 2) * size.y);
                             break thirdCicle;
@@ -116,6 +119,7 @@ public class Player {
                     switch (map[i].charAt((int) posInMap.x)){
                         case'#':
                         case 'e':
+                        case 'y':
                             posInMap.y = i - 1;
                             target.y = Main.HEIGHT / Main.SIZECHANGE.y - (int) ((i) * size.y);
                             break fourthCicle;
@@ -126,7 +130,6 @@ public class Player {
     }
 
     public void move(float dt) {
-        System.out.println(speed.x*dt+" "+speed.y*dt);
         if (position.x <= target.x && target.x >= 0) {
             if(speed.x<=50)
                 speed.x+=acceleration.x*dt;

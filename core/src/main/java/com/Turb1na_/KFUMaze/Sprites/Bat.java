@@ -35,6 +35,7 @@ public class Bat {
                     case '#':
                     case 'e':
                     case 'h':
+                    case 'y':
                         posInMap.y = i + 1;
                         target.y = Main.HEIGHT / Main.SIZECHANGE.y - (int) ((i + 2) * size.y);
                         go.y = 0;
@@ -48,6 +49,7 @@ public class Bat {
                 switch (map[i].charAt((int) posInMap.x)){
                     case '#':
                     case 'e':
+                    case 'y':
                     case 'h':
                         posInMap.y = i - 1;
                         target.y = Main.HEIGHT / Main.SIZECHANGE.y - (int) ((i) * size.y);
@@ -63,6 +65,7 @@ public class Bat {
                     case '#':
                     case 'e':
                     case 'h':
+                    case 'y':
                         posInMap.x = i + 1;
                         target.x = (int) ((i + 1) * size.x);
                         go.x = 1;
@@ -77,6 +80,7 @@ public class Bat {
                     case '#':
                     case 'e':
                     case 'h':
+                    case 'y':
                         posInMap.x = i - 1;
                         target.x = (int) ((i - 1) * size.x);
                         go.x = 0;

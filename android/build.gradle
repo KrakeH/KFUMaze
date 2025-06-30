@@ -33,7 +33,7 @@ android {
     applicationId 'com.Turb1na_.KFUMaze'
     minSdkVersion 21
     targetSdkVersion 35
-    versionCode 6
+    versionCode 7
     versionName "0.0.9"
     multiDexEnabled true
   }

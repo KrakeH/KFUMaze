@@ -48,13 +48,18 @@ public class PlayState extends State {
     private Texture boardsFront = (new Random().nextInt(100) <= 49 ? new Texture("Sprites/Decorations/boardFront1.png") : new Random().nextInt(50) < 49 ? new Texture("Sprites/Decorations/boardFront2.png") : new Texture("Sprites/Decorations/boardFrontSecret.png"));
     private Texture boardsLeft = (new Random().nextInt(2) == 0 ? new Texture("Sprites/Decorations/boardLeft1.png") : new Texture("Sprites/Decorations/boardLeft2.png"));
     private Texture boardsRight = (new Random().nextInt(2) == 0 ? new Texture("Sprites/Decorations/boardRight1.png") : new Texture("Sprites/Decorations/boardRight2.png"));
-    private Texture door = new Texture("Sprites/exit.png");
+    private Texture door = new Texture("Sprites/Decorations/door.png");
+    private Texture door1 = new Texture("Sprites/exit.png");
     private Texture shelfFront = new Texture("Sprites/Decorations/bookShelf2.png");
     private Texture shelfLeft = new Texture("Sprites/Decorations/bookShelf1.png");
     private Texture shelfRight = new Texture("Sprites/Decorations/bookShelf3.png");
     private Texture kitchenTable = new Texture("Sprites/Decorations/kitchenTable.png");
     private Texture gym = new Texture("Sprites/Decorations/gym.png");
     private Texture coin = new Texture("Sprites/coin.png");
+    private Texture arrowUp = new Texture("Sprites/Tutorial/arrowUp.png");
+    private Texture arrowDown = new Texture("Sprites/Tutorial/arrowDown.png");
+    private Texture arrowRight = new Texture("Sprites/Tutorial/arrowRight.png");
+    private Texture arrowLeft = new Texture("Sprites/Tutorial/arrowLeft.png");
 
     /// ------------------------
     private Texture exit;
@@ -86,40 +91,40 @@ public class PlayState extends State {
     private int money = prefs.getInteger("Coins");
     private List<Bat> bats = new ArrayList<>();
     private String maps[] = {
-        "##################\n" +
+            "##################\n" +
             "#########0########\n" +
             "######### ########\n" +
             "######### ########\n" +
             "######### ########\n" +
             "######   -########\n" +
             "######  ##########\n" +
-            "######  ##########\n" +
-            "######   #5a5a5a #\n" +
+            "######  ##5a5a5a #\n" +
+            "######   #5a5a5a h\n" +
             "######## #5a5a5a h\n" +
-            "######## #5a5a5a h\n" +
-            "######## e       h\n" +
+            "########ue       h\n" +
             "######## #5a5a5a #\n" +
             "######## #########\n" +
-            "######      -#####\n" +
-            "######  u### #####\n" +
+            "######    -  #####\n" +
+            "######   ### #####\n" +
+            "######   ### #####\n" +
             "############ #####\n" +
             "###### c7c7# #####\n" +
-            "######i    e #####\n" +
+            "######i    ef#####\n" +
             "###### c7c7# #####\n" +
             "############ #####\n" +
-            "####   f#### #####\n" +
+            "####    #### #####\n" +
             "#### ## #### #####\n" +
             "#### ##      #####\n" +
             "#### #############\n" +
             "#         ###  -##\n" +
-            "#k   ####       ##\n" +
-            "#    #########  ##\n" +
-            "#    ######     ##\n" +
+            "#    #### ###   ##\n" +
+            "#    ####       ##\n" +
+            "#k   #########  ##\n" +
             "###########     ##\n" +
-            "###########    *e#\n" +
+            "###########    *y#\n" +
             "##################\n",
 
-            "##################\n" +
+        "##################\n" +
             "##              ##\n" +
             "##        k#### ##\n" +
             "##        -#6 e ##\n" +
@@ -148,11 +153,11 @@ public class PlayState extends State {
             "## ####### #######\n" +
             "## ####### #######\n" +
             "##-1111111      ##\n" +
-            "########## #   *e#\n" +
+            "########## #   *y#\n" +
             "##########0#    ##\n" +
             "##################",
 
-            "##################\n" +
+        "##################\n" +
             "# gg  #0# 5a5a5a h\n" +
             "#dddd # #        h\n" +
             "#8888 # # 5a5a5a h\n" +
@@ -182,7 +187,7 @@ public class PlayState extends State {
             "#- ## ## ## ### ##\n" +
             "#   # ## ## ### ##\n" +
             "# * #   -##-    ##\n" +
-            "##e###############\n" +
+            "##y###############\n" +
             "##################",
 
         "##################\n" +
@@ -215,11 +220,11 @@ public class PlayState extends State {
             "#### #####o#     #\n" +
             "#    ##### #     #\n" +
             "#k    --        *#\n" +
-            "########## #####e#\n" +
+            "########## #####y#\n" +
             "##################",
 
-            "##################\n" +
-            "#ggg #    *e#o####\n" +
+        "##################\n" +
+            "#ggg #    *y#o####\n" +
             "#ddd e     ## ####\n" +
             "#888 #     ## ####\n" +
             "#ddd ###       k##\n" +
@@ -280,11 +285,11 @@ public class PlayState extends State {
             "#        #### ####\n" +
             "# lmmmmn #### - ##\n" +
             "#        #      ##\n" +
-            "# lmmmmn e     *e#\n" +
+            "# lmmmmn e     *y#\n" +
             "#        #      ##\n" +
             "##################",
 
-            "##################\n" +
+        "##################\n" +
             "##################\n" +
             "##-    ###########\n" +
             "##    p###########\n" +
@@ -314,7 +319,7 @@ public class PlayState extends State {
             "#-     #-    1  w#\n" +
             "### #   k#w     w#\n" +
             "### ######w  *  w#\n" +
-            "### #########e####\n" +
+            "### #########y####\n" +
             "##################",
 
         "##################\n" +
@@ -334,12 +339,12 @@ public class PlayState extends State {
             "##########  p   ##\n" +
             "###############  #\n" +
             "######### ###### #\n" +
-            "##www#### ###### #\n" +
+            "######### ###### #\n" +
             "##     -# -  ### #\n" +
-            "#e*   #      ### #\n" +
+            "#y*   #      ### #\n" +
             "##   ##    #  2#-#\n" +
-            "#### #   ok#  2# #\n" +
-            "#### #33#####  # #\n" +
+            "##   #   ok#  2# #\n" +
+            "##   #33#####  # #\n" +
             "####e#### 3 #  # #\n" +
             "#      ##2#4#  # #\n" +
             "#5j75j7## 1    # #\n" +
@@ -380,7 +385,7 @@ public class PlayState extends State {
             "# ##wwwwww##5a5a h\n" +
             "# ##w    w##5a5a h\n" +
             "# ##w    w##5a5a h\n" +
-            "#  -     *e#5a5a #\n" +
+            "#  -     *y#5a5a #\n" +
             "##################\n"};
 
     private String[] levelMap;
@@ -388,8 +393,32 @@ public class PlayState extends State {
     private Player player;
     private int[][] WallMap = new int[32][18];
     private int[][] ThronsMap = new int[32][18];
+    private int[][] Tutorial = {
+        {4,4,9},
+        //{1,5,7},
+        {4,7,6},
+        //{3,8,7},
+        {4,14,8},
+        //{1,15,7},
+        //{2,14,6},
+        //{3,13,11},
+        {4,22,12},
+        //{1,23,8},
+        //{2,22,7},
+        //{1,21,6},
+        {4,27,4},
+        //{1,28,2},
+        //{2,26,1},
+        //{3,25,8},
+        //{4,26,9},
+        {3,27,12},
+        //{2,26,13},
+        //{3,25,14},
+        //{4,29,15},
+    };
     private KillBlock[][] KillMap = new KillBlock[32][18];
     private List<KillBlock> KillBlocks = new ArrayList<>();
+    private Image levelNumber;
 
     private int GetWallMask(int x, int y, String[] map) {
         int mask = 0;
@@ -408,7 +437,7 @@ public class PlayState extends State {
                 return 20;
             if (!((y - 1 < 0 || x + 1 >= 18) || (map[y - 1].charAt(x + 1) == '#')) && ((y + 1 >= 32 || x + 1 >= 18) || map[y + 1].charAt(x + 1) == '#'))
                 return 21;
-            if (((y - 1 < 0 || x + 1 >= 18) || (map[y - 1].charAt(x + 1) == '#')|| (map[y - 1].charAt(x + 1) == 'h')) && ((y + 1 >= 32 || x + 1 >= 18) || map[y + 1].charAt(x + 1) == '#'|| map[y + 1].charAt(x + 1) == 'h'))
+            if (((y - 1 < 0 || x + 1 >= 18) || (map[y - 1].charAt(x + 1) == '#') || (map[y - 1].charAt(x + 1) == 'h')) && ((y + 1 >= 32 || x + 1 >= 18) || map[y + 1].charAt(x + 1) == '#' || map[y + 1].charAt(x + 1) == 'h'))
                 return 22;
 
         }
@@ -448,7 +477,7 @@ public class PlayState extends State {
                 return 34;
             if (!((y - 1 < 0 || x + 1 >= 18) || map[y - 1].charAt(x + 1) == '#') && !((y + 1 >= 32 || x + 1 >= 18) || map[y + 1].charAt(x + 1) == '#') && !((y + 1 >= 32 || x - 1 < 0) || map[y + 1].charAt(x - 1) == '#') && ((y - 1 < 0 || x - 1 < 0) || map[y - 1].charAt(x - 1) == '#'))
                 return 35;
-            if (((y - 1 < 0 || x + 1 >= 18) || map[y - 1].charAt(x + 1) == '#'||map[y - 1].charAt(x + 1) == 'h') && ((y + 1 >= 32 || x + 1 >= 18) || map[y + 1].charAt(x + 1) == '#'|| map[y + 1].charAt(x + 1) == 'h') && !((y + 1 >= 32 || x - 1 < 0) || map[y + 1].charAt(x - 1) == '#'|| map[y + 1].charAt(x - 1) == 'h') && !((y - 1 < 0 || x - 1 < 0) || map[y - 1].charAt(x - 1) == '#' || map[y - 1].charAt(x - 1) == 'h'))
+            if (((y - 1 < 0 || x + 1 >= 18) || map[y - 1].charAt(x + 1) == '#' || map[y - 1].charAt(x + 1) == 'h') && ((y + 1 >= 32 || x + 1 >= 18) || map[y + 1].charAt(x + 1) == '#' || map[y + 1].charAt(x + 1) == 'h') && !((y + 1 >= 32 || x - 1 < 0) || map[y + 1].charAt(x - 1) == '#' || map[y + 1].charAt(x - 1) == 'h') && !((y - 1 < 0 || x - 1 < 0) || map[y - 1].charAt(x - 1) == '#' || map[y - 1].charAt(x - 1) == 'h'))
                 return 36;
             if (!((y - 1 < 0 || x + 1 >= 18) || map[y - 1].charAt(x + 1) == '#') && ((y + 1 >= 32 || x + 1 >= 18) || map[y + 1].charAt(x + 1) == '#') && ((y + 1 >= 32 || x - 1 < 0) || map[y + 1].charAt(x - 1) == '#') && !((y - 1 < 0 || x - 1 < 0) || map[y - 1].charAt(x - 1) == '#'))
                 return 37;
@@ -456,15 +485,15 @@ public class PlayState extends State {
                 return 38;
             if (((y - 1 < 0 || x + 1 >= 18) || map[y - 1].charAt(x + 1) == '#') && !((y + 1 >= 32 || x + 1 >= 18) || map[y + 1].charAt(x + 1) == '#') && !((y + 1 >= 32 || x - 1 < 0) || map[y + 1].charAt(x - 1) == '#') && ((y - 1 < 0 || x - 1 < 0) || map[y - 1].charAt(x - 1) == '#'))
                 return 39;
-            if (((y - 1 < 0 || x + 1 >= 18) || map[y - 1].charAt(x + 1) == '#'|| map[y - 1].charAt(x + 1) == 'h') && ((y + 1 >= 32 || x + 1 >= 18) || map[y + 1].charAt(x + 1) == '#'|| map[y + 1].charAt(x + 1) == 'h') && ((y + 1 >= 32 || x - 1 < 0) || map[y + 1].charAt(x - 1) == '#'|| map[y + 1].charAt(x - 1) == 'h') && !((y - 1 < 0 || x - 1 < 0) || map[y - 1].charAt(x - 1) == '#'|| map[y - 1].charAt(x - 1) == 'h'))
+            if (((y - 1 < 0 || x + 1 >= 18) || map[y - 1].charAt(x + 1) == '#' || map[y - 1].charAt(x + 1) == 'h') && ((y + 1 >= 32 || x + 1 >= 18) || map[y + 1].charAt(x + 1) == '#' || map[y + 1].charAt(x + 1) == 'h') && ((y + 1 >= 32 || x - 1 < 0) || map[y + 1].charAt(x - 1) == '#' || map[y + 1].charAt(x - 1) == 'h') && !((y - 1 < 0 || x - 1 < 0) || map[y - 1].charAt(x - 1) == '#' || map[y - 1].charAt(x - 1) == 'h'))
                 return 40;
             if (!((y - 1 < 0 || x + 1 >= 18) || map[y - 1].charAt(x + 1) == '#') && ((y + 1 >= 32 || x + 1 >= 18) || map[y + 1].charAt(x + 1) == '#') && ((y + 1 >= 32 || x - 1 < 0) || map[y + 1].charAt(x - 1) == '#') && ((y - 1 < 0 || x - 1 < 0) || map[y - 1].charAt(x - 1) == '#'))
                 return 41;
             if (((y - 1 < 0 || x + 1 >= 18) || map[y - 1].charAt(x + 1) == '#') && !((y + 1 >= 32 || x + 1 >= 18) || map[y + 1].charAt(x + 1) == '#') && ((y + 1 >= 32 || x - 1 < 0) || map[y + 1].charAt(x - 1) == '#') && ((y - 1 < 0 || x - 1 < 0) || map[y - 1].charAt(x - 1) == '#'))
                 return 42;
-            if (((y - 1 < 0 || x + 1 >= 18) || map[y - 1].charAt(x + 1) == '#'||map[y - 1].charAt(x + 1) == 'h') && ((y + 1 >= 32 || x + 1 >= 18) || map[y + 1].charAt(x + 1) == '#'|| map[y + 1].charAt(x + 1) == 'h') && !((y + 1 >= 32 || x - 1 < 0) || map[y + 1].charAt(x - 1) == '#'|| map[y + 1].charAt(x - 1) == 'h') && ((y - 1 < 0 || x - 1 < 0) || map[y - 1].charAt(x - 1) == '#'|| map[y - 1].charAt(x - 1) == 'h'))
+            if (((y - 1 < 0 || x + 1 >= 18) || map[y - 1].charAt(x + 1) == '#' || map[y - 1].charAt(x + 1) == 'h') && ((y + 1 >= 32 || x + 1 >= 18) || map[y + 1].charAt(x + 1) == '#' || map[y + 1].charAt(x + 1) == 'h') && !((y + 1 >= 32 || x - 1 < 0) || map[y + 1].charAt(x - 1) == '#' || map[y + 1].charAt(x - 1) == 'h') && ((y - 1 < 0 || x - 1 < 0) || map[y - 1].charAt(x - 1) == '#' || map[y - 1].charAt(x - 1) == 'h'))
                 return 43;
-            if (((y - 1 < 0 || x + 1 >= 18) || map[y - 1].charAt(x + 1) == '#'||map[y - 1].charAt(x + 1) == 'h') && ((y + 1 >= 32 || x + 1 >= 18) || map[y + 1].charAt(x + 1) == '#'||map[y + 1].charAt(x + 1) == 'h') && ((y + 1 >= 32 || x - 1 < 0) || map[y + 1].charAt(x - 1) == '#'||map[y + 1].charAt(x - 1) == 'h') && ((y - 1 < 0 || x - 1 < 0) || map[y - 1].charAt(x - 1) == '#'|| map[y - 1].charAt(x - 1) == 'h'))
+            if (((y - 1 < 0 || x + 1 >= 18) || map[y - 1].charAt(x + 1) == '#' || map[y - 1].charAt(x + 1) == 'h') && ((y + 1 >= 32 || x + 1 >= 18) || map[y + 1].charAt(x + 1) == '#' || map[y + 1].charAt(x + 1) == 'h') && ((y + 1 >= 32 || x - 1 < 0) || map[y + 1].charAt(x - 1) == '#' || map[y + 1].charAt(x - 1) == 'h') && ((y - 1 < 0 || x - 1 < 0) || map[y - 1].charAt(x - 1) == '#' || map[y - 1].charAt(x - 1) == 'h'))
                 return 44;
         }
 
@@ -565,6 +594,9 @@ public class PlayState extends State {
         menuBackground = new Image(new Texture("gameBackground.png"));
         killBackground = new Image(new Texture("killBackground.png"));
         winBackground = new Image(new Texture("winBackground.png"));
+        levelNumber = new Image(new Texture("LevelsName/level" + (level) + ".png"));
+        levelNumber.setSize(520 * Main.SIZECHANGE.x, 110 * Main.SIZECHANGE.y);
+        levelNumber.setPosition(Main.WIDTH / 2 - new Texture("winBackground.png").getWidth() / 3 * Main.SIZECHANGE.x + 10 * 12 * Main.SIZECHANGE.x, Main.HEIGHT / 2 - new Texture("winBackground.png").getHeight() / 3 * Main.SIZECHANGE.y + 10 * 82 * Main.SIZECHANGE.y);
 
         stopButton = createImageButton(new Texture("Buttons/stopBtn.png"), 120, 120);
         continueButton = createImageButton(new Texture("Buttons/ctnBtn.png"), 160, 67 * 10);
@@ -596,6 +628,7 @@ public class PlayState extends State {
         menuBackground.setVisible(false);
         killBackground.setVisible(false);
         winBackground.setVisible(false);
+        levelNumber.setVisible(false);
 
         KStar = new Image(new Texture("Sprites/KFU/K.png"));
         FStar = new Image(new Texture("Sprites/KFU/F.png"));
@@ -679,17 +712,19 @@ public class PlayState extends State {
                 SoundBtn.play(SoundVolume);
                 GameMusic.stop();
                 if (Exit) {
-                    money += player.getCoins() ;
+                    money += player.getCoins();
                     prefs.putInteger("Coins", money);
                     prefs.flush();
                 }
                 gsm.set(new PlayState(gsm, MusicVolume, SoundVolume, level, levelStars));
             }
         });
+
         stage.addActor(stopButton);
         stage.addActor(menuBackground);
         stage.addActor(killBackground);
         stage.addActor(winBackground);
+        stage.addActor(levelNumber);
         stage.addActor(continueButton);
         stage.addActor(nextButton);
         stage.addActor(againButton);
@@ -698,18 +733,19 @@ public class PlayState extends State {
         stage.addActor(FStar);
         stage.addActor(UStar);
 
+
         for (int i = 0; i < sizeMap.y; i++) {
             for (int j = 0; j < sizeMap.x; j++) {
                 KillMap[i][j] = null;
                 switch (levelMap[i].charAt(j)) {
                     case '*':
-                        player = new Player(new Vector2(60 * j, 60 * (sizeMap.y - 1 - i)), new Vector2(60, 60), levelMap, new Vector2(5 * Main.SIZECHANGE.x*50, 5 * Main.SIZECHANGE.y*50), Gdx.graphics.getDeltaTime(), SoundVolume);
+                        player = new Player(new Vector2(60 * j, 60 * (sizeMap.y - 1 - i)), new Vector2(60, 60), levelMap, new Vector2(5 * Main.SIZECHANGE.x * 50, 5 * Main.SIZECHANGE.y * 50), Gdx.graphics.getDeltaTime(), SoundVolume);
                         break;
                     case 'o':
-                        bats.add(new Bat(new Vector2(60 * j, 60 * (sizeMap.y - 1 - i)), new Vector2(60, 60), levelMap, new Vector2(4 * Main.SIZECHANGE.x*50, 4 * Main.SIZECHANGE.y*50), true));
+                        bats.add(new Bat(new Vector2(60 * j, 60 * (sizeMap.y - 1 - i)), new Vector2(60, 60), levelMap, new Vector2(4 * Main.SIZECHANGE.x * 50, 4 * Main.SIZECHANGE.y * 50), true));
                         break;
                     case 'p':
-                        bats.add(new Bat(new Vector2(60 * j, 60 * (sizeMap.y - 1 - i)), new Vector2(60, 60), levelMap, new Vector2(4 * Main.SIZECHANGE.x*50, 4 * Main.SIZECHANGE.y*50), false));
+                        bats.add(new Bat(new Vector2(60 * j, 60 * (sizeMap.y - 1 - i)), new Vector2(60, 60), levelMap, new Vector2(4 * Main.SIZECHANGE.x * 50, 4 * Main.SIZECHANGE.y * 50), false));
                         break;
                     case '1':
                     case '2':
@@ -795,6 +831,7 @@ public class PlayState extends State {
                 prefs.flush();
 
                 winBackground.setVisible(true);
+                levelNumber.setVisible(true);
                 againButton.setVisible(true);
                 nextButton.setVisible(true);
                 KStar.setSize(0, 0);
@@ -845,7 +882,7 @@ public class PlayState extends State {
                 WinStar.play(SoundVolume);
             }
             KStar.setSize(deltaSize.x * Main.SIZECHANGE.x, deltaSize.x * Main.SIZECHANGE.y);
-            KStar.setPosition(Main.WIDTH / 2 - menuBackground.getWidth() / 2 + 10 * 3 * Main.SIZECHANGE.x + (120 - deltaSize.x / 2) * Main.SIZECHANGE.x, Main.HEIGHT / 2 - menuBackground.getHeight() / 2 + 64 * 10 * Main.SIZECHANGE.y + (120 - deltaSize.x / 2) * Main.SIZECHANGE.y);
+            KStar.setPosition(Main.WIDTH / 2 - menuBackground.getWidth() / 2 + 10 * 3 * Main.SIZECHANGE.x + (120 - deltaSize.x / 2) * Main.SIZECHANGE.x, Main.HEIGHT / 2 - menuBackground.getHeight() / 2 + 60.5f * 10 * Main.SIZECHANGE.y + (120 - deltaSize.x / 2) * Main.SIZECHANGE.y);
 
             KStar.setOrigin(deltaSize.x * Main.SIZECHANGE.x / 2, deltaSize.x * Main.SIZECHANGE.y / 2);
 
@@ -873,7 +910,7 @@ public class PlayState extends State {
                 WinStar.play(SoundVolume);
             }
             FStar.setSize(deltaSize.y * Main.SIZECHANGE.x, deltaSize.y * Main.SIZECHANGE.y);
-            FStar.setPosition(Main.WIDTH / 2 - menuBackground.getWidth() / 2 + 10 * 25 * Main.SIZECHANGE.x + (120 - deltaSize.y / 2) * Main.SIZECHANGE.x, Main.HEIGHT / 2 - menuBackground.getHeight() / 2 + 64 * 10 * Main.SIZECHANGE.y + (120 - deltaSize.y / 2) * Main.SIZECHANGE.y);
+            FStar.setPosition(Main.WIDTH / 2 - menuBackground.getWidth() / 2 + 10 * 25 * Main.SIZECHANGE.x + (120 - deltaSize.y / 2) * Main.SIZECHANGE.x, Main.HEIGHT / 2 - menuBackground.getHeight() / 2 + 60.5f * 10 * Main.SIZECHANGE.y + (120 - deltaSize.y / 2) * Main.SIZECHANGE.y);
 
             FStar.setOrigin(deltaSize.y * Main.SIZECHANGE.x / 2, deltaSize.y * Main.SIZECHANGE.y / 2);
 
@@ -901,7 +938,7 @@ public class PlayState extends State {
                 WinStar.play(SoundVolume);
             }
             UStar.setSize(deltaSize.z * Main.SIZECHANGE.x, deltaSize.z * Main.SIZECHANGE.y);
-            UStar.setPosition(Main.WIDTH / 2 - menuBackground.getWidth() / 2 + 10 * 49 * Main.SIZECHANGE.x + (120 - deltaSize.z / 2) * Main.SIZECHANGE.x, Main.HEIGHT / 2 - menuBackground.getHeight() / 2 + 64 * 10 * Main.SIZECHANGE.y + (120 - deltaSize.z / 2) * Main.SIZECHANGE.y);
+            UStar.setPosition(Main.WIDTH / 2 - menuBackground.getWidth() / 2 + 10 * 49 * Main.SIZECHANGE.x + (120 - deltaSize.z / 2) * Main.SIZECHANGE.x, Main.HEIGHT / 2 - menuBackground.getHeight() / 2 + 60.5f * 10 * Main.SIZECHANGE.y + (120 - deltaSize.z / 2) * Main.SIZECHANGE.y);
 
             UStar.setOrigin(deltaSize.z * Main.SIZECHANGE.x / 2, deltaSize.z * Main.SIZECHANGE.y / 2);
 
@@ -928,6 +965,25 @@ public class PlayState extends State {
         ScreenUtils.clear((float) 71 / 255, (float) 71 / 255, (float) 71 / 255, 1);
 
         sb.draw(background, 0, 0, background.getWidth() * Main.SIZECHANGE.x, background.getHeight() * Main.SIZECHANGE.y);
+
+        if (level == 1) {
+            for (int i = 0; i < Tutorial.length; i++) {
+                switch (Tutorial[i][0]) {
+                    case 1:
+                        sb.draw(arrowRight, 60 * Main.SIZECHANGE.x * Tutorial[i][2], 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 -Tutorial[i][1]), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
+                        break;
+                    case 2:
+                        sb.draw(arrowDown, 60 * Main.SIZECHANGE.x * Tutorial[i][2], 60 * Main.SIZECHANGE.y *(sizeMap.y - 1 - Tutorial[i][1]), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
+                        break;
+                    case 3:
+                        sb.draw(arrowLeft, 60 * Main.SIZECHANGE.x * Tutorial[i][2], 60 * Main.SIZECHANGE.y *(sizeMap.y - 1 - Tutorial[i][1]), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
+                        break;
+                    case 4:
+                        sb.draw(arrowUp, 60 * Main.SIZECHANGE.x * Tutorial[i][2], 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 -Tutorial[i][1]), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
+                        break;
+                }
+            }
+        }
 
         for (int i = 0; i < sizeMap.y; i++) {
             for (int j = 0; j < sizeMap.x; j++) {
@@ -970,8 +1026,11 @@ public class PlayState extends State {
                         case 'e':
                             sb.draw(door, 60 * Main.SIZECHANGE.x * j, 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
                             break;
+                        case 'y':
+                            sb.draw(door1, 60 * Main.SIZECHANGE.x * j, 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
+                            break;
                         case 'q':
-                            sb.draw(gym, 60 * Main.SIZECHANGE.x * j, 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), 60*7 * Main.SIZECHANGE.x, 60*7 * Main.SIZECHANGE.y);
+                            sb.draw(gym, 60 * Main.SIZECHANGE.x * j, 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), 60 * 7 * Main.SIZECHANGE.x, 60 * 7 * Main.SIZECHANGE.y);
                             break;
                         case 'l':
                             sb.draw(shelfLeft, 60 * Main.SIZECHANGE.x * j, 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
@@ -1019,6 +1078,10 @@ public class PlayState extends State {
 
     @Override
     public void dispose() {
+        arrowUp.dispose();
+        arrowDown.dispose();
+        arrowLeft.dispose();
+        arrowRight.dispose();
         GameMusic.dispose();
         SoundBtn.dispose();
         Win.dispose();

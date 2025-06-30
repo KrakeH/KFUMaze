@@ -42,6 +42,7 @@ public class MenuState extends State {
     private ImageButton homeBtn;
     private ImageButton shopBtn;
     private ImageButton cancelBtn;
+    private ImageButton Black;
     private TextureRegion background;
     private Texture loadingMenu;
     private Image loadingBackground;
@@ -64,6 +65,7 @@ public class MenuState extends State {
     private float tempSound;
     private float tempMusic;
     private static int countLevel = 20;
+    private Image[] levelsNumber=new Image[9];
     private boolean levelStars[][] = {
         {false, false, false},
         {false, false, false},
@@ -89,7 +91,7 @@ public class MenuState extends State {
                 if (!loadingBackground.isVisible() && !parametrsBackground.isVisible()) {
                     try {
                         if (level == 0 || (levelStars[level - 1][0] || levelStars[level - 1][1] || levelStars[level - 1][2])) {
-                            cancelBtn.setPosition(Main.WIDTH / 2 - loadingMenu.getWidth() / 3 * Main.SIZECHANGE.x + 10 * 68f * Main.SIZECHANGE.x, Main.HEIGHT / 2 - loadingMenu.getHeight() / 3 * Main.SIZECHANGE.y + 60 * 10 * Main.SIZECHANGE.y);
+                            cancelBtn.setPosition(Main.WIDTH / 2 - loadingMenu.getWidth() / 3 * Main.SIZECHANGE.x + 10 * 67f * Main.SIZECHANGE.x, Main.HEIGHT / 2 - loadingMenu.getHeight() / 3 * Main.SIZECHANGE.y + 67 * 10 * Main.SIZECHANGE.y);
 
                             levelTo = level;
                             if (levelStars[levelTo][0]) {
@@ -104,6 +106,8 @@ public class MenuState extends State {
                             loadingBackground.setVisible(true);
                             cancelBtn.setVisible(true);
                             enterBtn.setVisible(true);
+                            Black.setVisible(true);
+                            levelsNumber[level].setVisible(true);
                             SoundBtn.play();
                         } else {
                             Blocked.play();
@@ -150,7 +154,6 @@ public class MenuState extends State {
         parameter.borderColor=new Color(180/255f,180/255f,180/255f,1);
         font2 = generator.generateFont(parameter);
         generator.dispose();
-        /// ------------------
 
         SliderBack.setMinSize(48 * 15 *Main.SIZECHANGE.x, 1 * 15*Main.SIZECHANGE.y );
         Knob.setMinSize(3 * 15 *Main.SIZECHANGE.x, 7 * 15*Main.SIZECHANGE.y );
@@ -249,13 +252,14 @@ public class MenuState extends State {
         parametrsBackground.setSize(960 * Main.SIZECHANGE.x, 540 * Main.SIZECHANGE.y);
         parametrsBackground.setPosition(Main.WIDTH / 2 - parametrsBackground.getWidth() / 2, Main.HEIGHT / 2 - parametrsBackground.getHeight() / 2);
 
-        loadingBackground.setSize(1125 / 1.5f * Main.SIZECHANGE.x, 1020 / 1.5f * Main.SIZECHANGE.y);
+        loadingBackground.setSize(1125 / 1.5f * Main.SIZECHANGE.x, 1125 / 1.5f * Main.SIZECHANGE.y);
         loadingBackground.setPosition(Main.WIDTH / 2 - loadingMenu.getWidth() / 3 * Main.SIZECHANGE.x, Main.HEIGHT / 2 - loadingMenu.getHeight() / 3 * Main.SIZECHANGE.y);
 
         enterBtn = createImageButton(new Texture("Buttons/enterBtn.png"), 16 * 10, 67 * 10);
         cancelBtn = createImageButton(new Texture("Buttons/cancelBtn.png"), 60, 60);
         homeBtn = createImageButton(new Texture("Buttons/paramBtn.png"), 150, 150);
         shopBtn = createImageButton(new Texture("Buttons/shopBtn.png"), 150, 150);
+        Black = createImageButton(new Texture("Buttons/Black.png"), Main.HEIGHT, Main.WIDTH);
 
         KStar.setSize(24 * 10 * Main.SIZECHANGE.x, 24 * 10 * Main.SIZECHANGE.y);
         FStar.setSize(24 * 10 * Main.SIZECHANGE.x, 24 * 10 * Main.SIZECHANGE.y);
@@ -278,8 +282,19 @@ public class MenuState extends State {
         MusicSlider.setVisible(false);
         SoundSlider.setVisible(false);
 
+        /// ------------------
+        for (int i = 0; i < 9; i++) {
+            levelsNumber[i]=new Image(new Texture("LevelsName/level"+(i+1)+".png"));
+            levelsNumber[i].setVisible(false);
+            levelsNumber[i].setSize(520 * Main.SIZECHANGE.x, 110 * Main.SIZECHANGE.y);
+            levelsNumber[i].setPosition(Main.WIDTH / 2 - loadingMenu.getWidth() / 3 * Main.SIZECHANGE.x+12*10*Main.SIZECHANGE.x, Main.HEIGHT / 2 - loadingMenu.getHeight() / 3 * Main.SIZECHANGE.y+Main.SIZECHANGE.y*62*10);
+        }
+        /// -----------------
+
+        Black.setColor(0,0,0,0.5f);
 
         stage.addActor(scrollPane);
+        stage.addActor(Black);
         stage.addActor(loadingBackground);
         stage.addActor(parametrsBackground);
         stage.addActor(KStar);
@@ -290,6 +305,9 @@ public class MenuState extends State {
         stage.addActor(homeBtn);
         stage.addActor(shopBtn);
         stage.addActor(enterBtn);
+        for (int i = 0; i < 9; i++) {
+            stage.addActor(levelsNumber[i]);
+        }
 
         stage.addActor(MusicSlider);
         stage.addActor(SoundSlider);
@@ -297,6 +315,7 @@ public class MenuState extends State {
         KStar.setVisible(false);
         FStar.setVisible(false);
         UStar.setVisible(false);
+        Black.setVisible(false);
         loadingBackground.setVisible(false);
         parametrsBackground.setVisible(false);
         cancelBtn.setVisible(false);
@@ -306,12 +325,31 @@ public class MenuState extends State {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if(!loadingBackground.isVisible()) {
+                    Black.setVisible(true);
                     parametrsBackground.setVisible(true);
                     MusicSlider.setVisible(true);
                     SoundSlider.setVisible(true);
                     cancelBtn.setPosition(Main.WIDTH / 2 + parametrsBackground.getWidth() / 2 - 15 * 5f * Main.SIZECHANGE.x, Main.HEIGHT / 2 + parametrsBackground.getHeight() / 2 - 5 * 15 * Main.SIZECHANGE.y);
                     cancelBtn.setVisible(true);
                     SoundBtn.play();
+                }
+            }
+        });
+        Black.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Black.setVisible(false);
+                KStar.setVisible(false);
+                FStar.setVisible(false);
+                UStar.setVisible(false);
+                MusicSlider.setVisible(false);
+                SoundSlider.setVisible(false);
+                loadingBackground.setVisible(false);
+                parametrsBackground.setVisible(false);
+                cancelBtn.setVisible(false);
+                enterBtn.setVisible(false);
+                for (int i = 0; i < 9; i++) {
+                    levelsNumber[i].setVisible(false);
                 }
             }
         });
@@ -330,6 +368,7 @@ public class MenuState extends State {
         cancelBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                Black.setVisible(false);
                 KStar.setVisible(false);
                 FStar.setVisible(false);
                 UStar.setVisible(false);
@@ -339,6 +378,9 @@ public class MenuState extends State {
                 parametrsBackground.setVisible(false);
                 cancelBtn.setVisible(false);
                 enterBtn.setVisible(false);
+                for (int i = 0; i < 9; i++) {
+                    levelsNumber[i].setVisible(false);
+                }
                 SoundBtn.play();
             }
         });
