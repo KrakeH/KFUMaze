@@ -1,16 +1,11 @@
 package com.Turb1na_.KFUMaze.States;
 
 import com.Turb1na_.KFUMaze.Main;
-import com.Turb1na_.KFUMaze.Sprites.KillBlock;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -26,21 +21,17 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShopState extends State {
+public class ShopState implements Screen {
+    final Main game;
+    private boolean isShowed=false;
     private Stage stage;
     private BitmapFont font;
     private BitmapFont font2;
     private BitmapFont font3;
-
-    //font.draw(this.getBatch(), "Score: 0" + myScore.getCurrent(), 600, 500);
-    //this.getBatch().end();
-    //stage.act(Gdx.graphics.getDeltaTime());
-    //stage.draw();
     private float tempSound;
     private float tempMusic;
     private ScrollPane scrollPane;
@@ -51,32 +42,32 @@ public class ShopState extends State {
     private ImageButton paramBtn;
     private ImageButton cancelBtn;
     private Image parametrsBackground;
-    private Preferences prefs = Gdx.app.getPreferences("Game");
-    private int money = prefs.getInteger("Coins");
-    private Music MenuMusic = Gdx.audio.newMusic(Gdx.files.internal("Audio/MenuMusic.mp3"));
-    private Music Blocked = Gdx.audio.newMusic(Gdx.files.internal("Audio/blocked.mp3"));
-    private Music SoundBtn = Gdx.audio.newMusic(Gdx.files.internal("Audio/ButtonSound.wav"));
-    private Sound Star= Gdx.audio.newSound(Gdx.files.internal("Audio/Star.mp3"));
-    private TextureRegionDrawable SliderBack = new TextureRegionDrawable(new Texture("SliderBack.png"));
-    private TextureRegionDrawable Knob = new TextureRegionDrawable(new Texture("Knob.png"));
+    private TextureRegionDrawable SliderBack;
+    private TextureRegionDrawable Knob;
     private Slider.SliderStyle style;
 
     private List<TextButton> textButtons = new ArrayList<>();
-
-    private Texture[] images = {
-        new Texture("Player/playerStop.png"),
-        new Texture("Player/playerStop3.png"),
-        new Texture("Player/playerStop4.png"),
-        new Texture("Player/playerStop1.png"),
-        new Texture("Player/playerStop2.png"),
-        new Texture("Player/playerStop5.png")
-    };
 
     private String[] prices={
         "Equipped", "10", "50", "100", "500", "1000"
     };
 
     private Image Coins;
+
+    private void create(){
+        /// ----Music----------
+        game.sm.setVolume();
+        /// ----------------------
+
+        /// -------------Sliders---------------
+        MusicSlider.setValue(game.sm.MusicVolume);
+        SoundSlider.setValue(game.sm.SoundVolume);
+        /// ----------------------------------
+
+        for (int i = 0; i < prices.length; i++) {
+            prices[i]=game.prefs.getString("price"+i);
+        }
+    }
 
     private ImageButton createImageButton(Texture buttonTexture, float Height, float Width) {
         ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
@@ -105,15 +96,15 @@ public class ShopState extends State {
                             textButtons.get(i).setText("Equip");
                     }
                     textButtons.get(level).setText("Equipped");
-                    Star.stop();
-                    Star.play(tempSound);
+                    game.sm.Star.stop();
+                    game.sm.Star.play(game.sm.SoundVolume);
                     for (int i = 0; i < textButtons.size(); i++) {
                         if(String.valueOf(textButtons.get(i).getText()).equals("Equipped"))
-                            prefs.putInteger("Skin",i);
-                        prefs.putString("price"+i, String.valueOf(textButtons.get(i).getText()));
+                            game.prefs.putInteger("Skin",i);
+                        game.prefs.putString("price"+i, String.valueOf(textButtons.get(i).getText()));
                     }
                 }
-                prefs.flush();
+                game.prefs.flush();
             }
         });
         return button;
@@ -122,7 +113,7 @@ public class ShopState extends State {
     private TextButton createTextButton(String text, BitmapFont font) {
         TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
         style.font = font;
-        style.up = new TextureRegionDrawable(new TextureRegion(new Texture("priceBackground.png")));
+        style.up = new TextureRegionDrawable(new TextureRegion(game.tm.priceBackground));
         style.up.setMinHeight(60);
         style.up.setMinWidth(150 * Main.SIZECHANGE.x);
         TextButton button = new TextButton(text, style);
@@ -130,18 +121,18 @@ public class ShopState extends State {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 try {
-                    if (money < Integer.parseInt(String.valueOf(button.getText())))
-                        Blocked.play();
+                    if (game.money < Integer.parseInt(String.valueOf(button.getText())))
+                        game.sm.Blocked.play();
                     else {
-                        money -= Integer.parseInt(text);
-                        prefs.putInteger("Coins",money);
-                        Star.stop();
-                        Star.play(tempSound);
+                        game.money -= Integer.parseInt(text);
+                        game.prefs.putInteger("Coins",game.money);
+                        game.sm.Star.stop();
+                        game.sm.Star.play(game.sm.SoundVolume);
                         button.setText("Equip");
                         for (int i = 0; i < textButtons.size(); i++) {
-                            prefs.putString("price"+i, String.valueOf(textButtons.get(i).getText()));
+                            game.prefs.putString("price"+i, String.valueOf(textButtons.get(i).getText()));
                         }
-                        prefs.flush();
+                        game.prefs.flush();
                     }
                 } catch (Exception e) {
                     if(String.valueOf(button.getText()).equals("Equip")){
@@ -150,46 +141,47 @@ public class ShopState extends State {
                                 textButtons.get(i).setText("Equip");
                         }
                         button.setText("Equipped");
-                        Star.stop();
-                        Star.play(tempSound);
+                        game.sm.Star.stop();
+                        game.sm.Star.play(tempSound);
                         for (int i = 0; i < textButtons.size(); i++) {
                             if(String.valueOf(textButtons.get(i).getText()).equals("Equipped"))
-                                prefs.putInteger("Skin",i);
-                            prefs.putString("price"+i, String.valueOf(textButtons.get(i).getText()));
+                                game.prefs.putInteger("Skin",i);
+                            game.prefs.putString("price"+i, String.valueOf(textButtons.get(i).getText()));
                         }
                     }
-                    prefs.flush();
+                    game.prefs.flush();
                 }
             }
         });
         return button;
     }
 
-    public ShopState(GameStateManager gsm, float MusicVolume, float SoundVolume, boolean[][] stars) {
-        super(gsm, MusicVolume, SoundVolume);
+    public ShopState(final Main game,Stage stage) {
+        this.game=game;
+        this.stage=stage;
 
-        SoundVolume = prefs.getFloat("Sound");
-        MusicVolume = prefs.getFloat("Music");
-        tempSound = prefs.getFloat("Sound");
-        tempMusic = prefs.getFloat("Music");
-        MenuMusic.setVolume(MusicVolume);
-        Blocked.setVolume(SoundVolume);
-        SoundBtn.setVolume(SoundVolume);
 
-        MenuMusic.setLooping(true);
-        MenuMusic.play();
+        tempSound = game.prefs.getFloat("Sound");
+        tempMusic = game.prefs.getFloat("Music");
 
-        if(!prefs.contains("price0")){
+        /// -----Sliders-----
+        Knob = new TextureRegionDrawable(game.tm.knob);
+        SliderBack = new TextureRegionDrawable(game.tm.sliderBack);
+        SliderBack.setMinSize(48 * 15 * Main.SIZECHANGE.x, 1 * 15 * Main.SIZECHANGE.y);
+        Knob.setMinSize(3 * 15 * Main.SIZECHANGE.x, 7 * 15 * Main.SIZECHANGE.y);
+        style = new Slider.SliderStyle(SliderBack, Knob);
+        MusicSlider = new Slider(0, 1, 0.01f, false, style);
+        SoundSlider = new Slider(0, 1, 0.01f, false, style);
+        /// -------------------
+
+        if(!game.prefs.contains("price0")){
             for (int i = 0; i < prices.length; i++) {
-                prefs.putString("price"+i,prices[i]);
+                game.prefs.putString("price"+i,prices[i]);
             }
-            prefs.flush();
-        }else{
-            for (int i = 0; i < prices.length; i++) {
-                prices[i]=prefs.getString("price"+i);
-            }
+            game.prefs.flush();
         }
 
+        create();
         /// -----Font-----------
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/font.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -205,30 +197,17 @@ public class ShopState extends State {
         parameter.borderColor = new Color(180 / 255f, 180 / 255f, 180 / 255f, 1);
         font2 = generator.generateFont(parameter);
         generator.dispose();
-        /// -----Sliders-----
-        SliderBack.setMinSize(48 * 15 * Main.SIZECHANGE.x, 1 * 15 * Main.SIZECHANGE.y);
-        Knob.setMinSize(3 * 15 * Main.SIZECHANGE.x, 7 * 15 * Main.SIZECHANGE.y);
-        style = new Slider.SliderStyle(SliderBack, Knob);
-        MusicSlider = new Slider(0, 1, 0.01f, false, style);
-        SoundSlider = new Slider(0, 1, 0.01f, false, style);
-        MusicSlider.setValue(MusicVolume);
-        SoundSlider.setValue(SoundVolume);
-        /// -------------------
 
-        camera = new OrthographicCamera(Main.WIDTH, Main.HEIGHT);
-        camera.setToOrtho(false);
-        stage = new Stage(new ScreenViewport());
-        Gdx.input.setInputProcessor(stage);
         container = new Table();
-        Coins = new Image(new Texture("CoinValue.png"));
+        Coins = new Image(game.tm.coinValue);
 
-        homeBtn = createImageButton(new Texture("Buttons/homeBtn.png"), 150, 150);
-        paramBtn = createImageButton(new Texture("Buttons/paramBtn.png"), 150, 150);
-        cancelBtn = createImageButton(new Texture("Buttons/cancelBtn.png"), 60, 60);
+        homeBtn = createImageButton(game.tm.homeBtn, 150, 150);
+        paramBtn = createImageButton(game.tm.paramBtn, 150, 150);
+        cancelBtn = createImageButton(game.tm.cancelBtn, 60, 60);
         homeBtn.setPosition(Main.WIDTH - (homeBtn.getWidth() + 30), Main.HEIGHT - (homeBtn.getHeight() + 60 + paramBtn.getHeight()));
         paramBtn.setPosition(Main.WIDTH - (paramBtn.getWidth() + 30), Main.HEIGHT - (paramBtn.getHeight() + 30));
 
-        parametrsBackground = new Image(new Texture("paramBackground.png"));
+        parametrsBackground = new Image(game.tm.paramBackground);
         parametrsBackground.setSize(960 * Main.SIZECHANGE.x, 540 * Main.SIZECHANGE.y);
         parametrsBackground.setPosition(Main.WIDTH / 2 - parametrsBackground.getWidth() / 2, Main.HEIGHT / 2 - parametrsBackground.getHeight() / 2);
 
@@ -244,8 +223,8 @@ public class ShopState extends State {
         container.defaults().size(240 * Main.SIZECHANGE.x, 240);
         container.defaults().pad(120, 45 * Main.SIZECHANGE.x, 60, 45 * Main.SIZECHANGE.x);
 
-        for (int i = 0; i < images.length; i++) {
-            container.add(createImageButton(i,images[i]));
+        for (int i = 0; i < game.tm.skins.length; i++) {
+            container.add(createImageButton(i,game.tm.skins[i]));
             if ((i + 1) % 3 == 0) {
                 container.row();
                 container.defaults().pad(0, 22.5f * Main.SIZECHANGE.x, 120, 22.5f * Main.SIZECHANGE.x);
@@ -286,9 +265,10 @@ public class ShopState extends State {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (!parametrsBackground.isVisible()) {
-                    SoundBtn.play();
-                    gsm.set(new MenuState(gsm, tempMusic, tempSound, stars));
-                    MenuMusic.stop();
+                    game.sm.SoundBtn.play(game.sm.SoundVolume);
+                    game.setScreen(game.getMenuState());
+                    game.getMenuState().show();
+                    game.getShopState().hide();
                 }
             }
         });
@@ -300,7 +280,7 @@ public class ShopState extends State {
                 SoundSlider.setVisible(false);
                 parametrsBackground.setVisible(false);
                 cancelBtn.setVisible(false);
-                SoundBtn.play();
+                game.sm.SoundBtn.play(game.sm.SoundVolume);
             }
         });
 
@@ -312,7 +292,7 @@ public class ShopState extends State {
                 SoundSlider.setVisible(true);
                 cancelBtn.setPosition(Main.WIDTH / 2 + parametrsBackground.getWidth() / 2 - 15 * 5f * Main.SIZECHANGE.x, Main.HEIGHT / 2 + parametrsBackground.getHeight() / 2 - 5 * 15 * Main.SIZECHANGE.y);
                 cancelBtn.setVisible(true);
-                SoundBtn.play();
+                game.sm.SoundBtn.play(game.sm.SoundVolume);
 
             }
         });
@@ -321,8 +301,8 @@ public class ShopState extends State {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 tempMusic = MusicSlider.getValue();
-                prefs.putFloat("Music", tempMusic);
-                prefs.flush();
+                game.prefs.putFloat("Music", tempMusic);
+                game.prefs.flush();
             }
         });
 
@@ -330,49 +310,75 @@ public class ShopState extends State {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 tempSound = SoundSlider.getValue();
-                prefs.putFloat("Sound", tempSound);
-                prefs.flush();
+                game.prefs.putFloat("Sound", tempSound);
+                game.prefs.flush();
             }
         });
     }
 
+
     @Override
-    public void handleInpute() {
+    public void show() {
+        isShowed=true;
+        create();
+        Coins.setVisible(true);
+        homeBtn.setVisible(true);
+        paramBtn.setVisible(true);
+        scrollPane.setVisible(true);
+    }
+
+    @Override
+    public void render(float delta) {
+        if (game.sm.SoundVolume != tempSound) {
+            game.sm.SoundVolume = tempSound;
+            game.sm.setVolume();
+        }
+
+        if (game.sm.MusicVolume != tempMusic) {
+            game.sm.MusicVolume = tempMusic;
+            game.sm.setVolume();
+        }
+        /// --------------------------------
+        if(isShowed) {
+            ScreenUtils.clear(180 / 255f, 180 / 255f, 180 / 255f, 1);
+            game.camera.update();
+            game.sb.setProjectionMatrix(game.camera.combined);
+
+            stage.act(Gdx.graphics.getDeltaTime());
+            stage.draw();
+
+            game.sb.begin();
+            if (parametrsBackground.isVisible()) {
+                font3.draw(game.sb, String.valueOf((int) (100 * game.sm.SoundVolume)), Main.WIDTH / 2 - parametrsBackground.getWidth() / 2 + 42 * 15 * Main.SIZECHANGE.x, Main.HEIGHT / 2 - parametrsBackground.getHeight() / 2 + 17 * 15 * Main.SIZECHANGE.y);
+                font3.draw(game.sb, String.valueOf((int) (100 * game.sm.MusicVolume)), Main.WIDTH / 2 - parametrsBackground.getWidth() / 2 + 42 * 15 * Main.SIZECHANGE.x, Main.HEIGHT / 2 - parametrsBackground.getHeight() / 2 + 32 * 15 * Main.SIZECHANGE.y);
+            }
+            font2.draw(game.sb, String.valueOf(game.money), 36 * Main.SIZECHANGE.x + Coins.getWidth(), Main.HEIGHT - 90 * Main.SIZECHANGE.y);
+            game.sb.end();
+        }
+    }
+
+    @Override
+    public void resize(int width, int height) {
 
     }
 
     @Override
-    public void update(float dt) {
-        if (SoundVolume != tempSound) {
+    public void pause() {
 
-            SoundVolume = tempSound;
-            Blocked.setVolume(SoundVolume);
-            SoundBtn.setVolume(SoundVolume);
-        }
-
-        if (MusicVolume != tempMusic) {
-            MusicVolume = tempMusic;
-            MenuMusic.setVolume(MusicVolume);
-
-        }
     }
 
     @Override
-    public void render(SpriteBatch sb) {
-        ScreenUtils.clear(180 / 255f, 180 / 255f, 180 / 255f, 1);
-        camera.update();
-        sb.setProjectionMatrix(camera.combined);
+    public void resume() {
 
-        stage.act(Gdx.graphics.getDeltaTime());
-        stage.draw();
+    }
 
-        sb.begin();
-        if (parametrsBackground.isVisible()) {
-            font3.draw(sb, String.valueOf((int) (100 * SoundVolume)), Main.WIDTH / 2 - parametrsBackground.getWidth() / 2 + 42 * 15 * Main.SIZECHANGE.x, Main.HEIGHT / 2 - parametrsBackground.getHeight() / 2 + 17 * 15 * Main.SIZECHANGE.y);
-            font3.draw(sb, String.valueOf((int) (100 * MusicVolume)), Main.WIDTH / 2 - parametrsBackground.getWidth() / 2 + 42 * 15 * Main.SIZECHANGE.x, Main.HEIGHT / 2 - parametrsBackground.getHeight() / 2 + 32 * 15 * Main.SIZECHANGE.y);
-        }
-        font2.draw(sb, String.valueOf(money), 36 * Main.SIZECHANGE.x + Coins.getWidth(), Main.HEIGHT - 90 * Main.SIZECHANGE.y);
-        sb.end();
+    @Override
+    public void hide() {
+        isShowed=false;
+        homeBtn.setVisible(false);
+        paramBtn.setVisible(false);
+        Coins.setVisible(false);
+        scrollPane.setVisible(false);
     }
 
     @Override

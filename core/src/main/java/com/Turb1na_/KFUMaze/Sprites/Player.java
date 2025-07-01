@@ -10,37 +10,23 @@ import com.badlogic.gdx.math.Vector2;
 import com.Turb1na_.KFUMaze.Main;
 
 public class Player {
+    final Main game;
     private int coins=0;
     private Vector2 position;
     private boolean die = false;
     private Vector2 speed=new Vector2(0,0);
     private Vector2 target = new Vector2(-1, -1);
     private Vector2 acceleration;
-    private float SoundVolume;
     private Vector2 size;
     private String map[];
     private Vector2 posInMap;
     private char[] s;
     private boolean[] stars = {false, false, false};
-    private Preferences prefs = Gdx.app.getPreferences("Game");
-    private Sound Star= Gdx.audio.newSound(Gdx.files.internal("Audio/Star.mp3"));
-    private String[][] skins={
-        {"Player/playerUp.png","Player/playerLeft.png","Player/playerRight.png","Player/playerStop.png"},
-        {"Player/playerUp3.png","Player/playerLeft3.png","Player/playerRight3.png","Player/playerStop3.png"},
-        {"Player/playerUp4.png","Player/playerLeft4.png","Player/playerRight4.png","Player/playerStop4.png"},
-        {"Player/playerUp1.png","Player/playerLeft1.png","Player/playerRight1.png","Player/playerStop1.png"},
-        {"Player/playerUp2.png","Player/playerLeft2.png","Player/playerRight2.png","Player/playerStop2.png"},
-        {"Player/playerUp5.png","Player/playerLeft5.png","Player/playerRight5.png","Player/playerStop5.png"},
-    };
-    private int skin=prefs.getInteger("Skin");
-    private Texture playerUp=new Texture(skins[skin][0]);
-    private Texture playerLeft=new Texture(skins[skin][1]);
-    private Texture playerRight=new Texture(skins[skin][2]);
-    private Texture playerStop=new Texture(skins[skin][3]);
 
-    public Player(Vector2 position,  Vector2 size, String map[], Vector2 acceleration,float dt,float SoundVolume) {
+
+    public Player(final Main game,Vector2 position,  Vector2 size, String map[], Vector2 acceleration) {
+        this.game=game;
         this.map = map;
-        this.SoundVolume=SoundVolume;
         this.position = position;
         this.size = size;
         this.acceleration = acceleration;
@@ -56,20 +42,17 @@ public class Player {
 
     public void draw(SpriteBatch sb) {
         if(target.x==-1 && target.y==-1)
-            sb.draw(playerStop, position.x * Main.SIZECHANGE.x, position.y * Main.SIZECHANGE.y, size.x * Main.SIZECHANGE.x, size.y * Main.SIZECHANGE.y);
+            sb.draw(game.tm.skinsModel[game.Skin][3], position.x * Main.SIZECHANGE.x, position.y * Main.SIZECHANGE.y, size.x * Main.SIZECHANGE.x, size.y * Main.SIZECHANGE.y);
         if(position.x <= target.x && target.x >= 0)
-            sb.draw(playerRight, position.x * Main.SIZECHANGE.x, position.y * Main.SIZECHANGE.y, size.x * Main.SIZECHANGE.x, size.y * Main.SIZECHANGE.y);
+            sb.draw(game.tm.skinsModel[game.Skin][2], position.x * Main.SIZECHANGE.x, position.y * Main.SIZECHANGE.y, size.x * Main.SIZECHANGE.x, size.y * Main.SIZECHANGE.y);
         if(position.x >= target.x && target.x >= 0)
-            sb.draw(playerLeft, position.x * Main.SIZECHANGE.x, position.y * Main.SIZECHANGE.y, size.x * Main.SIZECHANGE.x, size.y * Main.SIZECHANGE.y);
+            sb.draw(game.tm.skinsModel[game.Skin][1], position.x * Main.SIZECHANGE.x, position.y * Main.SIZECHANGE.y, size.x * Main.SIZECHANGE.x, size.y * Main.SIZECHANGE.y);
         if(target.y>0)
-            sb.draw(playerUp, position.x * Main.SIZECHANGE.x, position.y * Main.SIZECHANGE.y, size.x * Main.SIZECHANGE.x, size.y * Main.SIZECHANGE.y);
+            sb.draw(game.tm.skinsModel[game.Skin][0], position.x * Main.SIZECHANGE.x, position.y * Main.SIZECHANGE.y, size.x * Main.SIZECHANGE.x, size.y * Main.SIZECHANGE.y);
     }
 
     public void dispose() {
-        playerUp.dispose();
-        playerRight.dispose();
-        playerLeft.dispose();
-        playerStop.dispose();
+
     }
 
     public void input(int deltaX, int deltaY) {
@@ -169,36 +152,36 @@ public class Player {
         }
         switch (map[31 - Math.round(position.y / 60f)].charAt(Math.round(position.x / 60f))) {
             case 'k':
-                Star.stop();
+                game.sm.Star.stop();
                 stars[0] = true;
                 s = map[31 - Math.round(position.y / 60f)].toCharArray();
                 s[Math.round(position.x / 60f)] = ' ';
                 map[31 - Math.round(position.y / 60f)] = new String(s);
-                Star.play(SoundVolume);
+                game.sm.Star.play(game.sm.SoundVolume);
                 break;
             case 'f':
-                Star.stop();
+                game.sm.Star.stop();
                 stars[1] = true;
                 s = map[31 - Math.round(position.y / 60f)].toCharArray();
                 s[Math.round(position.x / 60f)] = ' ';
                 map[31 - Math.round(position.y / 60f)] = new String(s);
-                Star.play(SoundVolume);
+                game.sm.Star.play(game.sm.SoundVolume);
                 break;
             case 'u':
-                Star.stop();
+                game.sm.Star.stop();
                 stars[2] = true;
                 s = map[31 - Math.round(position.y / 60f)].toCharArray();
                 s[Math.round(position.x / 60f)] = ' ';
                 map[31 - Math.round(position.y / 60f)] = new String(s);
-                Star.play(SoundVolume);
+                game.sm.Star.play(game.sm.SoundVolume);
                 break;
             case '-':
-                Star.stop();
+                game.sm.Star.stop();
                 coins++;
                 s = map[31 - Math.round(position.y / 60f)].toCharArray();
                 s[Math.round(position.x / 60f)] = ' ';
                 map[31 - Math.round(position.y / 60f)] = new String(s);
-                Star.play(SoundVolume);
+                game.sm.Star.play(game.sm.SoundVolume);
                 break;
         }
     }

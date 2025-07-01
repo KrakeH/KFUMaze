@@ -9,6 +9,7 @@ import java.sql.Time;
 
 
 public class KillBlock {
+    final Main game;
     private Vector2 position;
     private String map[];
     private Vector2 posInMap;
@@ -17,14 +18,11 @@ public class KillBlock {
     private boolean isRunning = false;
     private boolean canKill = false;
     private float Timer;
-    private Texture[][] textures={
-        {new Texture("Sprites/killBlock/killBlock11.png"),new Texture("Sprites/killBlock/killBlock12.png"),new Texture("Sprites/throns/thron5.png")},
-        {new Texture("Sprites/killBlock/killBlock21.png"),new Texture("Sprites/killBlock/killBlock22.png"),new Texture("Sprites/throns/thron6.png")},
-        {new Texture("Sprites/killBlock/killBlock31.png"),new Texture("Sprites/killBlock/killBlock32.png"),new Texture("Sprites/throns/thron7.png")},
-        {new Texture("Sprites/killBlock/killBlock41.png"),new Texture("Sprites/killBlock/killBlock42.png"),new Texture("Sprites/throns/thron8.png")}};
 
 
-    public KillBlock(Vector2 position, Vector2 size, String map[], char Direction) {
+
+    public KillBlock(final Main game,Vector2 position, Vector2 size, String map[], char Direction) {
+        this.game=game;
         this.map = map;
         this.position = position;
         this.size = size;
@@ -36,35 +34,35 @@ public class KillBlock {
         switch (Direction) {
             case '1':
                 if(Timer<0.5f)
-                    sb.draw(textures[0][0], position.x * Main.SIZECHANGE.x, position.y * Main.SIZECHANGE.y, size.x * Main.SIZECHANGE.x, size.y * Main.SIZECHANGE.y);
+                    sb.draw(game.tm.killBlocks[0][0], position.x * Main.SIZECHANGE.x, position.y * Main.SIZECHANGE.y, size.x * Main.SIZECHANGE.x, size.y * Main.SIZECHANGE.y);
                 else if(Timer>=0.5f &&Timer<1.4f)
-                    sb.draw(textures[0][1], position.x * Main.SIZECHANGE.x, position.y * Main.SIZECHANGE.y, size.x * Main.SIZECHANGE.x, size.y * Main.SIZECHANGE.y);
+                    sb.draw(game.tm.killBlocks[0][1], position.x * Main.SIZECHANGE.x, position.y * Main.SIZECHANGE.y, size.x * Main.SIZECHANGE.x, size.y * Main.SIZECHANGE.y);
                 else
-                    sb.draw(textures[0][2], position.x * Main.SIZECHANGE.x, position.y * Main.SIZECHANGE.y, size.x * Main.SIZECHANGE.x, size.y * Main.SIZECHANGE.y);
+                    sb.draw(game.tm.killBlocks[0][2], position.x * Main.SIZECHANGE.x, position.y * Main.SIZECHANGE.y, size.x * Main.SIZECHANGE.x, size.y * Main.SIZECHANGE.y);
                 break;
             case '2':
                 if(Timer<0.5f)
-                    sb.draw(textures[1][0], position.x * Main.SIZECHANGE.x, position.y * Main.SIZECHANGE.y, size.x * Main.SIZECHANGE.x, size.y * Main.SIZECHANGE.y);
+                    sb.draw(game.tm.killBlocks[1][0], position.x * Main.SIZECHANGE.x, position.y * Main.SIZECHANGE.y, size.x * Main.SIZECHANGE.x, size.y * Main.SIZECHANGE.y);
                 else if(Timer>=0.5f &&Timer<1.4f)
-                    sb.draw(textures[1][1], position.x * Main.SIZECHANGE.x, position.y * Main.SIZECHANGE.y, size.x * Main.SIZECHANGE.x, size.y * Main.SIZECHANGE.y);
+                    sb.draw(game.tm.killBlocks[1][1], position.x * Main.SIZECHANGE.x, position.y * Main.SIZECHANGE.y, size.x * Main.SIZECHANGE.x, size.y * Main.SIZECHANGE.y);
                 else
-                    sb.draw(textures[1][2], position.x * Main.SIZECHANGE.x, position.y * Main.SIZECHANGE.y, size.x * Main.SIZECHANGE.x, size.y * Main.SIZECHANGE.y);
+                    sb.draw(game.tm.killBlocks[1][2], position.x * Main.SIZECHANGE.x, position.y * Main.SIZECHANGE.y, size.x * Main.SIZECHANGE.x, size.y * Main.SIZECHANGE.y);
                 break;
             case '3':
                 if(Timer<0.7f)
-                    sb.draw(textures[2][0], position.x * Main.SIZECHANGE.x, position.y * Main.SIZECHANGE.y, size.x * Main.SIZECHANGE.x, size.y * Main.SIZECHANGE.y);
+                    sb.draw(game.tm.killBlocks[2][0], position.x * Main.SIZECHANGE.x, position.y * Main.SIZECHANGE.y, size.x * Main.SIZECHANGE.x, size.y * Main.SIZECHANGE.y);
                 else if(Timer>=0.5f &&Timer<1.4f)
-                    sb.draw(textures[2][1], position.x * Main.SIZECHANGE.x, position.y * Main.SIZECHANGE.y, size.x * Main.SIZECHANGE.x, size.y * Main.SIZECHANGE.y);
+                    sb.draw(game.tm.killBlocks[2][1], position.x * Main.SIZECHANGE.x, position.y * Main.SIZECHANGE.y, size.x * Main.SIZECHANGE.x, size.y * Main.SIZECHANGE.y);
                 else
-                    sb.draw(textures[2][2], position.x * Main.SIZECHANGE.x, position.y * Main.SIZECHANGE.y, size.x * Main.SIZECHANGE.x, size.y * Main.SIZECHANGE.y);
+                    sb.draw(game.tm.killBlocks[2][2], position.x * Main.SIZECHANGE.x, position.y * Main.SIZECHANGE.y, size.x * Main.SIZECHANGE.x, size.y * Main.SIZECHANGE.y);
                 break;
             case '4':
                 if(Timer<0.5f)
-                    sb.draw(textures[3][0], position.x * Main.SIZECHANGE.x, position.y * Main.SIZECHANGE.y, size.x * Main.SIZECHANGE.x, size.y * Main.SIZECHANGE.y);
+                    sb.draw(game.tm.killBlocks[3][0], position.x * Main.SIZECHANGE.x, position.y * Main.SIZECHANGE.y, size.x * Main.SIZECHANGE.x, size.y * Main.SIZECHANGE.y);
                 else if(Timer>=0.5f &&Timer<1.4f)
-                    sb.draw(textures[3][1], position.x * Main.SIZECHANGE.x, position.y * Main.SIZECHANGE.y, size.x * Main.SIZECHANGE.x, size.y * Main.SIZECHANGE.y);
+                    sb.draw(game.tm.killBlocks[3][1], position.x * Main.SIZECHANGE.x, position.y * Main.SIZECHANGE.y, size.x * Main.SIZECHANGE.x, size.y * Main.SIZECHANGE.y);
                 else
-                    sb.draw(textures[3][2], position.x * Main.SIZECHANGE.x, position.y * Main.SIZECHANGE.y, size.x * Main.SIZECHANGE.x, size.y * Main.SIZECHANGE.y);
+                    sb.draw(game.tm.killBlocks[3][2], position.x * Main.SIZECHANGE.x, position.y * Main.SIZECHANGE.y, size.x * Main.SIZECHANGE.x, size.y * Main.SIZECHANGE.y);
                 break;
         }
     }
@@ -94,11 +92,6 @@ public class KillBlock {
     }
 
     public void dispose() {
-        for (int i = 0; i < textures.length; i++) {
-            for (int j = 0; j < textures[0].length; j++) {
-                textures[i][j].dispose();
-            }
-        }
     }
 
     public Vector2 getPosition() {

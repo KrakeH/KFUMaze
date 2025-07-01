@@ -21,11 +21,9 @@ public class Button {
         this.texture=texture;
     }
     private boolean inButton(int x,int y){
-        //System.out.println(x+" "+y+" "+(0<y-position.y)+" "+( y-position.y<height*Main.SIZECHANGE.y));
         return (0<x-position.x*Main.SIZECHANGE.x&& x-position.x*Main.SIZECHANGE.x<width*Main.SIZECHANGE.x)&&(0<y-position.y*Main.SIZECHANGE.y && y-position.y*Main.SIZECHANGE.y<height*Main.SIZECHANGE.y);
     }
     public boolean onClick(){
-        //System.out.println(Gdx.input.getX());
         return Gdx.input.justTouched() &&inButton(Gdx.input.getX(),Math.abs(Gdx.input.getY()-Gdx.graphics.getHeight()));
     }
     public void addPosition(Vector2 force){

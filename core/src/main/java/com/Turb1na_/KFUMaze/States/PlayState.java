@@ -2,12 +2,9 @@ package com.Turb1na_.KFUMaze.States;
 
 import com.Turb1na_.KFUMaze.Sprites.KillBlock;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -18,7 +15,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,44 +24,12 @@ import com.Turb1na_.KFUMaze.Main;
 import com.Turb1na_.KFUMaze.Sprites.Bat;
 import com.Turb1na_.KFUMaze.Sprites.Player;
 
+public class PlayState implements Screen {
 
-public class PlayState extends State {
-
-    private OrthographicCamera camera;
-    private Stage stage;
-    private Preferences prefs = Gdx.app.getPreferences("Game");
-    private Sound SoundBtn = Gdx.audio.newSound(Gdx.files.internal("Audio/ButtonSound.wav"));
-    private Music Win = Gdx.audio.newMusic(Gdx.files.internal("Audio/Win.mp3"));
-    private Sound WinStar = Gdx.audio.newSound(Gdx.files.internal("Audio/WinStar.wav"));
-    private Sound Die = Gdx.audio.newSound(Gdx.files.internal("Audio/Die.mp3"));
-    private com.badlogic.gdx.audio.Music GameMusic = Gdx.audio.newMusic(Gdx.files.internal("Audio/GameMusic.mp3"));
-    private Texture background;
-    /// Textures---------------
-    private Texture[] walls = new Texture[45];
-    private Texture[] throns = new Texture[8];
-    private Texture[] tables = {new Texture("Sprites/Decorations/table1.png"), new Texture("Sprites/Decorations/table2.png"), new Texture("Sprites/Decorations/table3.png"), new Texture("Sprites/Decorations/table4.png")};
-    private Texture[] chairs = {new Texture("Sprites/Decorations/chair1.png"), new Texture("Sprites/Decorations/chair2.png"), new Texture("Sprites/Decorations/chair3.png"), new Texture("Sprites/Decorations/chair4.png")};
-    private Texture boardsFront = (new Random().nextInt(100) <= 49 ? new Texture("Sprites/Decorations/boardFront1.png") : new Random().nextInt(50) < 49 ? new Texture("Sprites/Decorations/boardFront2.png") : new Texture("Sprites/Decorations/boardFrontSecret.png"));
-    private Texture boardsLeft = (new Random().nextInt(2) == 0 ? new Texture("Sprites/Decorations/boardLeft1.png") : new Texture("Sprites/Decorations/boardLeft2.png"));
-    private Texture boardsRight = (new Random().nextInt(2) == 0 ? new Texture("Sprites/Decorations/boardRight1.png") : new Texture("Sprites/Decorations/boardRight2.png"));
-    private Texture door = new Texture("Sprites/Decorations/door.png");
-    private Texture door1 = new Texture("Sprites/exit.png");
-    private Texture shelfFront = new Texture("Sprites/Decorations/bookShelf2.png");
-    private Texture shelfLeft = new Texture("Sprites/Decorations/bookShelf1.png");
-    private Texture shelfRight = new Texture("Sprites/Decorations/bookShelf3.png");
-    private Texture kitchenTable = new Texture("Sprites/Decorations/kitchenTable.png");
-    private Texture gym = new Texture("Sprites/Decorations/gym.png");
-    private Texture coin = new Texture("Sprites/coin.png");
-    private Texture arrowUp = new Texture("Sprites/Tutorial/arrowUp.png");
-    private Texture arrowDown = new Texture("Sprites/Tutorial/arrowDown.png");
-    private Texture arrowRight = new Texture("Sprites/Tutorial/arrowRight.png");
-    private Texture arrowLeft = new Texture("Sprites/Tutorial/arrowLeft.png");
-
-    /// ------------------------
-    private Texture exit;
-    private Texture Ktexture;
-    private Texture Ftexture;
-    private Texture Utexture;
+    final Main game;
+    private boolean isShowed = false;
+    private final OrthographicCamera camera;
+    private final Stage stage;
     private ImageButton stopButton;
     private ImageButton continueButton;
     private ImageButton againButton;
@@ -77,7 +41,6 @@ public class PlayState extends State {
     private Image KStar;
     private Image FStar;
     private Image UStar;
-    private int level;
     private Vector3 deltaAngle = new Vector3(360, 360, 360);
     private Vector3 deltaSize = new Vector3(0, 0, 0);
     private Vector3 deltaSizeIs = new Vector3(0, 0, 0);
@@ -87,11 +50,19 @@ public class PlayState extends State {
     private boolean Exit = false;
     private boolean batsDie = false;
     private boolean killBlockDie = false;
-    private boolean[][] levelStars;
-    private int money = prefs.getInteger("Coins");
+    private boolean levelStars[][] = {
+        {false, false, false},
+        {false, false, false},
+        {false, false, false},
+        {false, false, false},
+        {false, false, false},
+        {false, false, false},
+        {false, false, false},
+        {false, false, false},
+        {false, false, false}};
     private List<Bat> bats = new ArrayList<>();
     private String maps[] = {
-            "##################\n" +
+        "##################\n" +
             "#########0########\n" +
             "######### ########\n" +
             "######### ########\n" +
@@ -389,36 +360,22 @@ public class PlayState extends State {
             "##################\n"};
 
     private String[] levelMap;
+    private int level = 1;
     private Vector2 sizeMap;
     private Player player;
     private int[][] WallMap = new int[32][18];
     private int[][] ThronsMap = new int[32][18];
     private int[][] Tutorial = {
-        {4,4,9},
-        //{1,5,7},
-        {4,7,6},
-        //{3,8,7},
-        {4,14,8},
-        //{1,15,7},
-        //{2,14,6},
-        //{3,13,11},
-        {4,22,12},
-        //{1,23,8},
-        //{2,22,7},
-        //{1,21,6},
-        {4,27,4},
-        //{1,28,2},
-        //{2,26,1},
-        //{3,25,8},
-        //{4,26,9},
-        {3,27,12},
-        //{2,26,13},
-        //{3,25,14},
-        //{4,29,15},
+        {4, 4, 9},
+        {4, 7, 6},
+        {4, 14, 8},
+        {4, 22, 12},
+        {4, 27, 4},
+        {3, 27, 12}
     };
     private KillBlock[][] KillMap = new KillBlock[32][18];
     private List<KillBlock> KillBlocks = new ArrayList<>();
-    private Image levelNumber;
+    private Image[] levelsNumber = new Image[9];
 
     private int GetWallMask(int x, int y, String[] map) {
         int mask = 0;
@@ -545,6 +502,207 @@ public class PlayState extends State {
         return mask;
     }
 
+    public void regenerate(int level) {
+        this.level = level;
+
+        Time = true;
+
+        KillBlocks.clear();
+        bats.clear();
+
+        sizeMap = new Vector2(maps[level - 1].split("\\r?\\n")[0].length(), maps[level - 1].split("\\r?\\n").length);
+        levelMap = maps[level - 1].split("\\r?\\n");
+
+        for (int i = 0; i < sizeMap.y; i++) {
+            for (int j = 0; j < sizeMap.x; j++) {
+                KillMap[i][j] = null;
+                switch (levelMap[i].charAt(j)) {
+                    case '*':
+                        player = new Player(game,new Vector2(60 * j, 60 * (sizeMap.y - 1 - i)), new Vector2(60, 60), levelMap, new Vector2(5 * Main.SIZECHANGE.x * 50, 5 * Main.SIZECHANGE.y * 50));
+                        break;
+                    case 'o':
+                        bats.add(new Bat(game,new Vector2(60 * j, 60 * (sizeMap.y - 1 - i)), new Vector2(60, 60), levelMap, new Vector2(6 * Main.SIZECHANGE.x * 50, 6 * Main.SIZECHANGE.y * 50), true));
+                        break;
+                    case 'p':
+                        bats.add(new Bat(game,new Vector2(60 * j, 60 * (sizeMap.y - 1 - i)), new Vector2(60, 60), levelMap, new Vector2(6 * Main.SIZECHANGE.x * 50, 6 * Main.SIZECHANGE.y * 50), false));
+                        break;
+                    case '1':
+                    case '2':
+                    case '3':
+                    case '4':
+                        KillMap[i][j] = new KillBlock(game,new Vector2(60 * j, 60 * (sizeMap.y - 1 - i)), new Vector2(60, 60), levelMap, levelMap[i].charAt(j));
+                        KillBlocks.add(KillMap[i][j]);
+                        break;
+                }
+            }
+        }
+
+        ///----------------
+
+        generateWallMap(levelMap);
+        generateThronsMap(levelMap);
+
+        create();
+    }
+
+    private void create() {
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 3; j++) {
+                levelStars[i][j] = game.prefs.getBoolean("" + i + j);
+            }
+        }
+
+        /// -----------Buttons------------------
+        stopButton.clearListeners();
+        stopButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (!winBackground.isVisible() && !killBackground.isVisible() && !menuBackground.isVisible()) {
+                    game.sm.SoundBtn.play(game.sm.SoundVolume);
+                    Time = false;
+                    KStar.setSize(24 * 10 * Main.SIZECHANGE.x, 24 * 10 * Main.SIZECHANGE.y);
+                    FStar.setSize(24 * 10 * Main.SIZECHANGE.x, 24 * 10 * Main.SIZECHANGE.y);
+                    UStar.setSize(24 * 10 * Main.SIZECHANGE.x, 24 * 10 * Main.SIZECHANGE.y);
+                    KStar.setPosition(Main.WIDTH / 2 - menuBackground.getWidth() / 2 + 10 * 3 * Main.SIZECHANGE.x, Main.HEIGHT / 2 - menuBackground.getHeight() / 2 + 74 * 10 * Main.SIZECHANGE.y);
+                    FStar.setPosition(Main.WIDTH / 2 - menuBackground.getWidth() / 2 + 10 * 25 * Main.SIZECHANGE.x, Main.HEIGHT / 2 - menuBackground.getHeight() / 2 + 74 * 10 * Main.SIZECHANGE.y);
+                    UStar.setPosition(Main.WIDTH / 2 - menuBackground.getWidth() / 2 + 10 * 49 * Main.SIZECHANGE.x, Main.HEIGHT / 2 - menuBackground.getHeight() / 2 + 74 * 10 * Main.SIZECHANGE.y);
+                    KStar.setOrigin(0, 0);
+                    FStar.setOrigin(0, 0);
+                    UStar.setOrigin(0, 0);
+                    KStar.setRotation(0);
+                    FStar.setRotation(0);
+                    UStar.setRotation(0);
+
+                    continueButton.setPosition(Main.WIDTH / 2 - game.tm.gameBackground.getWidth() / 3 * Main.SIZECHANGE.x + 10 * 4 * Main.SIZECHANGE.x, Main.HEIGHT / 2 - game.tm.gameBackground.getHeight() / 3 * Main.SIZECHANGE.y + 10 * 48 * Main.SIZECHANGE.y);
+                    exitButton.setPosition(Main.WIDTH / 2 - game.tm.gameBackground.getWidth() / 3 * Main.SIZECHANGE.x + 10 * 4 * Main.SIZECHANGE.x, Main.HEIGHT / 2 - game.tm.gameBackground.getHeight() / 3 * Main.SIZECHANGE.y + 10 * 8 * Main.SIZECHANGE.y);
+                    againButton.setPosition(Main.WIDTH / 2 - game.tm.gameBackground.getWidth() / 3 * Main.SIZECHANGE.x + 10 * 4 * Main.SIZECHANGE.x, Main.HEIGHT / 2 - game.tm.gameBackground.getHeight() / 3 * Main.SIZECHANGE.y + 10 * 28 * Main.SIZECHANGE.y);
+
+                    menuBackground.setVisible(true);
+                    continueButton.setVisible(true);
+                    againButton.setVisible(true);
+                    exitButton.setVisible(true);
+
+                    if (levelStars[level - 1][0])
+                        KStar.setVisible(true);
+                    if (levelStars[level - 1][1])
+                        FStar.setVisible(true);
+                    if (levelStars[level - 1][2])
+                        UStar.setVisible(true);
+                }
+            }
+        });
+        exitButton.clearListeners();
+        exitButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.sm.SoundBtn.play(game.sm.SoundVolume);
+
+                menuBackground.setVisible(false);
+                againButton.setVisible(false);
+                continueButton.setVisible(false);
+                exitButton.setVisible(false);
+                nextButton.setVisible(false);
+                KStar.setVisible(false);
+                FStar.setVisible(false);
+                UStar.setVisible(false);
+                killBackground.setVisible(false);
+                winBackground.setVisible(false);
+
+                game.setScreen(game.getMenuState());
+                game.getMenuState().update();
+                game.getMenuState().show();
+                game.getPlayState().hide();
+                game.sm.MenuMusicPlay();
+            }
+        });
+        nextButton.clearListeners();
+        nextButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.sm.SoundBtn.play(game.sm.SoundVolume);
+                game.sm.GameMusic.stop();
+                game.money += player.getCoins();
+                game.prefs.putInteger("Coins", game.money);
+                game.prefs.flush();
+
+                game.setScreen(game.getInfoState());
+                game.getInfoState().regenerate(level);
+                game.getInfoState().show();
+                game.getPlayState().hide();
+            }
+        });
+        continueButton.clearListeners();
+        continueButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.sm.SoundBtn.play(game.sm.SoundVolume);
+                Time = true;
+                menuBackground.setVisible(false);
+                againButton.setVisible(false);
+                continueButton.setVisible(false);
+                exitButton.setVisible(false);
+                KStar.setVisible(false);
+                FStar.setVisible(false);
+                UStar.setVisible(false);
+            }
+        });
+        againButton.clearListeners();
+        againButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.sm.SoundBtn.play(game.sm.SoundVolume);
+                game.sm.GameMusic.stop();
+                if (Exit) {
+                    game.money += player.getCoins();
+                    game.prefs.putInteger("Coins", game.money);
+                    game.prefs.flush();
+                }
+                regenerate(level);
+                menuBackground.setVisible(false);
+                againButton.setVisible(false);
+                continueButton.setVisible(false);
+                exitButton.setVisible(false);
+                nextButton.setVisible(false);
+                KStar.setVisible(false);
+                FStar.setVisible(false);
+                UStar.setVisible(false);
+                killBackground.setVisible(false);
+                winBackground.setVisible(false);
+                Time = true;
+                Exit = false;
+                batsDie = false;
+                killBlockDie = false;
+            }
+        });
+        /// -------------------------------------------------
+
+        stopButton.setVisible(true);
+        againButton.setVisible(false);
+        continueButton.setVisible(false);
+        exitButton.setVisible(false);
+        nextButton.setVisible(false);
+        menuBackground.setVisible(false);
+        killBackground.setVisible(false);
+        winBackground.setVisible(false);
+        for (int i = 0; i < 9; i++) {
+            levelsNumber[i].setVisible(false);
+        }
+        KStar.setVisible(false);
+        FStar.setVisible(false);
+        UStar.setVisible(false);
+
+        game.sm.GameMusic.play();
+
+        Time = true;
+        Exit = false;
+        batsDie = false;
+        killBlockDie = false;
+
+        deltaAngle = new Vector3(360, 360, 360);
+        deltaSize = new Vector3(0, 0, 0);
+        deltaSizeIs = new Vector3(0, 0, 0);
+        Music = new Vector3(0, 0, 0);
+    }
 
     private ImageButton createImageButton(Texture buttonTexture, float Height, float Width) {
         ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
@@ -557,174 +715,61 @@ public class PlayState extends State {
         return button;
     }
 
-    public PlayState(GameStateManager gsm, float MusicVolume, float SoundVolume, int level, boolean[][] stars) {
-        super(gsm, MusicVolume, SoundVolume);
-
-        Win.setVolume(MusicVolume);
-        GameMusic.setVolume(MusicVolume);
-
-
-        levelStars = stars;
-        this.level = level;
-
-        GameMusic.setLooping(true);
-        GameMusic.play();
+    public PlayState(Main game, Stage stage) {
+        this.game = game;
+        this.stage = stage;
 
         camera = new OrthographicCamera(Main.WIDTH, Main.HEIGHT);
         camera.setToOrtho(false);
-        stage = new Stage(new ScreenViewport());
-        Gdx.input.setInputProcessor(stage);
-
-        background = new Texture("PlayBackground.png");
 
         ///download-wall-thorns---------------
-        for (int i = 0; i < walls.length; i++) {
-            walls[i] = new Texture("Sprites/walls/" + (i + 1) + ".png");
-        }
 
-        for (int i = 0; i < throns.length; i++) {
-            throns[i] = new Texture("Sprites/throns/thron" + (i + 1) + ".png");
-        }
         ///-----------------------------
-        exit = new Texture("Sprites/exit.png");
-        Ktexture = new Texture("Sprites/KFU/K.png");
-        Ftexture = new Texture("Sprites/KFU/F.png");
-        Utexture = new Texture("Sprites/KFU/U.png");
 
-        menuBackground = new Image(new Texture("gameBackground.png"));
-        killBackground = new Image(new Texture("killBackground.png"));
-        winBackground = new Image(new Texture("winBackground.png"));
-        levelNumber = new Image(new Texture("LevelsName/level" + (level) + ".png"));
-        levelNumber.setSize(520 * Main.SIZECHANGE.x, 110 * Main.SIZECHANGE.y);
-        levelNumber.setPosition(Main.WIDTH / 2 - new Texture("winBackground.png").getWidth() / 3 * Main.SIZECHANGE.x + 10 * 12 * Main.SIZECHANGE.x, Main.HEIGHT / 2 - new Texture("winBackground.png").getHeight() / 3 * Main.SIZECHANGE.y + 10 * 82 * Main.SIZECHANGE.y);
+        menuBackground = new Image(game.tm.gameBackground);
+        killBackground = new Image(game.tm.killBackground);
+        winBackground = new Image(game.tm.winBackground);
 
-        stopButton = createImageButton(new Texture("Buttons/stopBtn.png"), 120, 120);
-        continueButton = createImageButton(new Texture("Buttons/ctnBtn.png"), 160, 67 * 10);
-        againButton = createImageButton(new Texture("Buttons/againBtn.png"), 160, 67 * 10);
-        exitButton = createImageButton(new Texture("Buttons/exitBtn.png"), 160, 67 * 10);
-        nextButton = createImageButton(new Texture("Buttons/nextBtn.png"), 160, 67 * 10);
-        sizeMap = new Vector2(maps[level - 1].split("\\r?\\n")[0].length(), maps[level - 1].split("\\r?\\n").length);
-        levelMap = maps[level - 1].split("\\r?\\n");
+        for (int i = 0; i < 9; i++) {
+            levelsNumber[i] = new Image(game.tm.levelsNumbers[i]);
+            levelsNumber[i].setVisible(false);
+            levelsNumber[i].setSize(520 * Main.SIZECHANGE.x, 110 * Main.SIZECHANGE.y);
+            levelsNumber[i].setPosition(Main.WIDTH / 2 - game.tm.winBackground.getWidth() / 3 * Main.SIZECHANGE.x + 10 * 12 * Main.SIZECHANGE.x, Main.HEIGHT / 2 - game.tm.winBackground.getHeight() / 3 * Main.SIZECHANGE.y + 10 * 82 * Main.SIZECHANGE.y);
+        }
 
-        generateWallMap(levelMap);
-        generateThronsMap(levelMap);
+        stopButton = createImageButton(game.tm.stopBtn, 120, 120);
+        continueButton = createImageButton(game.tm.ctnBtn, 160, 67 * 10);
+        againButton = createImageButton(game.tm.againBtn, 160, 67 * 10);
+        exitButton = createImageButton(game.tm.exitBtn, 160, 67 * 10);
+        nextButton = createImageButton(game.tm.nextBtn, 160, 67 * 10);
 
-        menuBackground.setSize(new Texture("gameBackground.png").getWidth() / 1.5f * Main.SIZECHANGE.x, new Texture("gameBackground.png").getHeight() / 1.5f * Main.SIZECHANGE.y);
-        menuBackground.setPosition(Main.WIDTH / 2 - new Texture("gameBackground.png").getWidth() / 3 * Main.SIZECHANGE.x, Main.HEIGHT / 2 - new Texture("gameBackground.png").getHeight() / 3 * Main.SIZECHANGE.y);
+        menuBackground.setSize(game.tm.gameBackground.getWidth() / 1.5f * Main.SIZECHANGE.x, game.tm.gameBackground.getHeight() / 1.5f * Main.SIZECHANGE.y);
+        menuBackground.setPosition(Main.WIDTH / 2 - game.tm.gameBackground.getWidth() / 3 * Main.SIZECHANGE.x, Main.HEIGHT / 2 - game.tm.gameBackground.getHeight() / 3 * Main.SIZECHANGE.y);
 
-        killBackground.setSize(new Texture("killBackground.png").getWidth() / 1.5f * Main.SIZECHANGE.x, new Texture("killBackground.png").getHeight() / 1.5f * Main.SIZECHANGE.y);
-        killBackground.setPosition(Main.WIDTH / 2 - new Texture("killBackground.png").getWidth() / 3 * Main.SIZECHANGE.x, Main.HEIGHT / 2 - new Texture("killBackground.png").getHeight() / 3 * Main.SIZECHANGE.y);
+        killBackground.setSize(game.tm.killBackground.getWidth() / 1.5f * Main.SIZECHANGE.x, game.tm.killBackground.getHeight() / 1.5f * Main.SIZECHANGE.y);
+        killBackground.setPosition(Main.WIDTH / 2 - game.tm.killBackground.getWidth() / 3 * Main.SIZECHANGE.x, Main.HEIGHT / 2 - game.tm.killBackground.getHeight() / 3 * Main.SIZECHANGE.y);
 
-        winBackground.setSize(new Texture("winBackground.png").getWidth() / 1.5f * Main.SIZECHANGE.x, new Texture("winBackground.png").getHeight() / 1.5f * Main.SIZECHANGE.y);
-        winBackground.setPosition(Main.WIDTH / 2 - new Texture("winBackground.png").getWidth() / 3 * Main.SIZECHANGE.x, Main.HEIGHT / 2 - new Texture("winBackground.png").getHeight() / 3 * Main.SIZECHANGE.y);
+        winBackground.setSize(game.tm.winBackground.getWidth() / 1.5f * Main.SIZECHANGE.x, game.tm.winBackground.getHeight() / 1.5f * Main.SIZECHANGE.y);
+        winBackground.setPosition(Main.WIDTH / 2 - game.tm.winBackground.getWidth() / 3 * Main.SIZECHANGE.x, Main.HEIGHT / 2 - game.tm.winBackground.getHeight() / 3 * Main.SIZECHANGE.y);
 
         stopButton.setPosition(Main.WIDTH - stopButton.getWidth() - 60 * Main.SIZECHANGE.x, Main.HEIGHT - stopButton.getHeight() - 60 * Main.SIZECHANGE.y);
-        nextButton.setPosition(Main.WIDTH / 2 - new Texture("winBackground.png").getWidth() / 3 * Main.SIZECHANGE.x + 10 * 4 * Main.SIZECHANGE.x, Main.HEIGHT / 2 - new Texture("winBackground.png").getHeight() / 3 * Main.SIZECHANGE.y + 10 * 28 * Main.SIZECHANGE.y);
+        nextButton.setPosition(Main.WIDTH / 2 - game.tm.winBackground.getWidth() / 3 * Main.SIZECHANGE.x + 10 * 4 * Main.SIZECHANGE.x, Main.HEIGHT / 2 - game.tm.winBackground.getHeight() / 3 * Main.SIZECHANGE.y + 10 * 28 * Main.SIZECHANGE.y);
 
-        againButton.setVisible(false);
-        continueButton.setVisible(false);
-        exitButton.setVisible(false);
-        nextButton.setVisible(false);
-        menuBackground.setVisible(false);
-        killBackground.setVisible(false);
-        winBackground.setVisible(false);
-        levelNumber.setVisible(false);
+        KStar = new Image(game.tm.KStar);
+        FStar = new Image(game.tm.FStar);
+        UStar = new Image(game.tm.UStar);
 
-        KStar = new Image(new Texture("Sprites/KFU/K.png"));
-        FStar = new Image(new Texture("Sprites/KFU/F.png"));
-        UStar = new Image(new Texture("Sprites/KFU/U.png"));
-
-        KStar.setVisible(false);
-        FStar.setVisible(false);
-        UStar.setVisible(false);
+        create();
 
         ///-----------------------
-        stopButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (!winBackground.isVisible() && !killBackground.isVisible()) {
-                    SoundBtn.play(SoundVolume);
-                    Time = false;
-                    KStar.setSize(24 * 10 * Main.SIZECHANGE.x, 24 * 10 * Main.SIZECHANGE.y);
-                    FStar.setSize(24 * 10 * Main.SIZECHANGE.x, 24 * 10 * Main.SIZECHANGE.y);
-                    UStar.setSize(24 * 10 * Main.SIZECHANGE.x, 24 * 10 * Main.SIZECHANGE.y);
-                    KStar.setPosition(Main.WIDTH / 2 - menuBackground.getWidth() / 2 + 10 * 3 * Main.SIZECHANGE.x, Main.HEIGHT / 2 - menuBackground.getHeight() / 2 + 74 * 10 * Main.SIZECHANGE.y);
-                    FStar.setPosition(Main.WIDTH / 2 - menuBackground.getWidth() / 2 + 10 * 25 * Main.SIZECHANGE.x, Main.HEIGHT / 2 - menuBackground.getHeight() / 2 + 74 * 10 * Main.SIZECHANGE.y);
-                    UStar.setPosition(Main.WIDTH / 2 - menuBackground.getWidth() / 2 + 10 * 49 * Main.SIZECHANGE.x, Main.HEIGHT / 2 - menuBackground.getHeight() / 2 + 74 * 10 * Main.SIZECHANGE.y);
-
-                    continueButton.setPosition(Main.WIDTH / 2 - new Texture("gameBackground.png").getWidth() / 3 * Main.SIZECHANGE.x + 10 * 4 * Main.SIZECHANGE.x, Main.HEIGHT / 2 - new Texture("gameBackground.png").getHeight() / 3 * Main.SIZECHANGE.y + 10 * 48 * Main.SIZECHANGE.y);
-                    exitButton.setPosition(Main.WIDTH / 2 - new Texture("gameBackground.png").getWidth() / 3 * Main.SIZECHANGE.x + 10 * 4 * Main.SIZECHANGE.x, Main.HEIGHT / 2 - new Texture("gameBackground.png").getHeight() / 3 * Main.SIZECHANGE.y + 10 * 8 * Main.SIZECHANGE.y);
-                    againButton.setPosition(Main.WIDTH / 2 - new Texture("gameBackground.png").getWidth() / 3 * Main.SIZECHANGE.x + 10 * 4 * Main.SIZECHANGE.x, Main.HEIGHT / 2 - new Texture("gameBackground.png").getHeight() / 3 * Main.SIZECHANGE.y + 10 * 28 * Main.SIZECHANGE.y);
-
-                    menuBackground.setVisible(true);
-                    continueButton.setVisible(true);
-                    againButton.setVisible(true);
-                    exitButton.setVisible(true);
-
-                    if (stars[level - 1][0])
-                        KStar.setVisible(true);
-                    if (stars[level - 1][1])
-                        FStar.setVisible(true);
-                    if (stars[level - 1][2])
-                        UStar.setVisible(true);
-                }
-            }
-        });
-
-        exitButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                SoundBtn.play(SoundVolume);
-                GameMusic.stop();
-                gsm.set(new MenuState(gsm, MusicVolume, SoundVolume, levelStars));
-            }
-        });
-
-        nextButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                SoundBtn.play(SoundVolume);
-                GameMusic.stop();
-                money += player.getCoins();
-                prefs.putInteger("Coins", money);
-                prefs.flush();
-                gsm.set(new InfoState(gsm, MusicVolume, SoundVolume, levelStars, level));
-            }
-        });
-
-        continueButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                SoundBtn.play(SoundVolume);
-                Time = true;
-                menuBackground.setVisible(false);
-                againButton.setVisible(false);
-                continueButton.setVisible(false);
-                exitButton.setVisible(false);
-                KStar.setVisible(false);
-                FStar.setVisible(false);
-                UStar.setVisible(false);
-            }
-        });
-        againButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                SoundBtn.play(SoundVolume);
-                GameMusic.stop();
-                if (Exit) {
-                    money += player.getCoins();
-                    prefs.putInteger("Coins", money);
-                    prefs.flush();
-                }
-                gsm.set(new PlayState(gsm, MusicVolume, SoundVolume, level, levelStars));
-            }
-        });
 
         stage.addActor(stopButton);
         stage.addActor(menuBackground);
         stage.addActor(killBackground);
         stage.addActor(winBackground);
-        stage.addActor(levelNumber);
+        for (int i = 0; i < 9; i++) {
+            stage.addActor(levelsNumber[i]);
+        }
         stage.addActor(continueButton);
         stage.addActor(nextButton);
         stage.addActor(againButton);
@@ -734,40 +779,31 @@ public class PlayState extends State {
         stage.addActor(UStar);
 
 
-        for (int i = 0; i < sizeMap.y; i++) {
-            for (int j = 0; j < sizeMap.x; j++) {
-                KillMap[i][j] = null;
-                switch (levelMap[i].charAt(j)) {
-                    case '*':
-                        player = new Player(new Vector2(60 * j, 60 * (sizeMap.y - 1 - i)), new Vector2(60, 60), levelMap, new Vector2(5 * Main.SIZECHANGE.x * 50, 5 * Main.SIZECHANGE.y * 50), Gdx.graphics.getDeltaTime(), SoundVolume);
-                        break;
-                    case 'o':
-                        bats.add(new Bat(new Vector2(60 * j, 60 * (sizeMap.y - 1 - i)), new Vector2(60, 60), levelMap, new Vector2(4 * Main.SIZECHANGE.x * 50, 4 * Main.SIZECHANGE.y * 50), true));
-                        break;
-                    case 'p':
-                        bats.add(new Bat(new Vector2(60 * j, 60 * (sizeMap.y - 1 - i)), new Vector2(60, 60), levelMap, new Vector2(4 * Main.SIZECHANGE.x * 50, 4 * Main.SIZECHANGE.y * 50), false));
-                        break;
-                    case '1':
-                    case '2':
-                    case '3':
-                    case '4':
-                        KillMap[i][j] = new KillBlock(new Vector2(60 * j, 60 * (sizeMap.y - 1 - i)), new Vector2(60, 60), levelMap, levelMap[i].charAt(j));
-                        KillBlocks.add(KillMap[i][j]);
-                        break;
-                }
-            }
-        }
     }
 
     @Override
-    public void handleInpute() {
-        player.input(Gdx.input.getDeltaX(), Gdx.input.getDeltaY());
+    public void show() {
+        isShowed = true;
+        create();
+        Time = true;
+        Exit = false;
+        batsDie = false;
+        killBlockDie = false;
+
+        deltaAngle = new Vector3(360, 360, 360);
+        deltaSize = new Vector3(0, 0, 0);
+        deltaSizeIs = new Vector3(0, 0, 0);
+        Music = new Vector3(0, 0, 0);
+
+        /// -----------Music--------------
+        game.sm.setVolume();
+        /// ---------------------------
     }
 
     @Override
-    public void update(float dt) {
+    public void render(float delta) {
         for (int i = 0; i < KillBlocks.size(); i++) {
-            KillBlocks.get(i).update(dt);
+            KillBlocks.get(i).update(delta);
         }
 
         if (KillMap[31 - Math.round(player.getTruthPosition().y / 60f)][Math.round(player.getTruthPosition().x / 60f)] != null && !KillMap[31 - Math.round(player.getTruthPosition().y / 60f)][Math.round(player.getTruthPosition().x / 60f)].isRunning()) {
@@ -787,19 +823,18 @@ public class PlayState extends State {
                 batsDie = true;
             }
         }
-        handleInpute();
-
         if (Time) {
             for (int i = 0; i < bats.size(); i++) {
-                bats.get(i).move(dt);
+                bats.get(i).move(delta);
             }
-            player.move(dt);
+            player.move(delta);
+
 
             if (player.exit()) Exit = true;
             if (player.exit()) player.setAcceleration(new Vector2(0, 0));
             if (Exit && !winBackground.isVisible()) {
-                GameMusic.stop();
-                Win.play();
+                game.sm.GameMusic.stop();
+                game.sm.Win.play();
                 int x = 0;
                 int z = 0;
                 if (levelStars[level - 1][0]) {
@@ -823,21 +858,23 @@ public class PlayState extends State {
                 if (z <= x) {
                     levelStars[level - 1] = player.getStars();
                 }
+
                 for (int i = 0; i < 9; i++) {
                     for (int j = 0; j < 3; j++) {
-                        prefs.putBoolean("" + i + j, levelStars[i][j]);
+                        game.prefs.putBoolean("" + i + j, levelStars[i][j]);
                     }
                 }
-                prefs.flush();
+                game.prefs.flush();
 
                 winBackground.setVisible(true);
-                levelNumber.setVisible(true);
+                System.out.println(level);
+                levelsNumber[level-1].setVisible(true);
                 againButton.setVisible(true);
                 nextButton.setVisible(true);
                 KStar.setSize(0, 0);
                 FStar.setSize(0, 0);
                 UStar.setSize(0, 0);
-                againButton.setPosition(Main.WIDTH / 2 - new Texture("winBackground.png").getWidth() / 3 * Main.SIZECHANGE.x + 10 * 4 * Main.SIZECHANGE.x, Main.HEIGHT / 2 - new Texture("winBackground.png").getHeight() / 3 * Main.SIZECHANGE.y + 10 * 8 * Main.SIZECHANGE.y);
+                againButton.setPosition(Main.WIDTH / 2 - game.tm.winBackground.getWidth() / 3 * Main.SIZECHANGE.x + 10 * 4 * Main.SIZECHANGE.x, Main.HEIGHT / 2 - game.tm.winBackground.getHeight() / 3 * Main.SIZECHANGE.y + 10 * 8 * Main.SIZECHANGE.y);
 
 
                 KStar.setPosition(Main.WIDTH / 2 - menuBackground.getWidth() / 2 + 10 * 3 * Main.SIZECHANGE.x, Main.HEIGHT / 2 - menuBackground.getHeight() / 2 + 64 * 10 * Main.SIZECHANGE.y);
@@ -852,12 +889,12 @@ public class PlayState extends State {
                     UStar.setVisible(true);
             }
             if ((player.isDie() || batsDie || killBlockDie) && !killBackground.isVisible()) {
-                Die.play(SoundVolume);
+                game.sm.Die.play(game.sm.SoundVolume);
                 killBackground.setVisible(true);
-                GameMusic.dispose();
+                game.sm.GameMusic.stop();
 
-                exitButton.setPosition(Main.WIDTH / 2 - new Texture("killBackground.png").getWidth() / 3 * Main.SIZECHANGE.x + 10 * 4 * Main.SIZECHANGE.x, Main.HEIGHT / 2 - new Texture("killBackground.png").getHeight() / 3 * Main.SIZECHANGE.y + 10 * 8 * Main.SIZECHANGE.y);
-                againButton.setPosition(Main.WIDTH / 2 - new Texture("killBackground.png").getWidth() / 3 * Main.SIZECHANGE.x + 10 * 4 * Main.SIZECHANGE.x, Main.HEIGHT / 2 - new Texture("killBackground.png").getHeight() / 3 * Main.SIZECHANGE.y + 10 * 28 * Main.SIZECHANGE.y);
+                exitButton.setPosition(Main.WIDTH / 2 - game.tm.killBackground.getWidth() / 3 * Main.SIZECHANGE.x + 10 * 4 * Main.SIZECHANGE.x, Main.HEIGHT / 2 - game.tm.killBackground.getHeight() / 3 * Main.SIZECHANGE.y + 10 * 8 * Main.SIZECHANGE.y);
+                againButton.setPosition(Main.WIDTH / 2 - game.tm.killBackground.getWidth() / 3 * Main.SIZECHANGE.x + 10 * 4 * Main.SIZECHANGE.x, Main.HEIGHT / 2 - game.tm.killBackground.getHeight() / 3 * Main.SIZECHANGE.y + 10 * 28 * Main.SIZECHANGE.y);
 
 
                 againButton.setVisible(true);
@@ -866,20 +903,19 @@ public class PlayState extends State {
 
             }
         }
-    }
-
-    @Override
-    public void render(SpriteBatch sb) {
+        /// ------------------------
+        player.input(Gdx.input.getDeltaX(), Gdx.input.getDeltaY());
+        ///------------------
         camera.position.set(player.getPosition().x * Main.SIZECHANGE.x, player.getPosition().y * Main.SIZECHANGE.y, 0);
         camera.zoom = 0.75f;
         camera.update();
-        sb.setProjectionMatrix(camera.combined);
+        game.sb.setProjectionMatrix(camera.combined);
 
         ///----K-STAR------------------------------
         if (Exit && deltaSizeIs.x != 2 && KStar.isVisible()) {
             if (Music.x == 0) {
                 Music.x = 1;
-                WinStar.play(SoundVolume);
+                game.sm.WinStar.play(game.sm.SoundVolume);
             }
             KStar.setSize(deltaSize.x * Main.SIZECHANGE.x, deltaSize.x * Main.SIZECHANGE.y);
             KStar.setPosition(Main.WIDTH / 2 - menuBackground.getWidth() / 2 + 10 * 3 * Main.SIZECHANGE.x + (120 - deltaSize.x / 2) * Main.SIZECHANGE.x, Main.HEIGHT / 2 - menuBackground.getHeight() / 2 + 60.5f * 10 * Main.SIZECHANGE.y + (120 - deltaSize.x / 2) * Main.SIZECHANGE.y);
@@ -907,7 +943,7 @@ public class PlayState extends State {
         if (Exit && (deltaSizeIs.x == 2 || !KStar.isVisible()) && FStar.isVisible() && deltaSizeIs.y != 2) {
             if (Music.y == 0) {
                 Music.y = 1;
-                WinStar.play(SoundVolume);
+                game.sm.WinStar.play(game.sm.SoundVolume);
             }
             FStar.setSize(deltaSize.y * Main.SIZECHANGE.x, deltaSize.y * Main.SIZECHANGE.y);
             FStar.setPosition(Main.WIDTH / 2 - menuBackground.getWidth() / 2 + 10 * 25 * Main.SIZECHANGE.x + (120 - deltaSize.y / 2) * Main.SIZECHANGE.x, Main.HEIGHT / 2 - menuBackground.getHeight() / 2 + 60.5f * 10 * Main.SIZECHANGE.y + (120 - deltaSize.y / 2) * Main.SIZECHANGE.y);
@@ -935,7 +971,7 @@ public class PlayState extends State {
         if (Exit && ((deltaSizeIs.x == 2 && deltaSizeIs.y == 2) || (!KStar.isVisible() && deltaSizeIs.y == 2) || (deltaSizeIs.x == 2 && !FStar.isVisible()) || (!KStar.isVisible() && !FStar.isVisible())) && deltaSizeIs.z != 2 && UStar.isVisible()) {
             if (Music.z == 0) {
                 Music.z = 1;
-                WinStar.play(SoundVolume);
+                game.sm.WinStar.play(game.sm.SoundVolume);
             }
             UStar.setSize(deltaSize.z * Main.SIZECHANGE.x, deltaSize.z * Main.SIZECHANGE.y);
             UStar.setPosition(Main.WIDTH / 2 - menuBackground.getWidth() / 2 + 10 * 49 * Main.SIZECHANGE.x + (120 - deltaSize.z / 2) * Main.SIZECHANGE.x, Main.HEIGHT / 2 - menuBackground.getHeight() / 2 + 60.5f * 10 * Main.SIZECHANGE.y + (120 - deltaSize.z / 2) * Main.SIZECHANGE.y);
@@ -961,25 +997,25 @@ public class PlayState extends State {
         }
         ///-------------------------------------
 
-        sb.begin();
+        game.sb.begin();
         ScreenUtils.clear((float) 71 / 255, (float) 71 / 255, (float) 71 / 255, 1);
 
-        sb.draw(background, 0, 0, background.getWidth() * Main.SIZECHANGE.x, background.getHeight() * Main.SIZECHANGE.y);
+        game.sb.draw(game.tm.playBackground, 0, 0, game.tm.playBackground.getWidth() * Main.SIZECHANGE.x, game.tm.playBackground.getHeight() * Main.SIZECHANGE.y);
 
         if (level == 1) {
             for (int i = 0; i < Tutorial.length; i++) {
                 switch (Tutorial[i][0]) {
                     case 1:
-                        sb.draw(arrowRight, 60 * Main.SIZECHANGE.x * Tutorial[i][2], 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 -Tutorial[i][1]), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
+                        game.sb.draw(game.tm.arrowRight, 60 * Main.SIZECHANGE.x * Tutorial[i][2], 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 - Tutorial[i][1]), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
                         break;
                     case 2:
-                        sb.draw(arrowDown, 60 * Main.SIZECHANGE.x * Tutorial[i][2], 60 * Main.SIZECHANGE.y *(sizeMap.y - 1 - Tutorial[i][1]), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
+                        game.sb.draw(game.tm.arrowDown, 60 * Main.SIZECHANGE.x * Tutorial[i][2], 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 - Tutorial[i][1]), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
                         break;
                     case 3:
-                        sb.draw(arrowLeft, 60 * Main.SIZECHANGE.x * Tutorial[i][2], 60 * Main.SIZECHANGE.y *(sizeMap.y - 1 - Tutorial[i][1]), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
+                        game.sb.draw(game.tm.arrowLeft, 60 * Main.SIZECHANGE.x * Tutorial[i][2], 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 - Tutorial[i][1]), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
                         break;
                     case 4:
-                        sb.draw(arrowUp, 60 * Main.SIZECHANGE.x * Tutorial[i][2], 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 -Tutorial[i][1]), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
+                        game.sb.draw(game.tm.arrowUp, 60 * Main.SIZECHANGE.x * Tutorial[i][2], 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 - Tutorial[i][1]), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
                         break;
                 }
             }
@@ -989,127 +1025,138 @@ public class PlayState extends State {
             for (int j = 0; j < sizeMap.x; j++) {
                 if (levelMap[i].charAt(j) == '#') {
                     try {
-                        sb.draw(walls[WallMap[i][j]], walls[0].getWidth() * Main.SIZECHANGE.x * j, walls[0].getHeight() * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), walls[0].getWidth() * Main.SIZECHANGE.x, walls[0].getHeight() * Main.SIZECHANGE.y);
+                        game.sb.draw(game.tm.walls[WallMap[i][j]], game.tm.walls[0].getWidth() * Main.SIZECHANGE.x * j, game.tm.walls[0].getHeight() * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), game.tm.walls[0].getWidth() * Main.SIZECHANGE.x, game.tm.walls[0].getHeight() * Main.SIZECHANGE.y);
                     } catch (Exception e) {
                     }
                 } else if (levelMap[i].charAt(j) == 'w') {
                     try {
-                        sb.draw(throns[ThronsMap[i][j]], throns[0].getWidth() * Main.SIZECHANGE.x * j, throns[0].getHeight() * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), throns[0].getWidth() * Main.SIZECHANGE.x, throns[0].getHeight() * Main.SIZECHANGE.y);
+                        game.sb.draw(game.tm.throns[ThronsMap[i][j]], game.tm.throns[0].getWidth() * Main.SIZECHANGE.x * j, game.tm.throns[0].getHeight() * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), game.tm.throns[0].getWidth() * Main.SIZECHANGE.x, game.tm.throns[0].getHeight() * Main.SIZECHANGE.y);
                     } catch (Exception e) {
                     }
                 } else {
                     switch (levelMap[i].charAt(j)) {
                         case '0':
-                            sb.draw(exit, 60 * Main.SIZECHANGE.x * j, 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), exit.getWidth() * Main.SIZECHANGE.x, exit.getHeight() * Main.SIZECHANGE.y);
+                            game.sb.draw(game.tm.exit, 60 * Main.SIZECHANGE.x * j, 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), game.tm.exit.getWidth() * Main.SIZECHANGE.x, game.tm.exit.getHeight() * Main.SIZECHANGE.y);
                             break;
                         case 'k':
-                            sb.draw(Ktexture, Ktexture.getWidth() * Main.SIZECHANGE.x * j, Ktexture.getHeight() * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), Ktexture.getWidth() * Main.SIZECHANGE.x, Ktexture.getHeight() * Main.SIZECHANGE.y);
+                            game.sb.draw(game.tm.KStar, game.tm.KStar.getWidth() * Main.SIZECHANGE.x * j, game.tm.KStar.getHeight() * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), game.tm.KStar.getWidth() * Main.SIZECHANGE.x, game.tm.KStar.getHeight() * Main.SIZECHANGE.y);
                             break;
                         case 'f':
-                            sb.draw(Ftexture, Ftexture.getWidth() * Main.SIZECHANGE.x * j, Ftexture.getHeight() * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), Ftexture.getWidth() * Main.SIZECHANGE.x, Ftexture.getHeight() * Main.SIZECHANGE.y);
+                            game.sb.draw(game.tm.FStar, game.tm.FStar.getWidth() * Main.SIZECHANGE.x * j, game.tm.FStar.getHeight() * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), game.tm.FStar.getWidth() * Main.SIZECHANGE.x, game.tm.FStar.getHeight() * Main.SIZECHANGE.y);
                             break;
                         case 'u':
-                            sb.draw(Utexture, Utexture.getWidth() * Main.SIZECHANGE.x * j, Utexture.getHeight() * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), Utexture.getWidth() * Main.SIZECHANGE.x, Utexture.getHeight() * Main.SIZECHANGE.y);
+                            game.sb.draw(game.tm.UStar, game.tm.UStar.getWidth() * Main.SIZECHANGE.x * j, game.tm.UStar.getHeight() * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), game.tm.UStar.getWidth() * Main.SIZECHANGE.x, game.tm.UStar.getHeight() * Main.SIZECHANGE.y);
                             break;
                         case '5':
                         case '6':
                         case '7':
                         case '8':
-                            sb.draw(chairs[levelMap[i].charAt(j) - '5'], 60 * Main.SIZECHANGE.x * j, 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
+                            game.sb.draw(game.tm.chairs[levelMap[i].charAt(j) - '5'], 60 * Main.SIZECHANGE.x * j, 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
                             break;
                         case 'a':
                         case 'b':
                         case 'c':
                         case 'd':
-                            sb.draw(tables[levelMap[i].charAt(j) - 'a'], 60 * Main.SIZECHANGE.x * j, 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
+                            game.sb.draw(game.tm.tables[levelMap[i].charAt(j) - 'a'], 60 * Main.SIZECHANGE.x * j, 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
                             break;
                         case 'e':
-                            sb.draw(door, 60 * Main.SIZECHANGE.x * j, 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
+                            game.sb.draw(game.tm.door, 60 * Main.SIZECHANGE.x * j, 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
                             break;
                         case 'y':
-                            sb.draw(door1, 60 * Main.SIZECHANGE.x * j, 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
+                            game.sb.draw(game.tm.exit, 60 * Main.SIZECHANGE.x * j, 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
                             break;
                         case 'q':
-                            sb.draw(gym, 60 * Main.SIZECHANGE.x * j, 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), 60 * 7 * Main.SIZECHANGE.x, 60 * 7 * Main.SIZECHANGE.y);
+                            game.sb.draw(game.tm.gym, 60 * Main.SIZECHANGE.x * j, 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), 60 * 7 * Main.SIZECHANGE.x, 60 * 7 * Main.SIZECHANGE.y);
                             break;
                         case 'l':
-                            sb.draw(shelfLeft, 60 * Main.SIZECHANGE.x * j, 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
+                            game.sb.draw(game.tm.shelfLeft, 60 * Main.SIZECHANGE.x * j, 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
                             break;
                         case 'm':
-                            sb.draw(shelfFront, 60 * Main.SIZECHANGE.x * j, 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
+                            game.sb.draw(game.tm.shelfFront, 60 * Main.SIZECHANGE.x * j, 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
                             break;
                         case 'n':
-                            sb.draw(shelfRight, 60 * Main.SIZECHANGE.x * j, 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
+                            game.sb.draw(game.tm.shelfRight, 60 * Main.SIZECHANGE.x * j, 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
                             break;
                         case 'j':
-                            sb.draw(kitchenTable, 60 * Main.SIZECHANGE.x * j, 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
+                            game.sb.draw(game.tm.kitchenTable, 60 * Main.SIZECHANGE.x * j, 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
                             break;
                         case 'g':
-                            sb.draw(boardsFront, 60 * Main.SIZECHANGE.x * j, 60 * Main.SIZECHANGE.y * (sizeMap.y - i), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
+                            game.sb.draw(game.tm.boardsFront, 60 * Main.SIZECHANGE.x * j, 60 * Main.SIZECHANGE.y * (sizeMap.y - i), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
                             break;
                         case 'h':
-                            sb.draw(boardsLeft, 60 * Main.SIZECHANGE.x * (j), 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
+                            game.sb.draw(game.tm.boardsLeft, 60 * Main.SIZECHANGE.x * (j), 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
                             break;
                         case 'i':
-                            sb.draw(boardsRight, 60 * Main.SIZECHANGE.x * (j - 1), 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
+                            game.sb.draw(game.tm.boardsRight, 60 * Main.SIZECHANGE.x * (j - 1), 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
                             break;
                         case '-':
-                            sb.draw(coin, 60 * Main.SIZECHANGE.x * (j), 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
+                            game.sb.draw(game.tm.coin, 60 * Main.SIZECHANGE.x * (j), 60 * Main.SIZECHANGE.y * (sizeMap.y - 1 - i), 60 * Main.SIZECHANGE.x, 60 * Main.SIZECHANGE.y);
                             break;
                     }
                 }
             }
         }
         for (int i = 0; i < bats.size(); i++) {
-            bats.get(i).draw(sb);
+            bats.get(i).draw(game.sb);
         }
         for (int i = 0; i < KillBlocks.size(); i++) {
-            KillBlocks.get(i).draw(sb);
+            KillBlocks.get(i).draw(game.sb);
 
         }
         if (!player.isDie()) {
-            player.draw(sb);
+            player.draw(game.sb);
         }
-        sb.end();
+        game.sb.end();
 
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
     }
 
     @Override
+    public void resize(int width, int height) {
+
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
+
+    }
+
+    @Override
+    public void hide() {
+        stopButton.setVisible(false);
+        againButton.setVisible(false);
+        continueButton.setVisible(false);
+        exitButton.setVisible(false);
+        nextButton.setVisible(false);
+        menuBackground.setVisible(false);
+        killBackground.setVisible(false);
+        winBackground.setVisible(false);
+        for (int i = 0; i < 9; i++) {
+            levelsNumber[i].setVisible(false);
+        }
+
+        KStar.setVisible(false);
+        FStar.setVisible(false);
+        UStar.setVisible(false);
+
+        isShowed = false;
+        game.sm.GameMusic.stop();
+
+        deltaAngle = new Vector3(360, 360, 360);
+        deltaSize = new Vector3(0, 0, 0);
+        deltaSizeIs = new Vector3(0, 0, 0);
+        Music = new Vector3(0, 0, 0);
+    }
+
+    @Override
     public void dispose() {
-        arrowUp.dispose();
-        arrowDown.dispose();
-        arrowLeft.dispose();
-        arrowRight.dispose();
-        GameMusic.dispose();
-        SoundBtn.dispose();
-        Win.dispose();
-        WinStar.dispose();
-        Die.dispose();
         stage.dispose();
-        background.dispose();
         player.dispose();
-        exit.dispose();
-        Ktexture.dispose();
-        Ftexture.dispose();
-        Utexture.dispose();
-        boardsFront.dispose();
-        boardsLeft.dispose();
-        boardsRight.dispose();
-        door.dispose();
-        coin.dispose();
-        for (int i = 0; i < walls.length; i++) {
-            walls[i].dispose();
-        }
-        for (int i = 0; i < throns.length; i++) {
-            throns[i].dispose();
-        }
-        for (int i = 0; i < chairs.length; i++) {
-            chairs[i].dispose();
-        }
-        for (int i = 0; i < tables.length; i++) {
-            tables[i].dispose();
-        }
     }
 }
