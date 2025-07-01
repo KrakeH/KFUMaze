@@ -221,6 +221,9 @@ public class MenuState implements Screen {
         MusicSlider.setVisible(false);
         SoundSlider.setVisible(false);
 
+        MusicSlider.setValue(game.sm.MusicVolume);
+        SoundSlider.setValue(game.sm.SoundVolume);
+
         /// ------------------
         for (int i = 0; i < 9; i++) {
             levelsNumber[i] = new Image(game.tm.levelsNumbers[i]);
