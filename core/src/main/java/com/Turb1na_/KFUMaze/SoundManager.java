@@ -10,7 +10,7 @@ public class SoundManager {
     public float SoundVolume;
     public Sound SoundBtn = Gdx.audio.newSound(Gdx.files.internal("Audio/ButtonSound.wav"));
     public Music MenuMusic = Gdx.audio.newMusic(Gdx.files.internal("Audio/MenuMusic.mp3"));
-    public Music Blocked = Gdx.audio.newMusic(Gdx.files.internal("Audio/blocked.mp3"));
+    public Sound Blocked = Gdx.audio.newSound(Gdx.files.internal("Audio/blocked.mp3"));
     public Sound Star= Gdx.audio.newSound(Gdx.files.internal("Audio/Star.mp3"));
     public Music Win = Gdx.audio.newMusic(Gdx.files.internal("Audio/Win.mp3"));
     public Sound WinStar = Gdx.audio.newSound(Gdx.files.internal("Audio/WinStar.wav"));
@@ -20,6 +20,7 @@ public class SoundManager {
 
     public SoundManager(final Main game){
         this.game=game;
+        System.out.println(game.prefs.getFloat("Music"));
         MusicVolume = game.prefs.getFloat("Music");
         SoundVolume= game.prefs.getFloat("Sound");
 
@@ -29,7 +30,6 @@ public class SoundManager {
 
     public void setVolume(){
         MenuMusic.setVolume(MusicVolume);
-        Blocked.setVolume(SoundVolume);
         Win.setVolume(MusicVolume);
         GameMusic.setVolume(MusicVolume);
     }

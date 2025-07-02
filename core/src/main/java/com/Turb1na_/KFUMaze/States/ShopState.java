@@ -99,8 +99,10 @@ public class ShopState implements Screen {
                     game.sm.Star.stop();
                     game.sm.Star.play(game.sm.SoundVolume);
                     for (int i = 0; i < textButtons.size(); i++) {
-                        if(String.valueOf(textButtons.get(i).getText()).equals("Equipped"))
-                            game.prefs.putInteger("Skin",i);
+                        if(String.valueOf(textButtons.get(i).getText()).equals("Equipped")) {
+                            game.prefs.putInteger("Skin", i);
+                            game.Skin=i;
+                        }
                         game.prefs.putString("price"+i, String.valueOf(textButtons.get(i).getText()));
                     }
                 }
@@ -122,7 +124,7 @@ public class ShopState implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 try {
                     if (game.money < Integer.parseInt(String.valueOf(button.getText())))
-                        game.sm.Blocked.play();
+                        game.sm.Blocked.play(game.sm.SoundVolume);
                     else {
                         game.money -= Integer.parseInt(text);
                         game.prefs.putInteger("Coins",game.money);
@@ -142,10 +144,12 @@ public class ShopState implements Screen {
                         }
                         button.setText("Equipped");
                         game.sm.Star.stop();
-                        game.sm.Star.play(tempSound);
+                        game.sm.Star.play(game.sm.SoundVolume);
                         for (int i = 0; i < textButtons.size(); i++) {
-                            if(String.valueOf(textButtons.get(i).getText()).equals("Equipped"))
-                                game.prefs.putInteger("Skin",i);
+                            if(String.valueOf(textButtons.get(i).getText()).equals("Equipped")) {
+                                game.prefs.putInteger("Skin", i);
+                                game.Skin=i;
+                            }
                             game.prefs.putString("price"+i, String.valueOf(textButtons.get(i).getText()));
                         }
                     }
@@ -193,7 +197,7 @@ public class ShopState implements Screen {
         font3=generator.generateFont(parameter);
         parameter.color = Color.BLACK;
         parameter.size = (int) (4 * 15 * Main.SIZECHANGE.y);
-        parameter.borderWidth = (int) 4 * Main.SIZECHANGE.y;
+        parameter.borderWidth = (int) 8 * Main.SIZECHANGE.y;
         parameter.borderColor = new Color(180 / 255f, 180 / 255f, 180 / 255f, 1);
         font2 = generator.generateFont(parameter);
         generator.dispose();
@@ -218,7 +222,7 @@ public class ShopState implements Screen {
         scrollPane.setOverscroll(false, false);
 
         Coins.setSize(120 * Main.SIZECHANGE.x, 120 * Main.SIZECHANGE.y);
-        Coins.setPosition((30), Main.HEIGHT - (180 * Main.SIZECHANGE.y));
+        Coins.setPosition((30), Main.HEIGHT - (150 * Main.SIZECHANGE.y));
 
         container.defaults().size(240 * Main.SIZECHANGE.x, 240);
         container.defaults().pad(120, 45 * Main.SIZECHANGE.x, 60, 45 * Main.SIZECHANGE.x);
@@ -301,8 +305,10 @@ public class ShopState implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 tempMusic = MusicSlider.getValue();
+                game.sm.MusicVolume=MusicSlider.getValue();
                 game.prefs.putFloat("Music", tempMusic);
                 game.prefs.flush();
+                game.sm.setVolume();
             }
         });
 
@@ -310,8 +316,10 @@ public class ShopState implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 tempSound = SoundSlider.getValue();
+                game.sm.SoundVolume=SoundSlider.getValue();
                 game.prefs.putFloat("Sound", tempSound);
                 game.prefs.flush();
+                game.sm.setVolume();
             }
         });
     }
@@ -329,15 +337,6 @@ public class ShopState implements Screen {
 
     @Override
     public void render(float delta) {
-        if (game.sm.SoundVolume != tempSound) {
-            game.sm.SoundVolume = tempSound;
-            game.sm.setVolume();
-        }
-
-        if (game.sm.MusicVolume != tempMusic) {
-            game.sm.MusicVolume = tempMusic;
-            game.sm.setVolume();
-        }
         /// --------------------------------
         if(isShowed) {
             ScreenUtils.clear(180 / 255f, 180 / 255f, 180 / 255f, 1);
@@ -352,7 +351,7 @@ public class ShopState implements Screen {
                 font3.draw(game.sb, String.valueOf((int) (100 * game.sm.SoundVolume)), Main.WIDTH / 2 - parametrsBackground.getWidth() / 2 + 42 * 15 * Main.SIZECHANGE.x, Main.HEIGHT / 2 - parametrsBackground.getHeight() / 2 + 17 * 15 * Main.SIZECHANGE.y);
                 font3.draw(game.sb, String.valueOf((int) (100 * game.sm.MusicVolume)), Main.WIDTH / 2 - parametrsBackground.getWidth() / 2 + 42 * 15 * Main.SIZECHANGE.x, Main.HEIGHT / 2 - parametrsBackground.getHeight() / 2 + 32 * 15 * Main.SIZECHANGE.y);
             }
-            font2.draw(game.sb, String.valueOf(game.money), 36 * Main.SIZECHANGE.x + Coins.getWidth(), Main.HEIGHT - 90 * Main.SIZECHANGE.y);
+            font2.draw(game.sb, String.valueOf(game.money), 36 * Main.SIZECHANGE.x + Coins.getWidth(), Main.HEIGHT  -60 * Main.SIZECHANGE.y);
             game.sb.end();
         }
     }

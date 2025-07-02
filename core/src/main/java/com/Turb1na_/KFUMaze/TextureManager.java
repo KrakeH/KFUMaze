@@ -16,9 +16,13 @@ public class TextureManager {
     public Texture winBackground;
     public Texture killBackground;
     public Texture gameBackground;
+    public Texture background;
+    public Texture plashka;
+    public Texture Ad;
 
     /// ------Buttons------------
     public Texture playBtn;
+    public Texture adBtn;
     public Texture nextBtn;
     public Texture homeBtn;
     public Texture paramBtn;
@@ -34,9 +38,13 @@ public class TextureManager {
 
     /// ------Sprites-------------
     public Texture sliderBack;
+    public Texture hearthZero;
+    public Texture hearth;
     public Texture batTexture;
     public Texture knob;
     public Texture coinValue;
+    public Texture way;
+    public Texture progressBar;
     public Texture door = new Texture("Sprites/Decorations/door.png");
     public Texture exit = new Texture("Sprites/exit.png");
     public Texture shelfFront = new Texture("Sprites/Decorations/bookShelf2.png");
@@ -71,6 +79,7 @@ public class TextureManager {
         new Texture("Info/info7.png"),
         new Texture("Info/info8.png"),
         new Texture("Info/info9.png"),
+        new Texture("Info/info10.png"),
     };
     public Texture[] skins = {
         new Texture("Player/playerStop.png"),
@@ -91,6 +100,7 @@ public class TextureManager {
         new Texture("levels/7.png"),
         new Texture("levels/8.png"),
         new Texture("levels/9.png"),
+        new Texture("levels/10.png"),
     };
 
     public Texture[] levelsNumbers = {
@@ -103,6 +113,7 @@ public class TextureManager {
         new Texture("LevelsName/level7.png"),
         new Texture("LevelsName/level8.png"),
         new Texture("LevelsName/level9.png"),
+        new Texture("LevelsName/level10.png")
     };
 
     public Texture[][] killBlocks={
@@ -130,6 +141,9 @@ public class TextureManager {
         winBackground = new Texture("winBackground.png");
         killBackground = new Texture("killBackground.png");
         gameBackground = new Texture("gameBackground.png");
+        background=new Texture("background.png");
+        plashka=new Texture("plashka.png");
+        Ad=new Texture("Info/Ad.png");
 
         playBtn = new Texture("Buttons/playbtn.png");
         nextBtn = new Texture("Buttons/nextBtn.png");
@@ -144,11 +158,16 @@ public class TextureManager {
         ctnBtn = new Texture("Buttons/ctnBtn.png");
         exitBtn = new Texture("Buttons/exitBtn.png");
         againBtn = new Texture("Buttons/againBtn.png");
+        adBtn=new Texture("Buttons/adButton.png");
 
         batTexture = new Texture("Sprites/Bat.png");
         coinValue = new Texture("CoinValue.png");
         knob = new Texture("Knob.png");
         sliderBack = new Texture("SliderBack.png");
+        hearth=new Texture("Sprites/hearth.png");
+        hearthZero=new Texture("Sprites/hearthZero.png");
+        way=new Texture("Sprites/way.png");
+        progressBar=new Texture("Sprites/progressBar.png");
 
         KStar = new Texture("Sprites/KFU/K.png");
         FStar = new Texture("Sprites/KFU/F.png");
@@ -208,6 +227,7 @@ public class TextureManager {
          KStar.dispose();
          FStar.dispose();
          UStar.dispose();
+         Ad.dispose();
 
         for (int i = 0; i < info.length; i++) {
             info[i].dispose();

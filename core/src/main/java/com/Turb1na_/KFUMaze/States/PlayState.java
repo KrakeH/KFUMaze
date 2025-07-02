@@ -1,6 +1,7 @@
 package com.Turb1na_.KFUMaze.States;
 
 import com.Turb1na_.KFUMaze.Sprites.KillBlock;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -51,6 +52,7 @@ public class PlayState implements Screen {
     private boolean batsDie = false;
     private boolean killBlockDie = false;
     private boolean levelStars[][] = {
+        {false, false, false},
         {false, false, false},
         {false, false, false},
         {false, false, false},
@@ -326,6 +328,39 @@ public class PlayState implements Screen {
             "########   2######\n" +
             "##################",
 
+            "##################\n" +
+            "####lmmmn#0#######\n" +
+            "#### 5d7 e #######\n" +
+            "##########-#######\n" +
+            "#w              w#\n" +
+            "#w      #       w#\n" +
+            "#w      - u#    w#\n" +
+            "#w  #           w#\n" +
+            "#w  1   2#      w#\n" +
+            "#w     #        w#\n" +
+            "#w     1   #    w#\n" +
+            "#w              w#\n" +
+            "#w #      -     w#\n" +
+            "####### ##########\n" +
+            "#######       f###\n" +
+            "#############w w##\n" +
+            "#i c7c7c7c7 #w w##\n" +
+            "#i c7c7c7c7 #w-w##\n" +
+            "#i          #w w##\n" +
+            "############## ###\n" +
+            "#      -       ###\n" +
+            "# ################\n" +
+            "# ### ## #########\n" +
+            "#   -      -#lmmn#\n" +
+            "##### ## ## e  5a#\n" +
+            "#   -     k-#lmmn#\n" +
+            "# ###o##o#########\n" +
+            "# ################\n" +
+            "# 2########     ##\n" +
+            "##2######## #  *y#\n" +
+            "##33333-    #   ##\n" +
+            "##################\n",
+
         "##################\n" +
             "##################\n" +
             "###        - #####\n" +
@@ -375,7 +410,7 @@ public class PlayState implements Screen {
     };
     private KillBlock[][] KillMap = new KillBlock[32][18];
     private List<KillBlock> KillBlocks = new ArrayList<>();
-    private Image[] levelsNumber = new Image[9];
+    private Image[] levelsNumber = new Image[10];
 
     private int GetWallMask(int x, int y, String[] map) {
         int mask = 0;
@@ -518,13 +553,13 @@ public class PlayState implements Screen {
                 KillMap[i][j] = null;
                 switch (levelMap[i].charAt(j)) {
                     case '*':
-                        player = new Player(game,new Vector2(60 * j, 60 * (sizeMap.y - 1 - i)), new Vector2(60, 60), levelMap, new Vector2(5 * Main.SIZECHANGE.x * 50, 5 * Main.SIZECHANGE.y * 50));
+                        player = new Player(game,new Vector2(60 * j, 60 * (sizeMap.y - 1 - i)), new Vector2(60, 60), levelMap, new Vector2(5 * Main.SIZECHANGE.x * 50, 5 * 50));
                         break;
                     case 'o':
-                        bats.add(new Bat(game,new Vector2(60 * j, 60 * (sizeMap.y - 1 - i)), new Vector2(60, 60), levelMap, new Vector2(6 * Main.SIZECHANGE.x * 50, 6 * Main.SIZECHANGE.y * 50), true));
+                        bats.add(new Bat(game,new Vector2(60 * j, 60 * (sizeMap.y - 1 - i)), new Vector2(60, 60), levelMap, new Vector2(6 * Main.SIZECHANGE.x * 50, 6 * 50), true));
                         break;
                     case 'p':
-                        bats.add(new Bat(game,new Vector2(60 * j, 60 * (sizeMap.y - 1 - i)), new Vector2(60, 60), levelMap, new Vector2(6 * Main.SIZECHANGE.x * 50, 6 * Main.SIZECHANGE.y * 50), false));
+                        bats.add(new Bat(game,new Vector2(60 * j, 60 * (sizeMap.y - 1 - i)), new Vector2(60, 60), levelMap, new Vector2(6 * Main.SIZECHANGE.x * 50, 6 * 50), false));
                         break;
                     case '1':
                     case '2':
@@ -546,7 +581,7 @@ public class PlayState implements Screen {
     }
 
     private void create() {
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 3; j++) {
                 levelStars[i][j] = game.prefs.getBoolean("" + i + j);
             }
@@ -657,21 +692,28 @@ public class PlayState implements Screen {
                     game.prefs.putInteger("Coins", game.money);
                     game.prefs.flush();
                 }
-                regenerate(level);
-                menuBackground.setVisible(false);
-                againButton.setVisible(false);
-                continueButton.setVisible(false);
-                exitButton.setVisible(false);
-                nextButton.setVisible(false);
-                KStar.setVisible(false);
-                FStar.setVisible(false);
-                UStar.setVisible(false);
-                killBackground.setVisible(false);
-                winBackground.setVisible(false);
-                Time = true;
-                Exit = false;
-                batsDie = false;
-                killBlockDie = false;
+                if(game.hearth>0) {
+                    regenerate(level);
+                    menuBackground.setVisible(false);
+                    againButton.setVisible(false);
+                    continueButton.setVisible(false);
+                    exitButton.setVisible(false);
+                    nextButton.setVisible(false);
+                    KStar.setVisible(false);
+                    FStar.setVisible(false);
+                    UStar.setVisible(false);
+                    killBackground.setVisible(false);
+                    winBackground.setVisible(false);
+                    Time = true;
+                    Exit = false;
+                    batsDie = false;
+                    killBlockDie = false;
+                }else{
+                    game.setScreen(game.getAdState());
+                    game.getAdState().regenerate(level-1);
+                    game.getAdState().show();
+                    game.getMenuState().hide();
+                }
             }
         });
         /// -------------------------------------------------
@@ -684,7 +726,7 @@ public class PlayState implements Screen {
         menuBackground.setVisible(false);
         killBackground.setVisible(false);
         winBackground.setVisible(false);
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < 10; i++) {
             levelsNumber[i].setVisible(false);
         }
         KStar.setVisible(false);
@@ -730,7 +772,7 @@ public class PlayState implements Screen {
         killBackground = new Image(game.tm.killBackground);
         winBackground = new Image(game.tm.winBackground);
 
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < 10; i++) {
             levelsNumber[i] = new Image(game.tm.levelsNumbers[i]);
             levelsNumber[i].setVisible(false);
             levelsNumber[i].setSize(520 * Main.SIZECHANGE.x, 110 * Main.SIZECHANGE.y);
@@ -767,7 +809,7 @@ public class PlayState implements Screen {
         stage.addActor(menuBackground);
         stage.addActor(killBackground);
         stage.addActor(winBackground);
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < 10; i++) {
             stage.addActor(levelsNumber[i]);
         }
         stage.addActor(continueButton);
@@ -859,7 +901,7 @@ public class PlayState implements Screen {
                     levelStars[level - 1] = player.getStars();
                 }
 
-                for (int i = 0; i < 9; i++) {
+                for (int i = 0; i < 10; i++) {
                     for (int j = 0; j < 3; j++) {
                         game.prefs.putBoolean("" + i + j, levelStars[i][j]);
                     }
@@ -867,7 +909,7 @@ public class PlayState implements Screen {
                 game.prefs.flush();
 
                 winBackground.setVisible(true);
-                System.out.println(level);
+
                 levelsNumber[level-1].setVisible(true);
                 againButton.setVisible(true);
                 nextButton.setVisible(true);
@@ -889,6 +931,10 @@ public class PlayState implements Screen {
                     UStar.setVisible(true);
             }
             if ((player.isDie() || batsDie || killBlockDie) && !killBackground.isVisible()) {
+                game.hearth-=1;
+                game.prefs.putLong("Hearth", game.hearth);
+                game.prefs.flush();
+
                 game.sm.Die.play(game.sm.SoundVolume);
                 killBackground.setVisible(true);
                 game.sm.GameMusic.stop();
@@ -972,6 +1018,7 @@ public class PlayState implements Screen {
             if (Music.z == 0) {
                 Music.z = 1;
                 game.sm.WinStar.play(game.sm.SoundVolume);
+
             }
             UStar.setSize(deltaSize.z * Main.SIZECHANGE.x, deltaSize.z * Main.SIZECHANGE.y);
             UStar.setPosition(Main.WIDTH / 2 - menuBackground.getWidth() / 2 + 10 * 49 * Main.SIZECHANGE.x + (120 - deltaSize.z / 2) * Main.SIZECHANGE.x, Main.HEIGHT / 2 - menuBackground.getHeight() / 2 + 60.5f * 10 * Main.SIZECHANGE.y + (120 - deltaSize.z / 2) * Main.SIZECHANGE.y);
@@ -1137,7 +1184,7 @@ public class PlayState implements Screen {
         menuBackground.setVisible(false);
         killBackground.setVisible(false);
         winBackground.setVisible(false);
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < 10; i++) {
             levelsNumber[i].setVisible(false);
         }
 

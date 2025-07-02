@@ -52,7 +52,14 @@ public class MenuState implements Screen {
     private Image KStar;
     private Image FStar;
     private Image UStar;
+    private Image Hearth1;
+    private Image Hearth2;
+    private Image Hearth3;
+    private Image HearthZero1;
+    private Image HearthZero2;
+    private Image HearthZero3;
     private Image Coins;
+    private Image Plashka;
     private TextureRegionDrawable SliderBack;
     private TextureRegionDrawable Knob;
     private Slider.SliderStyle style;
@@ -62,8 +69,9 @@ public class MenuState implements Screen {
     private float tempSound;
     private float tempMusic;
     private static int countLevel = 20;
-    private Image[] levelsNumber = new Image[9];
+    private Image[] levelsNumber = new Image[10];
     private boolean levelStars[][] = {
+        {false, false, false},
         {false, false, false},
         {false, false, false},
         {false, false, false},
@@ -107,10 +115,10 @@ public class MenuState implements Screen {
                             levelsNumber[level].setVisible(true);
                             game.sm.SoundBtn.play(game.sm.SoundVolume);
                         } else {
-                            game.sm.Blocked.play();
+                            game.sm.Blocked.play(game.sm.SoundVolume);
                         }
                     } catch (Exception e) {
-                        game.sm.Blocked.play();
+                        game.sm.Blocked.play(game.sm.SoundVolume);
                     }
                 }
             }
@@ -158,7 +166,7 @@ public class MenuState implements Screen {
         MusicSlider = new Slider(0, 1, 0.01f, false, style);
         SoundSlider = new Slider(0, 1, 0.01f, false, style);
 
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 3; j++) {
                 levelStars[i][j] = game.prefs.getBoolean("" + i + j);
             }
@@ -178,6 +186,7 @@ public class MenuState implements Screen {
         scrollPane.setFillParent(true);
         scrollPane.setScrollingDisabled(true, false);
         scrollPane.setOverscroll(false, false);
+        scrollPane.setPosition(0,-180*Main.SIZECHANGE.y);
 
 
         loadingBackground = new Image(game.tm.loadingMenu);
@@ -186,7 +195,15 @@ public class MenuState implements Screen {
         FStar = new Image(game.tm.FStar);
         UStar = new Image(game.tm.UStar);
 
+        Hearth1=new Image(game.tm.hearth);
+        Hearth2=new Image(game.tm.hearth);
+        Hearth3=new Image(game.tm.hearth);
+        HearthZero1=new Image(game.tm.hearthZero);
+        HearthZero2=new Image(game.tm.hearthZero);
+        HearthZero3=new Image(game.tm.hearthZero);
+
         Coins = new Image(game.tm.coinValue);
+        Plashka = new Image(game.tm.plashka);
 
         parametrsBackground.setSize(960 * Main.SIZECHANGE.x, 540 * Main.SIZECHANGE.y);
         parametrsBackground.setPosition(Main.WIDTH / 2 - parametrsBackground.getWidth() / 2, Main.HEIGHT / 2 - parametrsBackground.getHeight() / 2);
@@ -197,15 +214,34 @@ public class MenuState implements Screen {
         enterBtn = createImageButton(game.tm.enterBtn, 16 * 10, 67 * 10);
         cancelBtn = createImageButton(game.tm.cancelBtn, 60, 60);
         homeBtn = createImageButton(game.tm.paramBtn, 150, 150);
-        shopBtn = createImageButton(game.tm.homeBtn, 150, 150);
+        shopBtn = createImageButton(game.tm.shopBtn, 150, 150);
         Black = createImageButton(game.tm.Black, 1920, 1080);
 
         KStar.setSize(24 * 10 * Main.SIZECHANGE.x, 24 * 10 * Main.SIZECHANGE.y);
         FStar.setSize(24 * 10 * Main.SIZECHANGE.x, 24 * 10 * Main.SIZECHANGE.y);
         UStar.setSize(24 * 10 * Main.SIZECHANGE.x, 24 * 10 * Main.SIZECHANGE.y);
 
+        Hearth1.setSize(150*Main.SIZECHANGE.x,150* Main.SIZECHANGE.y);
+        Hearth2.setSize(150*Main.SIZECHANGE.x,150* Main.SIZECHANGE.y);
+        Hearth3.setSize(150*Main.SIZECHANGE.x,150* Main.SIZECHANGE.y);
+
+        HearthZero1.setSize(150*Main.SIZECHANGE.x,150* Main.SIZECHANGE.y);
+        HearthZero2.setSize(150*Main.SIZECHANGE.x,150* Main.SIZECHANGE.y);
+        HearthZero3.setSize(150*Main.SIZECHANGE.x,150* Main.SIZECHANGE.y);
+
+        Hearth1.setPosition(Main.WIDTH/2-Hearth1.getWidth()/2-180*Main.SIZECHANGE.x,Main.HEIGHT-165*Main.SIZECHANGE.y);
+        Hearth2.setPosition(Main.WIDTH/2-Hearth1.getWidth()/2,Main.HEIGHT-165*Main.SIZECHANGE.y);
+        Hearth3.setPosition(Main.WIDTH/2-Hearth1.getWidth()/2+180*Main.SIZECHANGE.x,Main.HEIGHT-165*Main.SIZECHANGE.y);
+
+        HearthZero1.setPosition(Main.WIDTH/2-Hearth1.getWidth()/2-180*Main.SIZECHANGE.x,Main.HEIGHT-165*Main.SIZECHANGE.y);
+        HearthZero2.setPosition(Main.WIDTH/2-Hearth1.getWidth()/2,Main.HEIGHT-165*Main.SIZECHANGE.y);
+        HearthZero3.setPosition(Main.WIDTH/2-Hearth1.getWidth()/2+180*Main.SIZECHANGE.x,Main.HEIGHT-165*Main.SIZECHANGE.y);
+
         Coins.setSize(120 * Main.SIZECHANGE.x, 120 * Main.SIZECHANGE.y);
-        Coins.setPosition((30), Main.HEIGHT - (homeBtn.getHeight() + 30 * Main.SIZECHANGE.y));
+        Coins.setPosition((30), Main.HEIGHT - (homeBtn.getHeight() + 0 * Main.SIZECHANGE.y));
+
+        Plashka.setSize(1080 * Main.SIZECHANGE.x, 210 * Main.SIZECHANGE.y);
+        Plashka.setPosition(0,(1920-180)*Main.SIZECHANGE.y);
 
         enterBtn.setPosition(Main.WIDTH / 2 - game.tm.loadingMenu.getWidth() / 3 * Main.SIZECHANGE.x + 10 * 4f * Main.SIZECHANGE.x, Main.HEIGHT / 2 - game.tm.loadingMenu.getHeight() / 3 * Main.SIZECHANGE.y + 8 * 10 * Main.SIZECHANGE.y);
         homeBtn.setPosition(Main.WIDTH - (homeBtn.getWidth() + 30), Main.HEIGHT - (homeBtn.getHeight() + 30));
@@ -225,7 +261,7 @@ public class MenuState implements Screen {
         SoundSlider.setValue(game.sm.SoundVolume);
 
         /// ------------------
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < 10; i++) {
             levelsNumber[i] = new Image(game.tm.levelsNumbers[i]);
             levelsNumber[i].setVisible(false);
             levelsNumber[i].setSize(520 * Main.SIZECHANGE.x, 110 * Main.SIZECHANGE.y);
@@ -236,7 +272,14 @@ public class MenuState implements Screen {
         Black.setColor(0, 0, 0, 0.5f);
 
         stage.addActor(scrollPane);
+        stage.addActor(Plashka);
+        stage.addActor(HearthZero1);
+        stage.addActor(HearthZero2);
+        stage.addActor(HearthZero3);
         stage.addActor(Black);
+        stage.addActor(Hearth1);
+        stage.addActor(Hearth2);
+        stage.addActor(Hearth3);
         stage.addActor(loadingBackground);
         stage.addActor(parametrsBackground);
         stage.addActor(KStar);
@@ -247,12 +290,19 @@ public class MenuState implements Screen {
         stage.addActor(homeBtn);
         stage.addActor(shopBtn);
         stage.addActor(enterBtn);
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < 10; i++) {
             stage.addActor(levelsNumber[i]);
         }
 
         stage.addActor(MusicSlider);
         stage.addActor(SoundSlider);
+
+        Hearth1.setVisible(false);
+        Hearth2.setVisible(false);
+        Hearth3.setVisible(false);
+        HearthZero1.setVisible(false);
+        HearthZero2.setVisible(false);
+        HearthZero3.setVisible(false);
 
         KStar.setVisible(false);
         FStar.setVisible(false);
@@ -267,6 +317,8 @@ public class MenuState implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (!loadingBackground.isVisible()) {
+                    MusicSlider.setValue(game.sm.MusicVolume);
+                    SoundSlider.setValue(game.sm.SoundVolume);
                     Black.setVisible(true);
                     parametrsBackground.setVisible(true);
                     MusicSlider.setVisible(true);
@@ -290,7 +342,7 @@ public class MenuState implements Screen {
                 parametrsBackground.setVisible(false);
                 cancelBtn.setVisible(false);
                 enterBtn.setVisible(false);
-                for (int i = 0; i < 9; i++) {
+                for (int i = 0; i < 10; i++) {
                     levelsNumber[i].setVisible(false);
                 }
             }
@@ -320,7 +372,7 @@ public class MenuState implements Screen {
                 parametrsBackground.setVisible(false);
                 cancelBtn.setVisible(false);
                 enterBtn.setVisible(false);
-                for (int i = 0; i < 9; i++) {
+                for (int i = 0; i < 10; i++) {
                     levelsNumber[i].setVisible(false);
                 }
                 game.sm.SoundBtn.play(game.sm.SoundVolume);
@@ -333,10 +385,18 @@ public class MenuState implements Screen {
                 game.sm.MenuMusicStop();
                 game.sm.SoundBtn.play(game.sm.SoundVolume);
 
-                game.getPlayState().regenerate(levelTo + 1);
-                game.setScreen(game.getPlayState());
-                game.getPlayState().show();
-                game.getMenuState().hide();
+                if(game.hearth>0) {
+                    game.getPlayState().regenerate(levelTo + 1);
+                    game.setScreen(game.getPlayState());
+                    game.getPlayState().show();
+                    game.getMenuState().hide();
+                }
+                else{
+                    game.setScreen(game.getAdState());
+                    game.getAdState().regenerate(levelTo);
+                    game.getAdState().show();
+                    game.getMenuState().hide();
+                }
             }
         });
 
@@ -344,8 +404,10 @@ public class MenuState implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 tempMusic = MusicSlider.getValue();
+                game.sm.MusicVolume = MusicSlider.getValue();
                 game.prefs.putFloat("Music", tempMusic);
                 game.prefs.flush();
+                game.sm.setVolume();
             }
         });
 
@@ -353,8 +415,10 @@ public class MenuState implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 tempSound = SoundSlider.getValue();
+                game.sm.SoundVolume = SoundSlider.getValue();
                 game.prefs.putFloat("Sound", tempSound);
                 game.prefs.flush();
+                game.sm.setVolume();
             }
         });
 
@@ -368,6 +432,11 @@ public class MenuState implements Screen {
         scrollPane.setVisible(true);
         shopBtn.setVisible(true);
         Coins.setVisible(true);
+        Plashka.setVisible(true);
+
+        HearthZero1.setVisible(true);
+        HearthZero2.setVisible(true);
+        HearthZero3.setVisible(true);
 
         /// ----------Music-------------
         game.sm.setVolume();
@@ -383,15 +452,9 @@ public class MenuState implements Screen {
     public void render(float delta) {
 
         if (isShowed) {
-            if (game.sm.SoundVolume != tempSound) {
-                game.sm.SoundVolume = tempSound;
-                game.sm.setVolume();
-            }
-
-            if (game.sm.MusicVolume != tempMusic) {
-                game.sm.MusicVolume = tempMusic;
-                game.sm.setVolume();
-            }
+            Hearth1.setVisible(game.hearth >= 1);
+            Hearth2.setVisible(game.hearth >= 2);
+            Hearth3.setVisible(game.hearth >= 3);
             ///----------------------
             game.camera.update();
             game.sb.setProjectionMatrix(game.camera.combined);
@@ -404,7 +467,7 @@ public class MenuState implements Screen {
                 font.draw(game.sb, String.valueOf((int) (100 * game.sm.SoundVolume)), Main.WIDTH / 2 - parametrsBackground.getWidth() / 2 + 42 * 15 * Main.SIZECHANGE.x, Main.HEIGHT / 2 - parametrsBackground.getHeight() / 2 + 17 * 15 * Main.SIZECHANGE.y);
                 font.draw(game.sb, String.valueOf((int) (100 * game.sm.MusicVolume)), Main.WIDTH / 2 - parametrsBackground.getWidth() / 2 + 42 * 15 * Main.SIZECHANGE.x, Main.HEIGHT / 2 - parametrsBackground.getHeight() / 2 + 32 * 15 * Main.SIZECHANGE.y);
             }
-            font2.draw(game.sb, String.valueOf(game.money), 36 * Main.SIZECHANGE.x + Coins.getWidth(), Main.HEIGHT - homeBtn.getHeight() + 60 * Main.SIZECHANGE.y);
+            font2.draw(game.sb, String.valueOf(game.money), 36 * Main.SIZECHANGE.x + Coins.getWidth(), Main.HEIGHT - homeBtn.getHeight() + 90 * Main.SIZECHANGE.y);
             game.sb.end();
         }
     }
@@ -438,10 +501,19 @@ public class MenuState implements Screen {
         KStar.setVisible(false);
         FStar.setVisible(false);
         UStar.setVisible(false);
+
+        Hearth1.setVisible(false);
+        Hearth2.setVisible(false);
+        Hearth3.setVisible(false);
+        HearthZero1.setVisible(false);
+        HearthZero2.setVisible(false);
+        HearthZero3.setVisible(false);
+
         for (int i = 0; i < levelsNumber.length; i++) {
             levelsNumber[i].setVisible(false);
         }
         Coins.setVisible(false);
+        Plashka.setVisible(false);
     }
 
     @Override
@@ -451,6 +523,12 @@ public class MenuState implements Screen {
     }
 
     public void update() {
+
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 3; j++) {
+                levelStars[i][j] = game.prefs.getBoolean("" + i + j);
+            }
+        }
         container.clear();
         for (int i = 0; i < countLevel / 4 + 1; i++) {
             try {
@@ -464,16 +542,18 @@ public class MenuState implements Screen {
             }
             try {
                 if (i == 0)
-                    container.add(createImageButton(i * 4, game.tm.levels[i * 4 ]));
+                    container.add(createImageButton(i * 4, game.tm.levels[i * 4]));
                 else if (levelStars[i * 4 - 1][0] || levelStars[i * 4 - 1][1] || levelStars[i * 4 - 1][2])
-                    container.add(createImageButton(i * 4, game.tm.levels[i * 4 ]));
+                    container.add(createImageButton(i * 4, game.tm.levels[i * 4]));
                 else
                     container.add(createImageButton(i * 4, game.tm.lock));
 
             } catch (Exception e) {
                 container.add(createImageButton(i * 4, game.tm.lock));
             }
+
             container.row();
+
             try {
                 if (levelStars[i * 4 + 1][0] || levelStars[i * 4 + 1][1] || levelStars[i * 4 + 1][2])
                     container.add(createImageButton(i * 4 + 2, game.tm.levels[i * 4 + 2]));
