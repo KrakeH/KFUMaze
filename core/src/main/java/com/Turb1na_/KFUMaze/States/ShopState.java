@@ -49,7 +49,7 @@ public class ShopState implements Screen {
     private List<TextButton> textButtons = new ArrayList<>();
 
     private String[] prices={
-        "Equipped", "10", "50", "100", "500", "1000"
+        "Выбрано", "10", "50", "100", "500", "1000"
     };
 
     private Image Coins;
@@ -90,16 +90,16 @@ public class ShopState implements Screen {
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if(String.valueOf(textButtons.get(level).getText()).equals("Equip")){
+                if(String.valueOf(textButtons.get(level).getText()).equals("Выбрать")){
                     for (int i = 0; i < textButtons.size(); i++) {
-                        if(String.valueOf(textButtons.get(i).getText()).equals("Equipped"))
-                            textButtons.get(i).setText("Equip");
+                        if(String.valueOf(textButtons.get(i).getText()).equals("Выбрано"))
+                            textButtons.get(i).setText("Выбрать");
                     }
-                    textButtons.get(level).setText("Equipped");
+                    textButtons.get(level).setText("Выбрано");
                     game.sm.Star.stop();
                     game.sm.Star.play(game.sm.SoundVolume);
                     for (int i = 0; i < textButtons.size(); i++) {
-                        if(String.valueOf(textButtons.get(i).getText()).equals("Equipped")) {
+                        if(String.valueOf(textButtons.get(i).getText()).equals("Выбрано")) {
                             game.prefs.putInteger("Skin", i);
                             game.Skin=i;
                         }
@@ -130,23 +130,23 @@ public class ShopState implements Screen {
                         game.prefs.putInteger("Coins",game.money);
                         game.sm.Star.stop();
                         game.sm.Star.play(game.sm.SoundVolume);
-                        button.setText("Equip");
+                        button.setText("Выбрать");
                         for (int i = 0; i < textButtons.size(); i++) {
                             game.prefs.putString("price"+i, String.valueOf(textButtons.get(i).getText()));
                         }
                         game.prefs.flush();
                     }
                 } catch (Exception e) {
-                    if(String.valueOf(button.getText()).equals("Equip")){
+                    if(String.valueOf(button.getText()).equals("Выбрать")){
                         for (int i = 0; i < textButtons.size(); i++) {
-                            if(String.valueOf(textButtons.get(i).getText()).equals("Equipped"))
-                                textButtons.get(i).setText("Equip");
+                            if(String.valueOf(textButtons.get(i).getText()).equals("Выбрано"))
+                                textButtons.get(i).setText("Выбрать");
                         }
-                        button.setText("Equipped");
+                        button.setText("Выбрано");
                         game.sm.Star.stop();
                         game.sm.Star.play(game.sm.SoundVolume);
                         for (int i = 0; i < textButtons.size(); i++) {
-                            if(String.valueOf(textButtons.get(i).getText()).equals("Equipped")) {
+                            if(String.valueOf(textButtons.get(i).getText()).equals("Выбрано")) {
                                 game.prefs.putInteger("Skin", i);
                                 game.Skin=i;
                             }
@@ -187,8 +187,9 @@ public class ShopState implements Screen {
 
         create();
         /// -----Font-----------
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/font.ttf"));
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/casio-fx-9860gii.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.characters="1234567890абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЬЫЭЮЯabcdefghijklmnopqrtsuvwxyzABSCEFGHIJKLMNOPQRSTUVWXYZ";
         parameter.size = (int) (40 * Main.SIZECHANGE.x);
         parameter.color = new Color(47 / 255f, 54 / 255f, 153 / 255f, 1);
         font = generator.generateFont(parameter);

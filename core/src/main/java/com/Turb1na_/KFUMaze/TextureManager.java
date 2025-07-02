@@ -22,6 +22,8 @@ public class TextureManager {
 
     /// ------Buttons------------
     public Texture playBtn;
+    public Texture equippedBtn;
+    public Texture equipBtn;
     public Texture adBtn;
     public Texture nextBtn;
     public Texture homeBtn;
@@ -116,11 +118,11 @@ public class TextureManager {
         new Texture("LevelsName/level10.png")
     };
 
-    public Texture[][] killBlocks={
-        {new Texture("Sprites/killBlock/killBlock11.png"),new Texture("Sprites/killBlock/killBlock12.png"),new Texture("Sprites/throns/thron5.png")},
-        {new Texture("Sprites/killBlock/killBlock21.png"),new Texture("Sprites/killBlock/killBlock22.png"),new Texture("Sprites/throns/thron6.png")},
-        {new Texture("Sprites/killBlock/killBlock31.png"),new Texture("Sprites/killBlock/killBlock32.png"),new Texture("Sprites/throns/thron7.png")},
-        {new Texture("Sprites/killBlock/killBlock41.png"),new Texture("Sprites/killBlock/killBlock42.png"),new Texture("Sprites/throns/thron8.png")}
+    public Texture[][] killBlocks = {
+        {new Texture("Sprites/killBlock/killBlock11.png"), new Texture("Sprites/killBlock/killBlock12.png"), new Texture("Sprites/throns/thron5.png")},
+        {new Texture("Sprites/killBlock/killBlock21.png"), new Texture("Sprites/killBlock/killBlock22.png"), new Texture("Sprites/throns/thron6.png")},
+        {new Texture("Sprites/killBlock/killBlock31.png"), new Texture("Sprites/killBlock/killBlock32.png"), new Texture("Sprites/throns/thron7.png")},
+        {new Texture("Sprites/killBlock/killBlock41.png"), new Texture("Sprites/killBlock/killBlock42.png"), new Texture("Sprites/throns/thron8.png")}
     };
     public Texture[] walls = new Texture[45];
     public Texture[] throns = new Texture[8];
@@ -141,9 +143,9 @@ public class TextureManager {
         winBackground = new Texture("winBackground.png");
         killBackground = new Texture("killBackground.png");
         gameBackground = new Texture("gameBackground.png");
-        background=new Texture("background.png");
-        plashka=new Texture("plashka.png");
-        Ad=new Texture("Info/Ad.png");
+        background = new Texture("background.png");
+        plashka = new Texture("plashka.png");
+        Ad = new Texture("Info/Ad.png");
 
         playBtn = new Texture("Buttons/playbtn.png");
         nextBtn = new Texture("Buttons/nextBtn.png");
@@ -158,16 +160,18 @@ public class TextureManager {
         ctnBtn = new Texture("Buttons/ctnBtn.png");
         exitBtn = new Texture("Buttons/exitBtn.png");
         againBtn = new Texture("Buttons/againBtn.png");
-        adBtn=new Texture("Buttons/adButton.png");
+        adBtn = new Texture("Buttons/adButton.png");
+        equipBtn = new Texture("Buttons/equip.png");
+        equippedBtn = new Texture("Buttons/equipped.png");
 
         batTexture = new Texture("Sprites/Bat.png");
         coinValue = new Texture("CoinValue.png");
         knob = new Texture("Knob.png");
         sliderBack = new Texture("SliderBack.png");
-        hearth=new Texture("Sprites/hearth.png");
-        hearthZero=new Texture("Sprites/hearthZero.png");
-        way=new Texture("Sprites/way.png");
-        progressBar=new Texture("Sprites/progressBar.png");
+        hearth = new Texture("Sprites/hearth.png");
+        hearthZero = new Texture("Sprites/hearthZero.png");
+        way = new Texture("Sprites/way.png");
+        progressBar = new Texture("Sprites/progressBar.png");
 
         KStar = new Texture("Sprites/KFU/K.png");
         FStar = new Texture("Sprites/KFU/F.png");
@@ -183,51 +187,53 @@ public class TextureManager {
     }
 
     public void dispose() {
-         startBackground.dispose();
-         priceBackground.dispose();
-         paramBackground.dispose();
-         loadingMenu.dispose();
-         menuBackground.dispose();
-         playBackground.dispose();
-         winBackground.dispose();
-         killBackground.dispose();
-         gameBackground.dispose();
-         playBtn.dispose();
-         nextBtn.dispose();
-         homeBtn.dispose();
-         paramBtn.dispose();
-         cancelBtn.dispose();
-         enterBtn.dispose();
-         shopBtn.dispose();
-         stopBtn.dispose();
-         ctnBtn.dispose();
-         exitBtn.dispose();
-         againBtn.dispose();
-         Black.dispose();
-         lock.dispose();
-         sliderBack.dispose();
-         batTexture.dispose();
-         knob.dispose();
-         coinValue.dispose();
-         door.dispose();
-         exit.dispose();
-         shelfFront.dispose();
-         shelfLeft.dispose();
-         shelfRight.dispose();
-         kitchenTable.dispose();
-         gym.dispose();
-         coin.dispose();
-         arrowUp.dispose();
-         arrowDown.dispose();
-         arrowRight.dispose();
-         arrowLeft.dispose();
-         boardsFront.dispose();
-         boardsRight.dispose();
-         boardsLeft.dispose();
-         KStar.dispose();
-         FStar.dispose();
-         UStar.dispose();
-         Ad.dispose();
+        equippedBtn.dispose();
+        equipBtn.dispose();
+        startBackground.dispose();
+        priceBackground.dispose();
+        paramBackground.dispose();
+        loadingMenu.dispose();
+        menuBackground.dispose();
+        playBackground.dispose();
+        winBackground.dispose();
+        killBackground.dispose();
+        gameBackground.dispose();
+        playBtn.dispose();
+        nextBtn.dispose();
+        homeBtn.dispose();
+        paramBtn.dispose();
+        cancelBtn.dispose();
+        enterBtn.dispose();
+        shopBtn.dispose();
+        stopBtn.dispose();
+        ctnBtn.dispose();
+        exitBtn.dispose();
+        againBtn.dispose();
+        Black.dispose();
+        lock.dispose();
+        sliderBack.dispose();
+        batTexture.dispose();
+        knob.dispose();
+        coinValue.dispose();
+        door.dispose();
+        exit.dispose();
+        shelfFront.dispose();
+        shelfLeft.dispose();
+        shelfRight.dispose();
+        kitchenTable.dispose();
+        gym.dispose();
+        coin.dispose();
+        arrowUp.dispose();
+        arrowDown.dispose();
+        arrowRight.dispose();
+        arrowLeft.dispose();
+        boardsFront.dispose();
+        boardsRight.dispose();
+        boardsLeft.dispose();
+        KStar.dispose();
+        FStar.dispose();
+        UStar.dispose();
+        Ad.dispose();
 
         for (int i = 0; i < info.length; i++) {
             info[i].dispose();
